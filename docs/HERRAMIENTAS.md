@@ -1,6 +1,58 @@
 # Herramientas y preparación del entorno Windows
 
-## Estado actual: Playwright Chromium y E2E verificados — 22/09/2026
+## Estado actual: WSL2 instalado y validado — 22/09/2026
+
+Validación posterior al reinicio manual satisfactoria, sin instalar ni actualizar
+nada. PendingFileRenameOperations, CBS/RebootPending y Windows Update/RebootRequired
+están inactivos. `wsl --version` y `wsl --status` terminaron con código0:
+WSL **2.7.14.0**, kernel **6.18.33.2-2**, versión predeterminada **2**.
+WSLg1.0.73.2, MSRDC1.2.7214, Direct3D1.611.1-81528511,
+DXCore10.0.26100.1-240331-1435.ge-release y Windows10.0.26200.9457.
+
+Get-WindowsOptionalFeature, con UAC exclusivamente de lectura, confirmó:
+VirtualMachinePlatform **Enabled**; Microsoft-Windows-Subsystem-Linux,
+Microsoft-Hyper-V-All y HypervisorPlatform **Disabled**. No se cambiaron estados.
+El aviso de wsl --status sobre WSL1 se conserva: WSL1 está deshabilitado por diseño.
+
+`wsl --list --verbose` informa que no hay distribuciones instaladas; código-1
+aceptado como lista vacía por el alcance solicitado. Ninguna distribución personal.
+Virtualización firmware y DEP disponibles; HypervisorPresent=true, corroborado
+por systeminfo. Los campos CIM SLAT/VMMonitor aparecen false con el hipervisor
+activo, mientras Get-ComputerInfo no publica esos requisitos; la comprobación
+previa al hipervisor registró ambos true. No hay error de kernel/virtualización.
+
+Primera consulta WSL al servicio denegada por aislamiento; repetir en el entorno
+normal resolvió E_ACCESSDENIED, sin cambiar permisos o configuración. Se corrigió
+la lectura UTF16 de las salidas. No se ejecutaron comandos Linux, wsl --update,
+instalaciones, habilitaciones o Docker. Solo se actualizan los tres documentos
+autorizados; no se hace staging ni commit. **WSL2 VALIDADO; detenerse.**
+
+## Histórico: WSL instalado; reinicio requerido antes de validación — 22/09/2026
+
+Después del reinicio manual del usuario, PendingFileRenameOperations,
+CBS/RebootPending y Windows Update/RebootRequired estaban inactivos. Windows11
+Pro x64, virtualización de firmware y SLAT disponibles; 8.39 GiB de RAM libre y
+564.22 GiB libres en C:. Git limpio en main con 41315c5 y 8262ec1, sin remotos.
+
+Se ejecutó únicamente `wsl --install --no-distribution` en PowerShell elevado
+mediante RunAs/UAC, sin cambiar ExecutionPolicy. El proceso confirmó permisos
+de administrador y terminó con código0 el 22/09/2026 a las09:03:14 (-05:00).
+El instalador informó **Subsistema de Windows para Linux 2.7.14 instalado** y
+habilitación de VirtualMachinePlatform. **REINICIO REQUERIDO**: los cambios se
+aplican después del reinicio; CBS/RebootPending está ahora activo.
+
+Consulta CIM posterior: VirtualMachinePlatform habilitada (InstallState1),
+Microsoft-Windows-Subsystem-Linux, Hyper-V completo y HypervisorPlatform
+deshabilitados (InstallState2). No se habilitó WSL1 ni se instaló distribución
+Linux personal. WSL2 aún no se declara operativo antes de reiniciar.
+
+No se ejecutaron wsl --update ni validaciones operativas posteriores. Tras el
+reinicio manual quedarán pendientes wsl --version, --status, --list --verbose
+y consultas de características elevadas; versión del kernel aún no comprobada.
+No se descargó ni instaló Docker u otra herramienta. Solo se actualizan los tres
+documentos autorizados, sin staging ni commit. **Detenerse para reinicio manual.**
+
+## Histórico: Playwright Chromium y E2E verificados — 22/09/2026
 
 Playwright **1.63.0**, ya declarado e instalado como dependencia, ejecutó
 `npm.cmd run test:e2e:install` (playwright install chromium), código0.

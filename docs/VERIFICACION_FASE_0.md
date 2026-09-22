@@ -3,6 +3,244 @@
 Registro inicial: 20/09/2026. Actualizado: 22/09/2026. Distingue inspección, revisión estática y pruebas
 de aplicación. No se presenta una comprobación estática como compilación o arranque.
 
+## WSL2: validación post-reinicio satisfactoria — 22/09/2026
+
+Alcance exclusivamente de lectura del sistema y actualización de estos tres
+documentos. No se instaló distribución, Docker u otra herramienta; no se ejecutó
+wsl --update ni se habilitaron características. No se hicieron cambios Git.
+
+### Reinicio y Git iniciales
+
+PendingFileRenameOperations=false; CBS/RebootPending=false;
+Windows Update/RebootRequired=false. No persiste el reinicio de la instalación.
+git status --short contenía únicamente los tres documentos WSL ya modificados.
+git log -3 --oneline mostró los dos commits existentes:
+
+```text
+41315c5 test: validate frontend e2e with chromium
+8262ec1 chore: bootstrap validated development environment
+```
+
+git remote -v: sin salida. Sin archivos nuevos ni staging.
+
+### Salidas reales de WSL
+
+`wsl --version`, código0, stderr vacío:
+
+```text
+Versión de WSL: 2.7.14.0
+Versión de kernel: 6.18.33.2-2
+Versión de WSLg: 1.0.73.2
+Versión de MSRDC: 1.2.7214
+Versión de Direct3D: 1.611.1-81528511
+Versión de DXCore: 10.0.26100.1-240331-1435.ge-release
+Versión de Windows: 10.0.26200.9457
+```
+
+`wsl --status`, código0, stderr vacío:
+
+```text
+Versión predeterminada: 2
+WSL1 no es compatible con la configuración actual del equipo.
+Habilita el componente opcional "Subsistema de Windows para Linux" para usar WSL1.
+```
+
+Este aviso se refiere solo a WSL1, excluido por el usuario; no es un error del
+kernel ni del hipervisor WSL2. No se siguió la sugerencia de habilitar WSL1.
+
+`wsl --list --verbose`, código-1, stderr vacío:
+
+```text
+Subsistema de Windows para Linux no tiene distribuciones instaladas.
+Para resolverlo, instale una distribución con las instrucciones siguientes:
+
+Use 'wsl.exe --list --online' para enumerar las distribuciones disponibles
+y "wsl.exe --install <Distro>" para instalar.
+```
+
+El código-1 se registra tal como ocurrió; la lista vacía es el resultado esperado
+y aceptado por el usuario. No se instalaron/importaron distribuciones ni se
+ejecutaron comandos Linux. No se necesita actualizar WSL2.7.14.0 para este paso.
+
+### Características Windows y virtualización
+
+Se ejecutaron las cuatro consultas Get-WindowsOptionalFeature -Online -FeatureName
+mediante PowerShell elevado por UAC solo para lectura. No se usó Enable ni DISM
+para modificar estados. Salida:
+
+| FeatureName | State | RestartRequired |
+| --- | --- | --- |
+| VirtualMachinePlatform | Enabled | Possible |
+| Microsoft-Windows-Subsystem-Linux | Disabled | Possible |
+| Microsoft-Hyper-V-All | Disabled | Possible |
+| HypervisorPlatform | Disabled | Possible |
+
+RestartRequired=Possible describe el comportamiento posible al cambiar una
+característica; no indica un reinicio pendiente actual. Los indicadores reales
+consultados están inactivos. Se conserva el componente opcional WSL1 deshabilitado.
+
+Datos CIM y systeminfo:
+
+```text
+Win32_ComputerSystem.HypervisorPresent: true
+Win32_Processor.VirtualizationFirmwareEnabled: true
+Win32_OperatingSystem.DataExecutionPrevention_Available: true
+Win32_Processor.SecondLevelAddressTranslationExtensions: false
+Win32_Processor.VMMonitorModeExtensions: false
+systeminfo: Se detectó un hipervisor. No se mostrarán las características necesarias para Hyper-V.
+```
+
+Get-ComputerInfo informó HyperVisorPresent=true y requisitos HyperVRequirement*
+nulos. Se conserva la discrepancia de campos SLAT/VMMonitor en lugar de ocultarla:
+antes de habilitar el hipervisor ambos estaban true en el mismo Ryzen7 7840HS.
+Con systeminfo indicando requisitos no expuestos y el hipervisor ahora activo,
+los valores actuales no se toman como evidencia de pérdida de soporte ni como
+motivo para cambiar BIOS o instalar Hyper-V completo. No se detectaron errores
+WSL de kernel/hipervisor/virtualización al consultar fuera del aislamiento.
+
+### Incidencias y resultado
+
+Dentro del aislamiento, --status y --list devolvieron
+Wsl/EnumerateDistros/Service/E_ACCESSDENIED, código-1. Se repitieron los mismos
+comandos fuera del aislamiento; status pasó y list devolvió la ausencia esperada
+de distribuciones. No se cambiaron permisos, ACL ni características para resolverlo.
+La primera captura de consola mostró caracteres NUL; se repitió la lectura
+mediante ProcessStartInfo con redirección UTF16 explícita, conservando salida,
+stderr y código por separado. No fue un error del producto WSL.
+
+**WSL2: instalado y VALIDADO** para el alcance sin distribución personal:
+sin reinicio pendiente, versión/kernel disponibles, predeterminado2, VMP Enabled,
+firmware activo, hipervisor detectado y ausencia de errores relevantes.
+Esto no ejecuta una carga Linux ni valida Docker, fuera de esta autorización.
+
+Documentos actualizados: HERRAMIENTAS.md, ESTADO_PROYECTO.md y este registro.
+git diff --check correcto; git status --short permanece:
+
+```text
+ M docs/ESTADO_PROYECTO.md
+ M docs/HERRAMIENTAS.md
+ M docs/VERIFICACION_FASE_0.md
+```
+
+Sin staging, commit, publicación ni instalación adicional. **Detenerse.**
+
+## WSL sin distribución personal: instalado, reinicio requerido — 22/09/2026
+
+Alcance autorizado: comprobar el reinicio manual anterior e instalar únicamente
+WSL2 mediante `wsl --install --no-distribution` si los indicadores estaban limpios.
+
+### Estado previo confirmado
+
+```text
+git status
+On branch main
+nothing to commit, working tree clean
+
+git log -2 --oneline
+41315c5 test: validate frontend e2e with chromium
+8262ec1 chore: bootstrap validated development environment
+
+git remote -v
+(sin salida)
+```
+
+| Comprobación | Resultado previo |
+| --- | --- |
+| PendingFileRenameOperations | Inactivo; 0 entradas no vacías |
+| CBS/RebootPending | Inactivo |
+| Windows Update/RebootRequired | Inactivo |
+| Windows | Windows11 Pro, 10.0.26200, x64 |
+| CPU | AMD Ryzen7 7840HS, 64 bits |
+| Virtualización BIOS/UEFI | Habilitada |
+| SLAT | Disponible |
+| Hipervisor activo | No |
+| RAM disponible | 8.39 GiB |
+| Disco C libre | 564.22 GiB |
+| VirtualMachinePlatform | Deshabilitada, CIM InstallState2 |
+| Microsoft-Windows-Subsystem-Linux | Deshabilitada, CIM InstallState2 |
+| Microsoft-Hyper-V-All / HypervisorPlatform | Ambas deshabilitadas, InstallState2 |
+
+`wsl --status`, código50, y `wsl --version`, código1, informaron:
+«El Subsistema de Windows para Linux no está instalado».
+El reinicio pendiente anterior quedó resuelto y los requisitos permitían continuar.
+
+### Comando y resultado reales
+
+Se solicitó elevación mediante Start-Process -Verb RunAs; proceso PowerShell
+auxiliar oculto. UAC/elevación obtenida: comprobación interna IsAdministrator=true.
+El único comando de instalación ejecutado fue:
+
+```powershell
+wsl --install --no-distribution
+```
+
+No se añadieron distribución, --enable-wsl1, --update ni comandos independientes
+para habilitar Hyper-V. El instalador realizó su habilitación necesaria de VMP.
+Salida legible relevante:
+
+```text
+Instalando componente opcional de Windows: VirtualMachinePlatform
+La operación solicitada se realizó correctamente. Los cambios se aplicarán una vez que se reinicie el sistema.
+Descargando: Subsistema de Windows para Linux 2.7.14
+Instalando: Subsistema de Windows para Linux 2.7.14
+Se ha instalado Subsistema de Windows para Linux 2.7.14.
+```
+
+Resultado del proceso elevado:
+
+```json
+{
+  "IsAdministrator": true,
+  "Command": "wsl --install --no-distribution",
+  "ExitCode": 0,
+  "Finished": "2026-09-22T09:03:14.5219444-05:00"
+}
+```
+
+**REINICIO REQUERIDO.** Código0 significa que el comando terminó correctamente;
+no demuestra que WSL2 esté activo antes del reinicio solicitado.
+
+### Registro posterior, sin validación operativa
+
+Solo se consultaron indicadores y características para documentar el cambio:
+
+| Comprobación | Resultado posterior |
+| --- | --- |
+| PendingFileRenameOperations | Inactivo |
+| CBS/RebootPending | Activo |
+| Windows Update/RebootRequired | Inactivo |
+| VirtualMachinePlatform | Habilitada según CIM, InstallState1; requiere reinicio para aplicar |
+| Microsoft-Windows-Subsystem-Linux | Deshabilitada, InstallState2 |
+| Microsoft-Hyper-V-All | Deshabilitada, InstallState2 |
+| HypervisorPlatform | Deshabilitada, InstallState2 |
+| Distribución personal instalada por este comando | Ninguna, --no-distribution |
+
+No se ejecutaron wsl --version, --status ni --list --verbose después de instalar:
+el usuario exige detenerse si se solicita reinicio. La versión2.7.14 procede del
+instalador; versión del kernel no mostrada/comprobada. Tras reiniciar manualmente,
+quedan pendientes esos tres comandos y Get-WindowsOptionalFeature para VMP/WSL
+con elevación de lectura. No se hará wsl --update por rutina.
+
+Incidencias de observación: la salida nativa WSL/DISM combina codificaciones y
+parte del progreso DISM se mostró ilegible en la captura; el mensaje de instalación,
+la solicitud de reinicio y el resultado JSON son legibles. No se repitió la
+instalación. La lectura CIM posterior dentro del aislamiento fue denegada y se
+repitió fuera del aislamiento únicamente para lectura.
+
+Se conservan install.log y result.json en la carpeta temporal local
+`C:\Users\ALEXXX~1\AppData\Local\Temp\codex-wsl-install-f2936cc53436495589c0ba729f789deb`.
+No se descargó instalador Docker ni se instaló ninguna otra herramienta. No se
+reinició Windows automáticamente. Los dos commits permanecen intactos.
+git status --short tras documentar muestra únicamente:
+
+```text
+ M docs/ESTADO_PROYECTO.md
+ M docs/HERRAMIENTAS.md
+ M docs/VERIFICACION_FASE_0.md
+```
+
+Sin staging ni commit. **Detenerse para reinicio manual; Fase1 no iniciada.**
+
 ## Playwright Chromium: E2E real completado — 22/09/2026
 
 Alcance: instalar Chromium propio de Playwright, ejecutar el único escenario E2E

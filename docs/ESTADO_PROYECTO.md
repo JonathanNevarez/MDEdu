@@ -8,6 +8,18 @@ Actualización documental: 22/09/2026. Maven verificado el 20/09/2026; frontend 
 Fases 1–13 no iniciadas. La raíz estaba vacía y no era un repositorio Git.
 El SVG original se conserva intacto.
 
+**WSL2: instalado y validado tras el reinicio manual.** Los tres indicadores de
+reinicio están inactivos. wsl --version: **2.7.14.0**, kernel **6.18.33.2-2**,
+código0. wsl --status: versión predeterminada **2**, código0; su aviso sobre WSL1
+no requiere habilitarlo. wsl --list --verbose: ninguna distribución, código-1
+aceptado para lista vacía. Get-WindowsOptionalFeature confirma VirtualMachinePlatform
+Enabled y Microsoft-Windows-Subsystem-Linux, Hyper-V completo y HypervisorPlatform
+Disabled. Firmware virtualizado y DEP habilitados; hipervisor activo confirmado
+por CIM/systeminfo. SLAT estaba disponible antes de activar el hipervisor; sus
+campos de capacidad actuales no se interpretan como un fallo de WSL2.
+Validación del entorno sin ejecutar Linux ni instalar distribución personal.
+Sin actualización, cambios de características, Docker ni herramientas adicionales.
+
 **Git2.55.0.windows.3 x64 instalado y repositorio local inicializado.** Ruta:
 `C:\Program Files\Git\cmd\git.exe`. Identidad global y core.autocrlf global ausentes;
 no se modificó configuración global. Rama normalizada a **main** e identidad
@@ -17,8 +29,10 @@ Los 98 archivos revisados están listados en [PRIMER_COMMIT](PRIMER_COMMIT.md).
 Snapshot inicial creado y aceptado: **8262ec1**,
 `chore: bootstrap validated development environment`; hash completo
 `8262ec1f636b1928ff6f637b9d9ba983e5fcfa8d`. Se verificó working tree clean antes
-del paso Playwright. Ahora solo cambian los tres documentos autorizados, sin staging
-ni nuevo commit. El snapshot permanece intacto. Evidencia del cierre inicial en
+del paso Playwright. Su evidencia quedó en el segundo commit **41315c5**,
+`test: validate frontend e2e with chromium`. Antes de instalar WSL, main estaba
+limpio y sin remotos. Ahora solo cambian los tres documentos autorizados, sin
+staging ni nuevo commit. Ambos commits permanecen intactos. Evidencia del cierre inicial en
 `.git/FASE_0_SNAPSHOT.txt`. La política MDE generada se decidirá en Fase1.
 
 **Node.js24.19.0 LTS x64 y npm11.17.0 instalados y verificados.** WinGet instaló
@@ -52,7 +66,7 @@ usuario; JAVA_HOME y PATH de máquina permanecen intactos. El POM conserva su ha
 
 BACKEND BUILD: **OK**. BACKEND RUNTIME: **pendiente de Docker/PostgreSQL**.
 El Wrapper fija versión y hash y es la vía preferida para tareas normales.
-WSL, Docker, Eclipse y componentes MDE siguen sin instalarse.
+Docker, Eclipse y componentes MDE siguen sin instalarse. WSL2 instalado y validado.
 
 **JDK21 instalado y verificado con autorización exclusiva para Java.** WinGet
 instaló Temurin x64 (paquete 21.0.12.101); java y javac devuelven **21.0.12.1**.
@@ -112,6 +126,7 @@ requiere Docker y se invoca mediante Failsafe en verify. No se deshabilitó.
 | JDK21/javac, JAVA_HOME, PATH y compilación mínima | Completado: Temurin21.0.12.1 x64; salida Java environment OK |
 | Maven/Wrapper, POM efectivo y validate | Completado: Maven3.9.16, Java21.0.12.1, salidas0 |
 | Git y repositorio local | Verificado: snapshot 8262ec1, main, identidad local y sin remotos |
+| WSL2 sin distribución personal | Validado: WSL2.7.14.0, kernel6.18.33.2-2, predeterminado2; VMP Enabled e hipervisor activo; sin reinicio pendiente |
 | Frontend compila y pruebas unitarias pasan | Completado: TypeScript/Vite; 1 archivo, 2 pruebas correctas |
 | Frontend inicia y responde HTTP | Completado: HTTP200 en 127.0.0.1:5173; servidor detenido |
 | Frontend E2E en Chromium | Completado: Playwright1.63.0, Chromium153.0.8010.12/r1243; 1 aprobado, salida0 |
@@ -123,7 +138,8 @@ requiere Docker y se invoca mediante Failsafe en verify. No se deshabilitó.
 
 ## Problemas conocidos
 
-1. Docker/WSL y Eclipse/MDE siguen pendientes. JDK21, Maven/Wrapper, Node/npm y Git ya verificados.
+1. WSL2 validado tras reinicio. Docker y Eclipse/MDE siguen sin instalar.
+   JDK21, Maven/Wrapper, Node/npm y Git ya verificados.
 2. La política local de PowerShell bloquea scripts `.ps1`; el script opcional de
    inspección no se pudo ejecutar. La inspección mediante comandos directos sí
    se realizó. `npm.ps1` también está bloqueado; se usa `npm.cmd`, sin cambiar la política.
@@ -145,7 +161,7 @@ requiere Docker y se invoca mediante Failsafe en verify. No se deshabilitó.
 
 ## Siguiente paso
 
-**Paso Playwright Chromium/E2E completado; detenerse. No hacer staging ni commit.
+**Validación WSL2 completada; detenerse. No hacer staging ni commit.
 No instalar otro componente ni conectar remotos hasta recibir nueva autorización
 del usuario.** La propuesta de herramientas
 restantes está documentada, pero no se ejecuta. La estrategia Eclipse/MDE sigue

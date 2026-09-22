@@ -1,6 +1,34 @@
 # Herramientas y preparación del entorno Windows
 
-## Estado actual: snapshot local autorizado — 21/09/2026
+## Estado actual: Playwright Chromium y E2E verificados — 22/09/2026
+
+Playwright **1.63.0**, ya declarado e instalado como dependencia, ejecutó
+`npm.cmd run test:e2e:install` (playwright install chromium), código0.
+Se instalaron exclusivamente Chrome for Testing y Headless Shell **153.0.8010.12**,
+revisión **1243**, más FFmpeg1011 y Winldd1007 en
+`C:\Users\alexxxjon\AppData\Local\ms-playwright`.
+Tamaño de archivos instalado: **739893945 bytes**, aproximadamente740 MB / 705.62 MiB.
+No se instalaron Firefox, WebKit, Chrome global ni herramientas adicionales.
+Se mantiene npm.cmd sin modificar ExecutionPolicy.
+
+`npm.cmd run test:e2e`: TypeScript y Vite8.3.0 compilaron; Playwright ejecutó
+1 archivo/escenario con Chromium, **1 aprobado, 0 fallidos, 0 omitidos**, salida0.
+Duración Playwright: 2.5s; escenario: 546ms; build Vite: 738ms.
+La prueba comprobó React, título, contenido, ruta inexistente y regreso al inicio;
+el arreglo de pageerror permaneció vacío. No captura console.error por separado.
+El preview temporal en 127.0.0.1:4173 y el navegador terminaron; procesos0,
+listeners0 en 4173/5173. Solo aviso menor NO_COLOR/FORCE_COLOR en procesos Node.
+
+FRONTEND BUILD: **OK**. FRONTEND UNIT: **OK** (verificación previa, no repetida).
+FRONTEND HTTP: **OK** (verificación previa). FRONTEND E2E CHROMIUM: **OK**.
+test-results/.last-run.json registra passed y está ignorado; playwright-report no
+se creó porque se usa reporter list. No hubo cambios en código, pruebas o versiones.
+
+Snapshot inicial **8262ec1** intacto. En este paso solo se modifican
+HERRAMIENTAS.md, VERIFICACION_FASE_0.md y ESTADO_PROYECTO.md, sin staging/commit.
+**Detenerse hasta nueva autorización; Fase0 sigue abierta.**
+
+## Histórico: snapshot local autorizado — 21/09/2026
 
 Git instalado y verificado según el registro inferior. Se configuró exclusivamente
 la identidad local JonathanNevarez <neva_rez00@hotmail.com> y se renombró la rama

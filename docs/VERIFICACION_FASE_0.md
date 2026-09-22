@@ -3,6 +3,156 @@
 Registro inicial: 20/09/2026. Actualizado: 22/09/2026. Distingue inspección, revisión estática y pruebas
 de aplicación. No se presenta una comprobación estática como compilación o arranque.
 
+## Playwright Chromium: E2E real completado — 22/09/2026
+
+Alcance: instalar Chromium propio de Playwright, ejecutar el único escenario E2E
+existente y documentar. Sin Firefox/WebKit/Chrome global, WSL, Docker, PostgreSQL,
+Eclipse/MDE ni otras herramientas. No se cambió ExecutionPolicy ni se hizo staging,
+commit, amend, reset, rebase, checkout del snapshot o conexión remota.
+
+### Estado inicial y escenario inspeccionado
+
+`git status --short`: sin salida, working tree clean.
+`git log -1 --oneline`:
+
+```text
+8262ec1 chore: bootstrap validated development environment
+```
+
+HEAD completo verificado: 8262ec1f636b1928ff6f637b9d9ba983e5fcfa8d.
+No existía caché ms-playwright. Procesos del proyecto/Playwright0 y listeners0
+en puertos4173/5173 antes de instalar.
+
+Se leyeron package.json, playwright.config.ts y tests/e2e/startup.spec.ts sin
+modificarlos. Playwright instalado: **1.63.0**. Configuración:
+
+- testDir: ./tests/e2e; reporter list; proyecto chromium con dispositivo Desktop Chrome.
+- baseURL: http://127.0.0.1:4173; navegador Chromium, ejecución headless por defecto.
+- webServer: npm run preview, misma URL, reuseExistingServer=false, timeout30000ms.
+- preview: vite preview --host 127.0.0.1 --port 4173 --strictPort.
+- timeout de prueba no sobrescrito: predeterminado30000ms, comprobado en el código
+  instalado de Playwright. Reintentos locales0; en CI2 y forbidOnly=true.
+- trace retain-on-failure; no captura de screenshots configurada.
+- Comando E2E exacto: npm.cmd run test:e2e → npm run build && playwright test.
+
+Único escenario, startup.spec.ts:3: abre /; verifica título «Lógica de programación»
+y heading «Un espacio para aprender lógica de programación» visible. Abre
+/pagina-inexistente, comprueba «No encontramos esta página», pulsa «Volver al inicio»,
+verifica URL http://127.0.0.1:4173/ y contenido principal visible otra vez.
+Recoge pageerror y exige un arreglo vacío al terminar. Demuestra renderizado React
+y navegación en navegador real. No escucha console.error/console.warn por separado;
+no se declara una auditoría completa de consola ni se añadió una prueba nueva.
+
+### Instalación y caché
+
+Desde frontend, con permisos para red/caché:
+
+```powershell
+npm.cmd run test:e2e:install
+```
+
+Script ejecutado: playwright install chromium. Salida0; componentes descargados:
+
+```text
+Chrome for Testing 153.0.8010.12 (playwright chromium v1243)
+Chrome Headless Shell 153.0.8010.12 (playwright chromium-headless-shell v1243)
+FFmpeg (playwright ffmpeg v1011)
+Winldd (playwright winldd v1007)
+```
+
+Destino: `C:\Users\alexxxjon\AppData\Local\ms-playwright`.
+Versión153.0.8010.12 también confirmada en ProductVersion de chrome.exe.
+
+| Componente de caché | Bytes de archivos instalados |
+| --- | ---: |
+| chromium-1243 | 452900525 |
+| chromium_headless_shell-1243 | 283217434 |
+| ffmpeg-1011 | 3517342 |
+| winldd-1007 | 258560 |
+| .links (metadatos locales) | 84 |
+| Total (610 archivos) | 739893945 |
+
+Aproximadamente740 MB decimales / 705.62 MiB; suma de tamaños lógicos de archivos,
+no espacio físico de bloques del disco. No se instalaron los demás navegadores.
+
+### Ejecución real
+
+`npm.cmd run test:e2e` se ejecutó fuera del aislamiento para permitir procesos de
+build, servidor y navegador, autorizado por el usuario. Sin primer intento fallido
+ni cambios al scaffold. Salida real resumida, código final0:
+
+```text
+> npm run build && playwright test
+> tsc --project tsconfig.json && tsc --project tsconfig.node.json
+vite v8.3.0 building client environment for production...
+26 modules transformed.
+dist/index.html                   0.60 kB | gzip: 0.35 kB
+dist/assets/index-BbaKOYXq.css    1.45 kB | gzip: 0.73 kB
+dist/assets/index-BggaICop.js   260.89 kB | gzip: 82.96 kB
+built in 738ms
+Running 1 test using 1 worker
+ok 1 [chromium] tests/e2e/startup.spec.ts:3:1
+el frontend compilado abre y permite recuperar una ruta inexistente (546ms)
+1 passed (2.5s)
+```
+
+Resultado: 1 archivo/spec, 1 escenario, 1 aprobado, 0 fallidos, 0 omitidos.
+2.5s corresponde a Playwright; no incluye toda la duración del comando npm/build.
+No hubo pageerror en el recorrido: la aserción final del arreglo vacío pasó.
+Único aviso observado (Node del webServer y worker, no error de navegador):
+
+```text
+Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+```
+
+No fue necesario modificar aplicación, configuraciones, versiones ni pruebas.
+
+### Cierre de procesos, artefactos y Git
+
+Al terminar, se consultaron procesos Win32 cuyo ejecutable pertenece a la caché
+Playwright y procesos Node Vite/Playwright del proyecto; se consultaron listeners:
+
+```text
+PlaywrightOrProjectProcessesAfter: 0
+ListenersAfter (4173/5173): 0
+HTTP after E2E: connection unavailable; preview stopped
+```
+
+No fue necesario matar procesos manualmente. Chromium y preview finalizaron.
+playwright-report/ no existe: reporter list. test-results/ existe y contiene
+.last-run.json, con salida real:
+
+```json
+{
+  "status": "passed",
+  "failedTests": []
+}
+```
+
+No hubo screenshot ni trace de fallo. Los resultados se conservan ignorados.
+git check-ignore -v confirmó **/test-results/ y **/playwright-report/.
+Antes de editar documentación, git status --short continuaba vacío;
+git status --ignored --short mostraba backend/target, frontend/dist,
+frontend/node_modules y frontend/test-results como ignorados.
+
+Estado esperado y comprobado tras esta actualización:
+
+```text
+ M docs/ESTADO_PROYECTO.md
+ M docs/HERRAMIENTAS.md
+ M docs/VERIFICACION_FASE_0.md
+```
+
+Solo documentación versionada modificada; HEAD sigue siendo8262ec1, sin staging,
+commit ni publicación. No se tocaron otras documentaciones ni archivos del scaffold.
+git diff --check pasó; Git mostró avisos habituales de futura conversión LF/CRLF
+en estos documentos, sin errores de whitespace ni cambios de política.
+
+FRONTEND BUILD: **OK** (repetido por E2E). FRONTEND UNIT: **OK** (2 pruebas ya
+validadas, no repetidas). FRONTEND HTTP: **OK** (validación previa).
+FRONTEND E2E CHROMIUM: **OK**. La Fase0 sigue abierta por backend/DB pendientes.
+**Detenerse hasta nueva autorización.**
+
 ## Snapshot inicial autorizado — preparado el 21/09/2026, retomado el 22/09/2026
 
 El primer intento de ejecutar el commit fue rechazado por la revisión automática
@@ -935,10 +1085,11 @@ No se ejecutaron comandos de build deliberadamente sabiendo que faltaban sus
 ejecutables. No se instalaron herramientas del sistema ni se generó un lock o
 digest ficticio. El Compose fue revisado como texto; no validado por Docker.
 
-## Resultado de aceptación actualizado al 21/09/2026
+## Resultado de aceptación actualizado al 22/09/2026
 
 **Fase 0 todavía no puede declararse completa.** Java, Maven/Wrapper y Node/npm
 están verificados. Backend y frontend compilan; pasan 3 pruebas MVC y 2 unitarias
-frontend. Vite respondió HTTP200 y quedó detenido. Permanecen pendientes E2E,
+frontend. Vite respondió HTTP200 y quedó detenido. El escenario E2E Chromium
+también pasó con salida0 y sus procesos terminaron. Permanecen pendientes las
 4 pruebas de integración backend, PostgreSQL y arranque/health del backend.
-El paso autorizado Node/npm está completo; detenerse hasta nueva autorización.
+El paso autorizado Playwright Chromium/E2E está completo; detenerse sin hacer commit.

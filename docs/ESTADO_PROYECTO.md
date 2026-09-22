@@ -1,6 +1,6 @@
 # Estado del proyecto
 
-Actualización documental: 22/09/2026. Maven verificado el 20/09/2026; frontend el 21/09/2026.
+Actualización documental: 22/09/2026. Maven verificado el 20/09/2026; frontend el 21/09 y E2E el 22/09/2026.
 
 ## Fase actual
 
@@ -14,12 +14,12 @@ no se modificó configuración global. Rama normalizada a **main** e identidad
 configurada únicamente aquí: **JonathanNevarez <neva_rez00@hotmail.com>**.
 .gitignore y .gitattributes verificados; Wrapper sigue funcionando. Sin remotos.
 Los 98 archivos revisados están listados en [PRIMER_COMMIT](PRIMER_COMMIT.md).
-Se prepara el commit autorizado `chore: bootstrap validated development environment`.
-Esta documentación se escribe antes del commit para que forme parte del snapshot.
-Su creación, hash exacto y estado limpio se comprobarán después y se registrarán
-en `.git/FASE_0_SNAPSHOT.txt` y en la respuesta al usuario, sin modificar archivos
-versionados. El hash del primer snapshot se consulta también con
-`git log --max-parents=0 --oneline`. La política MDE generada se decidirá en Fase1.
+Snapshot inicial creado y aceptado: **8262ec1**,
+`chore: bootstrap validated development environment`; hash completo
+`8262ec1f636b1928ff6f637b9d9ba983e5fcfa8d`. Se verificó working tree clean antes
+del paso Playwright. Ahora solo cambian los tres documentos autorizados, sin staging
+ni nuevo commit. El snapshot permanece intacto. Evidencia del cierre inicial en
+`.git/FASE_0_SNAPSHOT.txt`. La política MDE generada se decidirá en Fase1.
 
 **Node.js24.19.0 LTS x64 y npm11.17.0 instalados y verificados.** WinGet instaló
 el paquete oficial en `C:\Program Files\nodejs\`; no se editó PATH manualmente.
@@ -32,10 +32,17 @@ detenido y el puerto libre. `dist/` contiene HTML, CSS y JS (262958 bytes).
 La revisión básica de fuentes/configuración no encontró secretos; no existen
 archivos `.env*` en frontend. No cambió código, configuración ni versiones.
 
-FRONTEND BUILD/UNIT/HTTP: **OK**. FRONTEND E2E: **pendiente de autorización**.
-Playwright requiere Chromium y auxiliares (~327 MB de descarga); solo se hizo
-consulta dry-run y HEAD, sin descargar navegadores. No se verificó renderizado
-en navegador real. Fase 0 permanece abierta.
+FRONTEND BUILD: **OK**. FRONTEND UNIT: **OK**. FRONTEND HTTP: **OK**.
+FRONTEND E2E CHROMIUM: **OK**, verificado el 22/09/2026.
+Playwright1.63.0 instaló Chromium/Headless Shell153.0.8010.12, revisión1243,
+FFmpeg1011 y Winldd1007 en la caché local ms-playwright (739893945 bytes).
+`npm.cmd run test:e2e` terminó con salida0: 1 archivo, 1 prueba aprobada,
+0 fallos/omitidas, 2.5s total Playwright (546ms escenario). React y recuperación
+de ruta se verificaron en navegador real; pageerror vacío. console.error no se
+captura por separado. TypeScript/Vite se recompilaron; unitarias no se repitieron.
+Procesos de Chromium/Playwright/Vite cerrados y puertos4173/5173 libres.
+test-results/.last-run.json ignorado, estado passed; sin reporte HTML ni trace
+de fallo. Fase0 permanece abierta por las verificaciones backend/DB pendientes.
 
 **Maven3.9.16 instalado en el perfil de usuario y Wrapper3.3.4 preparado.** Ambos
 usan Temurin21.0.12.1. Se verificaron SHA-512 de instalación, rutas, POM efectivo,
@@ -80,6 +87,7 @@ La propuesta de las herramientas todavía pendientes está en
 - Maven Wrapper con versión/hash fijados; backend compilado y pruebas MVC verificadas.
 - Node/npm verificados, lock generado; frontend compilado, pruebas unitarias y HTTP verificados.
 - Git instalado; repositorio local, exclusiones, atributos y lista del primer commit preparados.
+- Snapshot Git 8262ec1 aceptado; E2E Chromium ejecutado sin cambios al scaffold.
 
 Estos entregables no son funcionalidades educativas terminadas. No hay modelo
 EMF generado, Blockly, intérprete, reglas, LLM ni IU adaptativa aún.
@@ -95,18 +103,18 @@ correspondencias de paquetes Java/rutas; copia SVG idéntica al original y sinta
 del comprobador PowerShell correcta. Informe sin fallos estáticos detectados.
 Pruebas preparadas: 2 casos de frontend con RTL, 1 smoke Playwright, 3 invocaciones
 MVC de CORS y 4 pruebas de integración PostgreSQL/Actuator/Flyway.
-**Las 3 pruebas MVC y las 2 pruebas unitarias frontend se ejecutaron correctamente.**
-E2E y las 4 pruebas de integración siguen pendientes. BackendBootstrapIT se compiló pero no ejecutó:
+**Las 3 pruebas MVC, las 2 unitarias frontend y el escenario E2E Chromium pasaron.**
+Las 4 pruebas de integración siguen pendientes. BackendBootstrapIT se compiló pero no ejecutó:
 requiere Docker y se invoca mediante Failsafe en verify. No se deshabilitó.
 
 | Criterio obligatorio de F0 | Estado |
 | --- | --- |
 | JDK21/javac, JAVA_HOME, PATH y compilación mínima | Completado: Temurin21.0.12.1 x64; salida Java environment OK |
 | Maven/Wrapper, POM efectivo y validate | Completado: Maven3.9.16, Java21.0.12.1, salidas0 |
-| Git y preparación del repositorio local | Verificado; identidad local y main configuradas; snapshot autorizado según registro de verificación |
+| Git y repositorio local | Verificado: snapshot 8262ec1, main, identidad local y sin remotos |
 | Frontend compila y pruebas unitarias pasan | Completado: TypeScript/Vite; 1 archivo, 2 pruebas correctas |
 | Frontend inicia y responde HTTP | Completado: HTTP200 en 127.0.0.1:5173; servidor detenido |
-| Frontend E2E en Chromium | Pendiente de autorización para descargar navegadores |
+| Frontend E2E en Chromium | Completado: Playwright1.63.0, Chromium153.0.8010.12/r1243; 1 aprobado, salida0 |
 | Backend compila y pruebas sin Docker pasan | Completado: 42 fuentes; 3 pruebas MVC, 0 fallos/errores/omitidas |
 | Backend: 4 pruebas de integración | Pendiente: Docker/PostgreSQL |
 | PostgreSQL inicia y acepta consulta | Pendiente: Docker ausente |
@@ -120,7 +128,7 @@ requiere Docker y se invoca mediante Failsafe en verify. No se deshabilitó.
    inspección no se pudo ejecutar. La inspección mediante comandos directos sí
    se realizó. `npm.ps1` también está bloqueado; se usa `npm.cmd`, sin cambiar la política.
 3. Package-lock generado por npm y validado. El digest de imagen sigue pendiente.
-4. Compatibilidad runtime de DB/LLM/MDE y E2E del frontend todavía por verificar.
+4. Compatibilidad runtime de DB/LLM/MDE todavía por verificar. E2E frontend completado.
 5. La matriz Eclipse/MDE está pendiente; Xtext reciente requiere revisar el
    requisito JUnit 5, y Acceleo 3/4 tienen diferencias que deben resolverse.
 6. Spring Boot 3.5.16 tiene límite de soporte OSS documentado; revisar antes de
@@ -132,10 +140,12 @@ requiere Docker y se invoca mediante Failsafe en verify. No se deshabilitó.
    comando con permisos de ejecución pasó, sin correcciones al scaffold.
    npm avisó de 22 paquetes con financiación y de una nueva versión mayor;
    no se actualizó npm ni se ejecutó audit fix.
+9. E2E emitió aviso NO_COLOR/FORCE_COLOR de Node, sin fallo. La prueba captura
+   pageerror, pero no console.error por separado; no se amplió su alcance.
 
 ## Siguiente paso
 
-**Crear y verificar únicamente el snapshot inicial autorizado; después detenerse.
+**Paso Playwright Chromium/E2E completado; detenerse. No hacer staging ni commit.
 No instalar otro componente ni conectar remotos hasta recibir nueva autorización
 del usuario.** La propuesta de herramientas
 restantes está documentada, pero no se ejecuta. La estrategia Eclipse/MDE sigue

@@ -1,0 +1,21 @@
+# Dependencias y productos de compilación
+**/node_modules/
+**/dist/
+**/target/
+**/coverage/
+**/playwright-report/
+**/test-results/
+**/.vitest/
+**/__pycache__/
+*.log
+# Configuración local y secretos
+.env
+.env.*
+!.env.example
+# Metadatos locales; los artefactos MDE fuente sí se versionan
+.idea/
+.metadata/
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db

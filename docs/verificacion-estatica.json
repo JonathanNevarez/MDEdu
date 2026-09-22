@@ -1,0 +1,19 @@
+{
+  "kind": "revision_estatica_no_runtime",
+  "checked": {
+    "json": 3,
+    "xml": 2,
+    "markdown_links": 118,
+    "java_package_paths": 44
+  },
+  "reference_svg_sha256": "fcb04a1bf5bbd8bf1b5bb4ca4a40bf931f3f997918bf245a16208e9b5b23f6c9",
+  "failures": [],
+  "passed": true,
+  "not_verified": [
+    "resolucion de dependencias npm/Maven",
+    "compilacion Java/TypeScript",
+    "pruebas unitarias, integracion y E2E",
+    "sintaxis/ejecucion Docker Compose y arranque de servicios",
+    "conformidad o transformaciones MDE"
+  ]
+}

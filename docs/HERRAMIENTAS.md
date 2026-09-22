@@ -1,6 +1,37 @@
 # Herramientas y preparación del entorno Windows
 
-## Estado actual: WSL2 instalado y validado — 22/09/2026
+## Estado actual: Docker Desktop instalado y validado — 22/09/2026
+
+**Docker Desktop4.91.0**, build239619 (ejecutable4.91.0.239619), instalado per-user
+en `C:\Users\alexxxjon\AppData\Local\Programs\DockerDesktop` y registrado en HKCU.
+Instalador oficial x64, 628014512 bytes; SHA256 esperado y calculado coinciden:
+`ac405b09942701770d581b173747fc1024cf0e6047cbe60f13d1df85437311ac`.
+Comando: instalador con `install --user --backend=wsl-2`, código0, como usuario
+normal y sin UAC observado. No se usaron --accept-license ni --always-run-service.
+La pantalla Docker Subscription Service Agreement se dejó al usuario, que confirmó
+su aceptación manual. No se inició sesión ni se creó cuenta por el asistente.
+
+PowerShell nueva con PATH persistente refrescado: docker.exe en
+`C:\Users\alexxxjon\AppData\Local\Programs\DockerDesktop\resources\bin\docker.exe`.
+CLI/Engine29.8.0, API1.56, containerd v2.3.4, runc1.4.3, docker-init0.19.0,
+Compose v5.5.1 y Buildx v0.37.0. Contexto desktop-linux, motor Linux/WSL2.
+OSType linux, arquitectura x86_64, 16 CPU y 7.412 GiB de RAM visibles para Docker
+(7958327296 bytes). Storage overlayfs, cgroupfs/v2, kernel
+6.18.33.2-microsoft-standard-WSL2, raíz /var/lib/docker. No se alteraron estos valores.
+
+`docker run --rm hello-world` descargó la imagen oficial linux/amd64 y terminó
+con «Hello from Docker!», código0. Digest:
+`sha256:5e23090353324d887c48ad5e5c56d294eab81588df9605b07d1afe895f9cc8f8`.
+docker ps -a vacío; imagen conservada. WSL2.7.14.0 sigue operativo; únicamente
+docker-desktop Running versión2, componente interno, sin distribución personal.
+
+Los tres indicadores de reinicio están inactivos. VMP habilitada; WSL1, Hyper-V
+completo y HypervisorPlatform deshabilitados. com.docker.service ausente, sin
+considerarlo fallo del modo per-user. Docker Desktop/backend quedan activos.
+**DOCKER VALIDADO.** PostgreSQL, Compose del proyecto y BackendBootstrapIT no
+ejecutados. Solo cambian estos tres documentos; sin staging, commit o push.
+
+## Histórico: WSL2 instalado y validado — 22/09/2026
 
 Validación posterior al reinicio manual satisfactoria, sin instalar ni actualizar
 nada. PendingFileRenameOperations, CBS/RebootPending y Windows Update/RebootRequired

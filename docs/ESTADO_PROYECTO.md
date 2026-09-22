@@ -8,31 +8,45 @@ Actualización documental: 22/09/2026. Maven verificado el 20/09/2026; frontend 
 Fases 1–13 no iniciadas. La raíz estaba vacía y no era un repositorio Git.
 El SVG original se conserva intacto.
 
+**Docker Desktop4.91.0 instalado y VALIDADO**, per-user, backend WSL2 y contenedores
+Linux. Ruta AppData/Local/Programs/DockerDesktop; hash oficial del instalador
+comprobado. Usuario aceptó manualmente los términos; no se inició sesión por el
+asistente. CLI/Engine29.8.0, API1.56, Compose5.5.1 y Buildx0.37.0 responden con
+código0. Contexto desktop-linux, x86_64, 16 CPU, RAM7.412 GiB, overlayfs,
+cgroupfs/v2 y kernel6.18.33.2-microsoft-standard-WSL2.
+hello-world oficial linux/amd64: código0, contenedor eliminado mediante --rm;
+docker ps -a vacío, imagen conservada. Sin reinicio pendiente ni errores críticos
+observados. No se ejecutaron PostgreSQL, Compose del proyecto ni Maven verify.
+
 **WSL2: instalado y validado tras el reinicio manual.** Los tres indicadores de
 reinicio están inactivos. wsl --version: **2.7.14.0**, kernel **6.18.33.2-2**,
 código0. wsl --status: versión predeterminada **2**, código0; su aviso sobre WSL1
-no requiere habilitarlo. wsl --list --verbose: ninguna distribución, código-1
-aceptado para lista vacía. Get-WindowsOptionalFeature confirma VirtualMachinePlatform
+no requiere habilitarlo. Antes de Docker, wsl --list --verbose devolvió lista vacía;
+ahora muestra únicamente docker-desktop Running versión2, distribución interna
+administrada por Docker, sin distribución Linux personal. Get-WindowsOptionalFeature confirma VirtualMachinePlatform
 Enabled y Microsoft-Windows-Subsystem-Linux, Hyper-V completo y HypervisorPlatform
 Disabled. Firmware virtualizado y DEP habilitados; hipervisor activo confirmado
 por CIM/systeminfo. SLAT estaba disponible antes de activar el hipervisor; sus
 campos de capacidad actuales no se interpretan como un fallo de WSL2.
-Validación del entorno sin ejecutar Linux ni instalar distribución personal.
-Sin actualización, cambios de características, Docker ni herramientas adicionales.
+Validación WSL conservada sin actualización ni cambios manuales de características.
+La instalación posterior de Docker usó ese backend, sin instalar distribución personal.
 
 **Git2.55.0.windows.3 x64 instalado y repositorio local inicializado.** Ruta:
 `C:\Program Files\Git\cmd\git.exe`. Identidad global y core.autocrlf global ausentes;
 no se modificó configuración global. Rama normalizada a **main** e identidad
 configurada únicamente aquí: **JonathanNevarez <neva_rez00@hotmail.com>**.
-.gitignore y .gitattributes verificados; Wrapper sigue funcionando. Sin remotos.
+.gitignore y .gitattributes verificados; Wrapper sigue funcionando.
+origin apunta a https://github.com/JonathanNevarez/MDEdu.git.
 Los 98 archivos revisados están listados en [PRIMER_COMMIT](PRIMER_COMMIT.md).
 Snapshot inicial creado y aceptado: **8262ec1**,
 `chore: bootstrap validated development environment`; hash completo
 `8262ec1f636b1928ff6f637b9d9ba983e5fcfa8d`. Se verificó working tree clean antes
 del paso Playwright. Su evidencia quedó en el segundo commit **41315c5**,
-`test: validate frontend e2e with chromium`. Antes de instalar WSL, main estaba
-limpio y sin remotos. Ahora solo cambian los tres documentos autorizados, sin
-staging ni nuevo commit. Ambos commits permanecen intactos. Evidencia del cierre inicial en
+`test: validate frontend e2e with chromium`. La validación WSL quedó en **e1df49e**,
+`chore: validate wsl2 environment`, publicado en MDEdu con los tres commits.
+Antes de instalar Docker, main estaba limpio y sincronizado con origin/main.
+Ahora solo cambian los tres documentos autorizados, sin staging, commit ni push;
+el historial y remoto permanecen intactos. Evidencia del cierre inicial en
 `.git/FASE_0_SNAPSHOT.txt`. La política MDE generada se decidirá en Fase1.
 
 **Node.js24.19.0 LTS x64 y npm11.17.0 instalados y verificados.** WinGet instaló
@@ -64,9 +78,9 @@ validate, clean compile y test. Compilación: 42 fuentes release21. Surefire: 3
 pruebas MVC, 0 fallos, 0 errores, 0 omitidas. Solo se añadió Maven/bin al PATH del
 usuario; JAVA_HOME y PATH de máquina permanecen intactos. El POM conserva su hash.
 
-BACKEND BUILD: **OK**. BACKEND RUNTIME: **pendiente de Docker/PostgreSQL**.
+BACKEND BUILD: **OK**. BACKEND RUNTIME: **pendiente de PostgreSQL y autorización**.
 El Wrapper fija versión y hash y es la vía preferida para tareas normales.
-Docker, Eclipse y componentes MDE siguen sin instalarse. WSL2 instalado y validado.
+WSL2 y Docker validados. Eclipse y componentes MDE siguen sin instalarse.
 
 **JDK21 instalado y verificado con autorización exclusiva para Java.** WinGet
 instaló Temurin x64 (paquete 21.0.12.101); java y javac devuelven **21.0.12.1**.
@@ -119,26 +133,29 @@ Pruebas preparadas: 2 casos de frontend con RTL, 1 smoke Playwright, 3 invocacio
 MVC de CORS y 4 pruebas de integración PostgreSQL/Actuator/Flyway.
 **Las 3 pruebas MVC, las 2 unitarias frontend y el escenario E2E Chromium pasaron.**
 Las 4 pruebas de integración siguen pendientes. BackendBootstrapIT se compiló pero no ejecutó:
-requiere Docker y se invoca mediante Failsafe en verify. No se deshabilitó.
+Docker ya está disponible, pero verify/BackendBootstrapIT siguen pendientes de
+autorización específica y preparación de PostgreSQL. No se deshabilitaron pruebas.
 
 | Criterio obligatorio de F0 | Estado |
 | --- | --- |
 | JDK21/javac, JAVA_HOME, PATH y compilación mínima | Completado: Temurin21.0.12.1 x64; salida Java environment OK |
 | Maven/Wrapper, POM efectivo y validate | Completado: Maven3.9.16, Java21.0.12.1, salidas0 |
-| Git y repositorio local | Verificado: snapshot 8262ec1, main, identidad local y sin remotos |
+| Git y repositorio | Verificado: main/e1df49e publicado en origin MDEdu; identidad local |
 | WSL2 sin distribución personal | Validado: WSL2.7.14.0, kernel6.18.33.2-2, predeterminado2; VMP Enabled e hipervisor activo; sin reinicio pendiente |
+| Docker Desktop per-user / WSL2 | Validado: Desktop4.91.0, Engine29.8.0, Compose5.5.1, hello-world salida0 |
 | Frontend compila y pruebas unitarias pasan | Completado: TypeScript/Vite; 1 archivo, 2 pruebas correctas |
 | Frontend inicia y responde HTTP | Completado: HTTP200 en 127.0.0.1:5173; servidor detenido |
 | Frontend E2E en Chromium | Completado: Playwright1.63.0, Chromium153.0.8010.12/r1243; 1 aprobado, salida0 |
 | Backend compila y pruebas sin Docker pasan | Completado: 42 fuentes; 3 pruebas MVC, 0 fallos/errores/omitidas |
-| Backend: 4 pruebas de integración | Pendiente: Docker/PostgreSQL |
-| PostgreSQL inicia y acepta consulta | Pendiente: Docker ausente |
+| Backend: 4 pruebas de integración | Pendiente de autorización; no se ejecutó Maven verify |
+| PostgreSQL inicia y acepta consulta | Pendiente de autorización; PostgreSQL no descargado ni iniciado |
 | Backend inicia y health comprueba DB | Pendiente |
 | Documentación y estructura creadas | Completado |
 
 ## Problemas conocidos
 
-1. WSL2 validado tras reinicio. Docker y Eclipse/MDE siguen sin instalar.
+1. WSL2 y Docker validados. PostgreSQL/BackendBootstrapIT pendientes de autorización;
+   Eclipse/MDE siguen sin instalar.
    JDK21, Maven/Wrapper, Node/npm y Git ya verificados.
 2. La política local de PowerShell bloquea scripts `.ps1`; el script opcional de
    inspección no se pudo ejecutar. La inspección mediante comandos directos sí
@@ -161,7 +178,8 @@ requiere Docker y se invoca mediante Failsafe en verify. No se deshabilitó.
 
 ## Siguiente paso
 
-**Validación WSL2 completada; detenerse. No hacer staging ni commit.
+**Validación Docker Desktop completada; detenerse. No iniciar PostgreSQL, Compose
+del proyecto ni Maven verify. No hacer staging, commit ni push.
 No instalar otro componente ni conectar remotos hasta recibir nueva autorización
 del usuario.** La propuesta de herramientas
 restantes está documentada, pero no se ejecuta. La estrategia Eclipse/MDE sigue

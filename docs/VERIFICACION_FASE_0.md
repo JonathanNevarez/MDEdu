@@ -3,6 +3,182 @@
 Registro inicial: 20/09/2026. Actualizado: 22/09/2026. Distingue inspección, revisión estática y pruebas
 de aplicación. No se presenta una comprobación estática como compilación o arranque.
 
+## Docker Desktop4.91.0 per-user / WSL2: VALIDADO — 22/09/2026
+
+### Estado inicial, descarga e instalación
+
+Git limpio en main/e1df49e, sincronizado con origin/main en
+https://github.com/JonathanNevarez/MDEdu.git. Commits previos41315c5 y8262ec1
+intactos. WSL2.7.14.0/kernel6.18.33.2-2/predeterminado2, consultas código0.
+Los tres indicadores PendingFileRenameOperations, CBS/RebootPending y Windows
+Update/RebootRequired estaban inactivos antes de descargar.
+
+Se reconfirmó exclusivamente Docker.DockerDesktop4.91.0 x64, publisher Docker Inc.,
+mediante `winget show --id Docker.DockerDesktop --exact --source winget
+--version 4.91.0 --architecture x64 --disable-interactivity`. No se eligió4.92.0.
+
+URL oficial:
+`https://desktop.docker.com/win/main/amd64/239619/Docker%20Desktop%20Installer.exe`.
+Instalador temporal fuera del repositorio:
+`C:\Users\ALEXXX~1\AppData\Local\Temp\codex-docker-4.91.0-42d5f7c2ca174cd28f8d8c7e103f7b21\Docker Desktop Installer.exe`.
+Tamaño real: **628014512 bytes**. Get-FileHash -Algorithm SHA256:
+
+```text
+Esperado:  ac405b09942701770d581b173747fc1024cf0e6047cbe60f13d1df85437311ac
+Calculado: AC405B09942701770D581B173747FC1024CF0E6047CBE60F13D1DF85437311AC
+Coinciden: True
+```
+
+Después de validar el hash se ejecutó Start-Process sobre ese instalador con
+ArgumentList install, --user, --backend=wsl-2, como usuario normal
+(LaunchingAsAdministrator=False). Sin --accept-license ni --always-run-service.
+Instalador código0 y log «Installation succeeded», sin UAC observado.
+No se habilitaron características Windows ni se añadió el usuario a docker-users.
+
+Instalación confirmada mediante registro HKCU (DisplayName Docker Desktop,
+DisplayVersion4.91.0, publisher Docker Inc.) y ejecutable:
+
+```text
+C:\Users\alexxxjon\AppData\Local\Programs\DockerDesktop\Docker Desktop.exe
+ProductVersion: 4.91.0.239619
+FileVersion: 4.91.0.239619
+```
+
+No existe Docker Desktop.exe en C:\Program Files\Docker\Docker.
+Se abrió como usuario normal. Apareció Docker Subscription Service Agreement
+con View Full Terms, Accept y Close; el asistente se detuvo sin aceptar. El usuario
+confirmó posteriormente su aceptación manual y autorizó continuar. En la
+reanudación no apareció una pantalla de login que requiriese intervención del
+asistente; no se creó cuenta ni se inició sesión automáticamente.
+
+### PowerShell nueva, rutas y versiones reales
+
+Se refrescó el PATH del proceso desde máquina/usuario y se inició powershell.exe
+-NoProfile para las verificaciones. No se editó PATH manualmente.
+
+```text
+Get-Command docker: Application
+C:\Users\alexxxjon\AppData\Local\Programs\DockerDesktop\resources\bin\docker.exe
+
+where.exe docker
+C:\Users\alexxxjon\AppData\Local\Programs\DockerDesktop\resources\bin\docker
+C:\Users\alexxxjon\AppData\Local\Programs\DockerDesktop\resources\bin\docker.exe
+
+docker --version
+Docker version 29.8.0, build 88096ef
+
+docker compose version
+Docker Compose version v5.5.1
+
+docker buildx version
+github.com/docker/buildx v0.37.0 ac30b249211430b85fb8f37b6e7154b5c47ba0b6
+
+docker context show
+desktop-linux
+```
+
+Todos terminaron con código0, al igual que docker version, docker info y
+docker context ls. Extracto real de versiones:
+
+| Componente | Versión / dato |
+| --- | --- |
+| Docker Desktop servidor | 4.91.0 (239619) |
+| CLI | 29.8.0, build88096ef, windows/amd64 |
+| Engine | 29.8.0, build3ce5872, linux/amd64 |
+| API cliente/servidor | 1.56; mínima servidor1.40 |
+| containerd | v2.3.4; db8809540e1a7a9da5d518876894933ff55692ab |
+| runc | 1.4.3; v1.4.3-0-gbb14dabe |
+| docker-init | 0.19.0; de40ad0 |
+| Compose | v5.5.1 |
+| Buildx | v0.37.0 |
+
+Contextos de docker context ls: default con npipe:////./pipe/docker_engine y
+desktop-linux (activo) con npipe:////./pipe/dockerDesktopLinuxEngine; sin errores.
+where devuelve dos archivos de una misma instalación, no dos instalaciones.
+
+### Motor y backend
+
+docker info respondió correctamente; no se asumió readiness por la GUI.
+
+| Campo | Valor real |
+| --- | --- |
+| OSType | linux |
+| Operating System | Docker Desktop |
+| Architecture | x86_64 |
+| CPUs | 16 |
+| Total Memory | 7.412 GiB; MemTotal7958327296 bytes |
+| Storage Driver | overlayfs |
+| driver-type | io.containerd.snapshotter.v1 |
+| Cgroup Driver | cgroupfs |
+| Cgroup Version | 2 |
+| Kernel Version | 6.18.33.2-microsoft-standard-WSL2 |
+| Docker Root Dir | /var/lib/docker |
+| Default Runtime | runc |
+
+No se cambiaron CPU/RAM/storage/cgroup ni opciones del motor. Backend WSL2
+confirmado por kernel, contenedores Linux y distribución interna de Docker.
+Las claves simples consultadas en settings-store.json no estaban expuestas;
+la validación se apoya en los datos efectivos del motor, no en inferir esos valores.
+
+### WSL y prueba mínima
+
+WSL sigue en2.7.14.0 y su kernel de paquete6.18.33.2-2. wsl --status devuelve
+docker-desktop como distribución predeterminada y versión predeterminada2.
+El aviso de WSL1 deshabilitado sigue siendo esperado. wsl --list --verbose, código0:
+
+```text
+  NAME              STATE           VERSION
+* docker-desktop    Running         2
+```
+
+Únicamente componente interno administrado por Docker. No existe distribución
+personal y no se ejecutó unregister, import, install de distribución ni wsl --update.
+
+Tras comprobar docker version/info, se ejecutó `docker run --rm hello-world`.
+Antes había0 imágenes/0 contenedores. Salida relevante real:
+
+```text
+Unable to find image 'hello-world:latest' locally
+latest: Pulling from library/hello-world
+Digest: sha256:5e23090353324d887c48ad5e5c56d294eab81588df9605b07d1afe895f9cc8f8
+Status: Downloaded newer image for hello-world:latest
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+HelloWorldExitCode=0
+```
+
+Plataforma confirmada con docker image inspect: linux/amd64, mismo RepoDigest.
+docker ps -a solo mostró cabecera; docker ps -aq --filter ancestor=hello-world
+no devolvió IDs. El contenedor temporal fue eliminado por --rm. Imagen conservada.
+No se siguieron las sugerencias del mensaje para ejecutar Ubuntu o crear cuenta.
+
+### Estado final y límites
+
+Engine volvió a responder:29.8.0, OSType linux, Containers0, Images1.
+Los tres indicadores de reinicio están **false**. No se requiere reinicio.
+Consulta CIM: VirtualMachinePlatform InstallState1; WSL opcional/WSL1,
+Microsoft-Hyper-V-All y HypervisorPlatform InstallState2 (deshabilitados).
+com.docker.service no existe, resultado aceptado para per-user/WSL2; no se instaló
+ni cambió ningún servicio manualmente. Docker Desktop, backend y build permanecen
+activos como procesos de la aplicación; sin errores críticos observados.
+
+**DOCKER DESKTOP VALIDADO.** No se descargó PostgreSQL ni se ejecutó Compose del
+proyecto, Maven verify o BackendBootstrapIT. No se crearon recursos del proyecto,
+ni se instaló Eclipse/MDE, ni se avanzó a Fase1. Esta validación no sustituye
+las pruebas de PostgreSQL/integración pendientes de autorización.
+
+Solo se actualizan HERRAMIENTAS.md, ESTADO_PROYECTO.md y este registro.
+git diff --check correcto; git status --short:
+
+```text
+ M docs/ESTADO_PROYECTO.md
+ M docs/HERRAMIENTAS.md
+ M docs/VERIFICACION_FASE_0.md
+```
+
+Sin staging, commit ni push. HEAD local/origin/main conservan e1df49e; el remoto
+MDEdu no se modificó durante esta instalación/validación. Detenerse.
+
 ## WSL2: validación post-reinicio satisfactoria — 22/09/2026
 
 Alcance exclusivamente de lectura del sistema y actualización de estos tres

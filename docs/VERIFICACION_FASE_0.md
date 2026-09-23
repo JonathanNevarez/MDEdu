@@ -3,7 +3,120 @@
 Registro inicial: 20/09/2026. Actualizado: 22/09/2026. Distingue inspección, revisión estática y pruebas
 de aplicación. No se presenta una comprobación estática como compilación o arranque.
 
-## Maven verify + Testcontainers: VALIDADO — 22/09/2026
+## Runtime manual Spring Boot contra PostgreSQL Compose: VALIDADO — 22/09/2026
+
+### Condiciones y arranque real
+
+Inicio: main/ab95344 limpio y sincronizado con origin/main. Docker Desktop 4.91.0,
+Engine 29.8.0 operativo, contexto desktop-linux. Compose postgres Exited (0).
+Puertos 5432 y 8080 libres. Se leyeron Compose, application.properties y V1,
+sin modificarlos; DB/user adaptativa, DB_PORT=5432, backend 127.0.0.1:8080.
+.env existe, ignorado por .gitignore:12; git ls-files -- .env vacío.
+DB_PASSWORD presente, sin imprimirlo; no había variables de proceso que
+sobrescribieran las variables DB o dirección/puerto del backend inspeccionadas.
+
+Desde la raíz: `docker compose up -d --wait postgres`, código 0. Contenedor
+existente educativa-adaptativa-postgres-1 running/healthy, puerto
+127.0.0.1:5432->5432/tcp. No se recreó el volumen.
+Consulta inicial information_schema.tables WHERE table_schema='public': **0 rows**.
+
+Desde backend/ se mantuvo activo:
+
+```powershell
+.\mvnw.cmd --batch-mode --no-transfer-progress spring-boot:run
+```
+
+Stdout/stderr capturados en target/runtime-manual-validation.log, ignorado.
+RunningAsAdministrator=False; sin contraseña en línea de comandos.
+PIDs observados: PowerShell 22820 -> cmd 20304 -> Maven/java 24236 -> Spring/java
+18900. Spring Boot 3.5.16, Java 21.0.12.1. El goal llegó a test-compile, con clases
+actualizadas, pero no ejecutó Surefire/Failsafe ni Maven verify.
+
+Evidencia real del log:
+
+```text
+HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@4c176ff1
+HikariPool-1 - Start completed.
+Database: jdbc:postgresql://localhost:5432/adaptativa (PostgreSQL 17.11)
+Migrating schema "public" to version "1 - bootstrap"
+Successfully applied 1 migration to schema "public", now at version v1 (execution time 00:00.012s)
+Tomcat started on port 8080 (http) with context path '/'
+Started AdaptativaApplication in 6.239 seconds (process running for 6.64)
+```
+
+Started registrado a las 20:03:11.095 -05:00. Get-NetTCPConnection confirmó
+127.0.0.1:8080 LISTEN, OwningProcess 18900. Spring importó ../.env mediante
+la configuración existente, y la conexión Hikari/PostgreSQL fue real.
+
+### HTTP real y SQL posterior
+
+`Invoke-WebRequest -UseBasicParsing http://localhost:8080/actuator/health`:
+
+```text
+HTTP 200
+Content-Type: application/vnd.spring-boot.actuator.v3+json
+Body: {"status":"UP"}
+```
+
+Petición a health con Origin: http://localhost:5173:
+HTTP 200, Access-Control-Allow-Origin: http://localhost:5173.
+Petición a /actuator/env: HTTP 404, Content-Type application/json, cuerpo:
+
+```json
+{"timestamp":"2026-09-23T01:04:43.454+00:00","status":404,"error":"Not Found","path":"/actuator/env"}
+```
+
+Sin trace, exception, message ni datos sensibles. Health oculta detalles DB por
+configuración; la conexión se acredita además con Hikari/Flyway y SQL.
+
+Consultas READ-ONLY mediante `docker compose exec -T postgres psql -U adaptativa
+-d adaptativa -v ON_ERROR_STOP=1` y opciones -c; sin contraseña visible:
+
+```text
+SELECT 1;                  -> 1 (1 row)
+SELECT current_database(); -> adaptativa
+SELECT current_user;       -> adaptativa
+Tablas public: public.flyway_schema_history (1 row)
+```
+
+`SELECT installed_rank, version, description, success FROM flyway_schema_history
+WHERE version='1';` devolvió:
+
+| installed_rank | version | description | success |
+| --- | --- | --- | --- |
+| 1 | 1 | bootstrap | t |
+
+No hay tablas educativas. No se modificó el esquema manualmente ni se invocó
+Flyway por separado; la aplicación aplicó V1 automáticamente al arrancar.
+
+### Apagado y estado final
+
+El runtime fue validado correctamente. Se envió Ctrl+C solo a la terminal de este
+arranque; el código 1 de la sesión corresponde únicamente a esa interrupción manual.
+No se afirma salida Maven 0 ni cierre graceful confirmado por log.
+Se verificó ausencia de los PID 22820, 20304, 24236 y 18900 y puerto 8080 libre.
+No se usó kill general ni se afectaron otros procesos Java.
+Después: `docker compose stop postgres`, código 0; Compose ps -a Exited (0).
+docker ps vacío; docker version código 0, Engine 29.8.0 operativo.
+Volumen educativa-adaptativa_postgres_data conservado, misma creación
+2026-09-22T19:52:58Z y montaje /var/lib/docker/volumes/educativa-adaptativa_postgres_data/_data.
+La fila Flyway quedó en ese volumen; no se eliminó ni recreó, ni se reinició
+PostgreSQL para una comprobación adicional de persistencia.
+
+Antes de documentar, git status --short vacío. .env y backend/target/ ignorados.
+No hubo cambios de fuentes, POM, pruebas, Compose, application.properties ni V1.
+Solo se actualizan los tres documentos autorizados; sin staging/commit/push.
+
+Incidencia de comprobación: PowerShell 5 devolvió el Content de health como byte[]
+por su tipo MIME; la primera aserción del verificador falló al tratarlo como texto.
+La respuesta HTTP ya era 200 con bytes de {"status":"UP"}. Se corrigió únicamente
+la decodificación en el comando de inspección y se repitió HTTP satisfactoriamente.
+No fue un error del backend ni motivó cambios de código o un nuevo arranque.
+No se observaron warnings/errores de datasource o Flyway; el log incluye DEBUG
+y el 404 esperado de /actuator/env. No se repitió verify ni se instaló Eclipse/MDE.
+Runtime validado; servicios detenidos. Fase 1 no iniciada; esperar autorización.
+
+## Histórico: Maven verify + Testcontainers: VALIDADO — 22/09/2026
 
 ### Ejecución y reportes reales
 
@@ -1749,8 +1862,10 @@ están verificados. Backend y frontend compilan; pasan 3 pruebas MVC y 2 unitari
 frontend. Vite respondió HTTP200 y quedó detenido. El escenario E2E Chromium
 también pasó con salida0 y sus procesos terminaron. Maven verify pasó con salida 0:
 3 pruebas Surefire y 4 BackendBootstrapIT correctas, sin fallos/errores/omitidas.
-Arranque manual del backend pendiente; health/DB comprobados dentro de las IT.
+Arranque manual del backend también validado contra PostgreSQL Compose:
+health UP, CORS correcto, /actuator/env cerrado y Flyway V1 aplicada a adaptativa.
 PostgreSQL Compose fue validado: healthy, SELECT 1 = 1, DB/user adaptativa,
-sin tablas public y detenido al finalizar con volumen conservado.
-Maven verify validado; Spring Boot manual pendiente de autorización. Detenerse sin staging,
+inicialmente sin tablas public; tras runtime contiene solo flyway_schema_history.
+Spring y PostgreSQL detenidos al finalizar, volumen conservado y puerto 8080 libre.
+Maven verify y runtime manual validados. Esperar el siguiente paso sin staging,
 commit ni push; no avanzar a Fase 1.

@@ -1,6 +1,38 @@
 # Herramientas y preparación del entorno Windows
 
-## Estado actual: Maven verify + Testcontainers validado — 22/09/2026
+## Estado actual: runtime manual Spring Boot validado — 22/09/2026
+
+Comando desde backend/: `.\mvnw.cmd --batch-mode --no-transfer-progress spring-boot:run`.
+Spring Boot 3.5.16, Java Temurin 21.0.12.1, Maven Wrapper existente; usuario normal
+(RunningAsAdministrator=False). PID Maven 24236, Spring 18900, lanzador PowerShell
+22820 y cmd 20304. Sin contraseña en argumentos. Log local ignorado:
+`backend/target/runtime-manual-validation.log`.
+
+Compose reutilizó postgres:17-bookworm y el volumen original; healthy en
+127.0.0.1:5432. DB/user adaptativa y DB_PASSWORD desde .env ignorado. Spring
+escuchó en 127.0.0.1:8080; Hikari iniciado, conexión PostgreSQL 17.11 confirmada;
+Started AdaptativaApplication in 6.239 seconds (process running for 6.64).
+Flyway aplicó V1 bootstrap sobre adaptativa. Public pasó de 0 tablas a únicamente
+flyway_schema_history; fila V1: installed_rank=1, version=1, description=bootstrap,
+success=true. SELECT 1=1, current_database/current_user=adaptativa.
+
+Health HTTP 200, Content-Type application/vnd.spring-boot.actuator.v3+json,
+cuerpo {"status":"UP"}. CORS HTTP 200 y Allow-Origin http://localhost:5173.
+/actuator/env HTTP 404, sin trace/exception/message ni datos sensibles.
+Maven/Spring detenidos mediante Ctrl+C dirigido a su terminal; los cuatro PID
+terminaron y 8080 quedó libre. La terminal devolvió código 1 únicamente por
+la interrupción manual con Ctrl+C; el runtime fue validado correctamente.
+No se afirma cierre graceful confirmado por log.
+Compose stop terminó con código 0; postgres Exited (0), docker ps vacío,
+Docker Engine 29.8.0 operativo. Volumen y registro Flyway conservados.
+
+Incidencia del verificador: Windows PowerShell devolvió health como byte[];
+se decodificó UTF-8 y se repitió solo la consulta HTTP, sin modificar la app.
+No se repitió verify, no se ejecutaron pruebas ni instalaciones adicionales.
+Solo tres documentos modificados; .env y target ignorados. Sin staging/commit/push.
+Fase 1 no iniciada; esperar autorización independiente.
+
+## Histórico: Maven verify + Testcontainers validado — 22/09/2026
 
 Desde backend/: `.\mvnw.cmd --batch-mode --no-transfer-progress verify`.
 Wrapper 3.3.4, Maven 3.9.16 y Eclipse Temurin 21.0.12.1; BUILD SUCCESS,

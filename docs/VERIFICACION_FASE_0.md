@@ -3,7 +3,110 @@
 Registro inicial: 20/09/2026. Actualizado: 22/09/2026. Distingue inspección, revisión estática y pruebas
 de aplicación. No se presenta una comprobación estática como compilación o arranque.
 
-## PostgreSQL Compose: VALIDADO y detenido — 22/09/2026
+## Maven verify + Testcontainers: VALIDADO — 22/09/2026
+
+### Ejecución y reportes reales
+
+Inicio: main/f2cb080 sincronizada con origin/main, working tree clean. Docker
+version/info correctos: Desktop 4.91.0, Engine 29.8.0, OSType linux,
+desktop-linux. Compose postgres Exited (0). Imágenes previas: hello-world:latest
+y postgres:17-bookworm; Ryuk ausente.
+
+POM y pruebas inspeccionados sin cambios. Failsafe ligado a integration-test y
+verify; BackendBootstrapIT coincide con el patrón predeterminado **/*IT.java.
+Cuatro @Test con los nombres esperados, @Testcontainers, @SpringBootTest con
+RANDOM_PORT y DynamicPropertySource para URL/usuario/contraseña del contenedor.
+spring.config.import vacío en pruebas: no dependen del .env ni de Compose.
+Flyway habilitado; V1 contiene SELECT 1, sin tablas educativas.
+
+Comando exacto desde backend/:
+
+```powershell
+.\mvnw.cmd --batch-mode --no-transfer-progress verify
+```
+
+Wrapper 3.3.4 (only-script), Maven 3.9.16, Java Temurin 21.0.12.1+1-LTS x64.
+Maven instalado por Wrapper en el perfil .m2; JAVA_HOME usa el JDK Temurin.
+Una sola ejecución, sin skipTests/skipITs, sin cambios ni reintentos.
+
+```text
+compiler:3.14.1:compile: Nothing to compile - all classes are up to date.
+compiler:3.14.1:testCompile: Nothing to compile - all classes are up to date.
+Surefire 3.5.6: Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+Failsafe 3.5.6: Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
+failsafe:3.5.6:verify ejecutado
+BUILD SUCCESS
+Total time: 33.580 s
+Finished at: 2026-09-22T19:46:33-05:00
+MavenVerifyExitCode=0
+```
+
+Ninguna fuente recompilada en este verify incremental; no se atribuyen a esta
+ejecución las 42 fuentes compiladas en la validación anterior. JAR empaquetado
+y reempaquetado por Spring Boot 3.5.16.
+
+Reportes inspeccionados, no editados, en target/surefire-reports y
+target/failsafe-reports; log local target/verify-validation.log. Todos ignorados.
+
+| Clase XML | Tests | Failures | Errors | Skipped | Tiempo |
+| --- | --- | --- | --- | --- | --- |
+| com.project.shared.infrastructure.config.CorsConfigurationTest | 3 | 0 | 0 | 0 | 3.510 s |
+| com.project.BackendBootstrapIT | 4 | 0 | 0 | 0 | 17.093 s |
+
+failsafe-summary.xml: completed=4, errors=0, failures=0, skipped=0, flakes=0,
+timeout=false. Los cuatro testcase no contienen failure/error/skipped:
+
+| BackendBootstrapIT | Resultado | Tiempo | Evidencia que demuestra |
+| --- | --- | --- | --- |
+| healthIncludesDatabaseCheckWithoutDisclosingDetails | PASS | 0.908 s | HTTP 200; status UP; cuerpo con un único campo; contribuidor db registrado |
+| bootstrapMigrationRunsAgainstPostgresqlAndCreatesNoEducationalTables | PASS | 0.106 s | V1 actual, ninguna migración pendiente, success=true; public contiene exactamente flyway_schema_history |
+| diagnosticEndpointsAreNotExposed | PASS | 0.036 s | /actuator/env devuelve 404; sin trace, exception ni message; no implica probar todos los endpoints posibles |
+| frontendCanReadHealthThroughActuatorCors | PASS | 0.020 s | GET health HTTP 200 con Access-Control-Allow-Origin http://localhost:5173 |
+
+### Contenedores y Flyway
+
+Testcontainers **1.21.4** detectó npipe:////./pipe/docker_engine, Docker 29.8.0,
+API 1.56. No se cambió contexto ni configuración Docker.
+PostgreSQL temporal ID:
+`5f0eea8223c2d5d1a56bd691810682c9519cc07a8d7583bdb9179c08aabd5245`.
+JDBC observado: `jdbc:postgresql://localhost:65390/test?loggerLevel=OFF`.
+Imagen existente postgres:17-bookworm, PostgreSQL 17.11; RepoDigest:
+`postgres@sha256:639ab7ceb90e13123085b741fb31ef493fba25463002f6da665352e7b534b652`.
+Servidor Spring de prueba: puerto HTTP aleatorio 65407.
+
+Única imagen nueva: testcontainers/ryuk:0.12.0. RepoDigest:
+`testcontainers/ryuk@sha256:dd3f023a6ed7015b3f95a49ccd65a2daf0c56e681422c12952b19a810dfa6298`.
+Ryuk ID `54c6479c970ac1d943a5f57276fb71fe8bc5d9b9bf1f420785f341e2598eb7c3`;
+log confirma inicio y limpieza al finalizar la JVM.
+
+Flyway conectó al puerto 65390, validó una migración, creó public.flyway_schema_history
+y registró: `Successfully applied 1 migration to schema "public", now at version v1`.
+Ejecución de migración: 00:00.014s. La prueba confirma bootstrap mínimo exitoso,
+sin tablas educativas; no se ejecutó Flyway manualmente.
+
+### Limpieza, límites e incidencias
+
+Después: docker ps vacío; docker ps -a solo muestra el contenedor Compose
+750fdaa23870, educativa-adaptativa-postgres-1, Exited (0). Ningún contenedor
+temporal restante. Compose conserva FinishedAt=2026-09-22T19:53:47.439762297Z,
+igual que antes de verify; nunca se inició en este paso.
+Volumen educativa-adaptativa_postgres_data presente, CreatedAt=2026-09-22T19:52:58Z;
+red educativa-adaptativa_default conservada. La prueba usa contenedor independiente
+sin montar el volumen Compose. No se borraron imágenes ni recursos persistentes.
+
+Git tras verify y antes de documentación: status --short vacío;
+status --ignored muestra .env y backend/target/ ignorados. Solo se actualizan
+los tres documentos autorizados; sin cambios de código, POM, Compose, Flyway,
+tests ni configuración. Sin git add/commit/push; Fase 1 no iniciada.
+
+Warnings: Mockito se autoanexa; Byte Buddy 1.17.8 carga agente dinámico y Java
+advierte sobre CDS. PowerShell presentó stderr como NativeCommandError, pero
+Maven terminó con código 0; reportes sin errores. No se ocultaron avisos ni se
+cambió configuración. Ryuk descargó públicamente sin credenciales Docker Hub.
+rg no estaba en el PATH refrescado: inspección resuelta con Get-ChildItem.
+Arranque manual Spring Boot y PostgreSQL Compose pendiente de otra autorización.
+
+## Histórico: PostgreSQL Compose: VALIDADO y detenido — 22/09/2026
 
 ### Condiciones iniciales y configuración inspeccionada
 
@@ -1644,9 +1747,10 @@ digest ficticio. El Compose fue revisado como texto; no validado por Docker.
 **Fase 0 todavía no puede declararse completa.** Java, Maven/Wrapper y Node/npm
 están verificados. Backend y frontend compilan; pasan 3 pruebas MVC y 2 unitarias
 frontend. Vite respondió HTTP200 y quedó detenido. El escenario E2E Chromium
-también pasó con salida0 y sus procesos terminaron. Permanecen pendientes las
-4 pruebas de integración backend y arranque/health del backend.
+también pasó con salida0 y sus procesos terminaron. Maven verify pasó con salida 0:
+3 pruebas Surefire y 4 BackendBootstrapIT correctas, sin fallos/errores/omitidas.
+Arranque manual del backend pendiente; health/DB comprobados dentro de las IT.
 PostgreSQL Compose fue validado: healthy, SELECT 1 = 1, DB/user adaptativa,
 sin tablas public y detenido al finalizar con volumen conservado.
-Maven verify y Spring Boot pendientes de autorización. Detenerse sin staging,
+Maven verify validado; Spring Boot manual pendiente de autorización. Detenerse sin staging,
 commit ni push; no avanzar a Fase 1.

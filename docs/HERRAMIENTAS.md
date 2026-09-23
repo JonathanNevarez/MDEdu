@@ -1,6 +1,31 @@
 # Herramientas y preparación del entorno Windows
 
-## Estado actual: PostgreSQL Compose validado y detenido — 22/09/2026
+## Estado actual: Maven verify + Testcontainers validado — 22/09/2026
+
+Desde backend/: `.\mvnw.cmd --batch-mode --no-transfer-progress verify`.
+Wrapper 3.3.4, Maven 3.9.16 y Eclipse Temurin 21.0.12.1; BUILD SUCCESS,
+salida 0 en 33.580 s. Sin clean ni opciones de omisión: compilación incremental
+sin fuentes recompiladas porque las clases estaban actualizadas.
+Surefire/Failsafe 3.5.6: CorsConfigurationTest 3/3 (3.510 s) y
+BackendBootstrapIT 4/4 (17.093 s), 0 failures/errors/skipped en los XML reales.
+
+Testcontainers 1.21.4 conectó con Docker Desktop 4.91.0 / Engine 29.8.0 por npipe.
+Usó la imagen existente postgres:17-bookworm, PostgreSQL 17.11, en contenedor
+propio con puerto dinámico localhost:65390 y DB test. Descargó únicamente
+testcontainers/ryuk:0.12.0; RepoDigest:
+`testcontainers/ryuk@sha256:dd3f023a6ed7015b3f95a49ccd65a2daf0c56e681422c12952b19a810dfa6298`.
+Flyway ejecutó V1 y solo existe flyway_schema_history en public. Actuator health
+UP con contribuidor DB y sin detalles; /actuator/env devuelve 404 sin información
+sensible; CORS permite localhost:5173 en health. Spring Boot iniciado únicamente
+por SpringBootTest, puerto HTTP 65407; no arranque manual.
+
+PostgreSQL temporal y Ryuk eliminados automáticamente; docker ps vacío.
+Compose sigue Exited (0), mismo FinishedAt, volumen y red conservados.
+Imágenes conservadas. `.env`, target/, reportes y log local ignorados; fuentes
+intactas. Avisos Mockito/Byte Buddy por agente dinámico y CDS, sin fallos.
+Spring Boot manual y Eclipse/MDE pendientes; no Fase 1 ni staging/commit/push.
+
+## Histórico: PostgreSQL Compose validado y detenido — 22/09/2026
 
 Servicio `postgres` del proyecto `educativa-adaptativa`, sin cambios en Compose,
 Spring, puertos, usuarios, volumen ni versiones. Imagen `postgres:17-bookworm`,

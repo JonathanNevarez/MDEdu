@@ -3,7 +3,147 @@
 Registro inicial: 20/09/2026. Actualizado: 22/09/2026. Distingue inspección, revisión estática y pruebas
 de aplicación. No se presenta una comprobación estática como compilación o arranque.
 
-## Docker Desktop4.91.0 per-user / WSL2: VALIDADO — 22/09/2026
+## PostgreSQL Compose: VALIDADO y detenido — 22/09/2026
+
+### Condiciones iniciales y configuración inspeccionada
+
+`git status`: main sincronizada con origin/main, working tree clean, HEAD dc7ad0a.
+`git log -5 --oneline` mostró los cuatro commits existentes: dc7ad0a, e1df49e,
+41315c5 y 8262ec1. Docker version/info operativos, Desktop 4.91.0 (239619),
+CLI/Engine 29.8.0, API 1.56, Compose 5.5.1, OSType linux, contexto desktop-linux.
+PendingFileRenameOperations=False, CBS/RebootPending=False,
+Windows Update/RebootRequired=False; no se requirió reinicio.
+
+Se inspeccionaron docker-compose.yml, .env.example, .gitignore,
+backend/src/main/resources/application.properties, docker/README.md y la migración
+V1__bootstrap.sql. No se modificó ninguno. Configuración real:
+
+| Campo | Valor |
+| --- | --- |
+| Proyecto / servicio | educativa-adaptativa / postgres |
+| Imagen declarada | postgres:17-bookworm |
+| Puerto host / contenedor | 127.0.0.1:5432 / 5432/tcp |
+| POSTGRES_DB / POSTGRES_USER | adaptativa / adaptativa |
+| Password | POSTGRES_PASSWORD desde DB_PASSWORD local, no revelado |
+| Volumen lógico / destino | postgres_data / /var/lib/postgresql/data |
+| Healthcheck | pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB" |
+| Interval / timeout / retries / start_period | 5s / 3s / 12 / 10s |
+| Init scripts del proyecto montados | Ninguno; docker/ solo contiene README.md |
+| Datasource Spring efectivo con estos valores | jdbc:postgresql://localhost:5432/adaptativa |
+| Usuario / contraseña Spring | adaptativa / DB_PASSWORD externo |
+
+Spring importa ../.env desde backend/; no se inició Spring. La migración preparada
+contiene SELECT 1 y no se ejecutó en este paso. No hubo discrepancias Compose/Spring.
+No existían variables DB_NAME/DB_USER/DB_PASSWORD/DB_PORT en el proceso que
+sobrescribieran .env. `.env` no existía: `git check-ignore -v .env` devolvió
+`.gitignore:12:.env .env`. Se creó con las cuatro variables del ejemplo y una
+contraseña criptográficamente aleatoria de 64 caracteres hexadecimales.
+El valor se escribió solo en .env, sin imprimirlo ni copiarlo a documentación.
+
+`docker compose config --quiet`: **código 0**; no se imprimió configuración
+interpolada. Antes de descargar: docker ps -a vacío, única imagen hello-world,
+ningún volumen, redes predeterminadas bridge/host/none y puerto 5432 libre.
+
+### Descarga, recursos y health real
+
+`docker compose pull postgres`: código 0. Sin descargar otros servicios.
+
+```text
+Repository/tag: postgres:17-bookworm
+Image ID: sha256:639ab7ceb90e13123085b741fb31ef493fba25463002f6da665352e7b534b652
+RepoDigest: postgres@sha256:639ab7ceb90e13123085b741fb31ef493fba25463002f6da665352e7b534b652
+Architecture: amd64
+OS: linux
+```
+
+El tag se mantuvo intacto; digest observado registrado, sin editar Compose.
+`docker compose up -d --wait postgres`: **código 0**. Único servicio iniciado.
+
+```text
+Container: educativa-adaptativa-postgres-1
+Image: postgres:17-bookworm
+Service: postgres
+Status: running
+Health.Status: healthy
+Health.FailingStreak: 0
+Health.Log: 1 comprobación registrada en la inspección inicial
+Health.Log[0].ExitCode: 0
+Health.Log[0].Output: /var/run/postgresql:5432 - accepting connections
+Ports: 127.0.0.1:5432->5432/tcp
+```
+
+El número registrado es la cantidad de entradas observadas, no un contador total
+de intentos garantizado por Docker. `docker compose ps` confirmó running/healthy.
+Volumen creado `educativa-adaptativa_postgres_data`, driver local, destino
+`/var/lib/postgresql/data`; red creada `educativa-adaptativa_default`, driver bridge.
+Labels de ambos identifican el proyecto educativa-adaptativa y Compose 5.5.1.
+
+### SQL real de solo lectura
+
+Se ejecutó `docker compose exec -T postgres psql -U adaptativa -d adaptativa`
+con `-v ON_ERROR_STOP=1` y las consultas siguientes mediante opciones `-c`.
+Conexión local dentro del contenedor, sin pasar contraseña en argumentos.
+Resultado global: **código 0**.
+
+```sql
+SELECT 1;
+SELECT version();
+SELECT current_database();
+SELECT current_user;
+SELECT table_schema, table_name, table_type
+FROM information_schema.tables
+WHERE table_schema = 'public' ORDER BY table_name;
+```
+
+```text
+SELECT 1: 1 (1 row)
+version: PostgreSQL 17.11 (Debian 17.11-1.pgdg12+2) on x86_64-pc-linux-gnu,
+         compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+current_database: adaptativa (1 row)
+current_user: adaptativa (1 row)
+Tablas public: (0 rows)
+```
+
+Sin tablas de aplicación ni historial Flyway observado. No se crearon tablas,
+no se insertaron datos ni se ejecutaron migraciones manualmente.
+La conexión probada fue por socket dentro del contenedor; el puerto publicado
+se comprobó mediante Compose/inspect, sin afirmar una prueba JDBC desde Windows.
+
+### Detención, Docker posterior y límites
+
+`docker compose stop postgres`: **código 0**. `docker compose ps -a`:
+
+```text
+NAME                              IMAGE                  SERVICE    STATUS
+educativa-adaptativa-postgres-1   postgres:17-bookworm   postgres   Exited (0)
+Status=exited ExitCode=0 OOMKilled=false Error=
+```
+
+Se conservaron imagen, contenedor detenido, volumen y red; hello-world no se
+eliminó. No se ejecutaron down -v, volume rm, system prune ni recreaciones.
+`docker version` y `docker info` después de stop: **ambos código 0**.
+Desktop 4.91.0 (239619), CLI/Engine 29.8.0, API 1.56, linux/amd64,
+desktop-linux; 0 contenedores ejecutándose, 1 detenido, 2 imágenes.
+Docker Desktop permanece abierto y operativo.
+
+Solo se actualizan ESTADO_PROYECTO.md, HERRAMIENTAS.md y este documento;
+`.env` permanece local e ignorado. La comprobación final comparó el valor en
+memoria con todos los archivos versionados sin imprimirlo: SecretInTrackedFiles=False.
+`git ls-files -- .env` vacío; `git status --ignored --short` muestra `!! .env`.
+`git diff --check`: código 0, sin errores; solo avisos LF a CRLF de Git.
+Índice sin cambios, HEAD dc7ad0a intacto. Estado versionado final:
+
+```text
+ M docs/ESTADO_PROYECTO.md
+ M docs/HERRAMIENTAS.md
+ M docs/VERIFICACION_FASE_0.md
+```
+
+Maven verify, BackendBootstrapIT, Spring Boot y Eclipse/MDE no ejecutados;
+Fase 1 no iniciada. Sin git add, commit ni push. PostgreSQL Compose validado;
+el siguiente paso requiere autorización independiente.
+
+## Histórico: Docker Desktop4.91.0 per-user / WSL2: VALIDADO — 22/09/2026
 
 ### Estado inicial, descarga e instalación
 
@@ -1505,5 +1645,8 @@ digest ficticio. El Compose fue revisado como texto; no validado por Docker.
 están verificados. Backend y frontend compilan; pasan 3 pruebas MVC y 2 unitarias
 frontend. Vite respondió HTTP200 y quedó detenido. El escenario E2E Chromium
 también pasó con salida0 y sus procesos terminaron. Permanecen pendientes las
-4 pruebas de integración backend, PostgreSQL y arranque/health del backend.
-El paso autorizado Playwright Chromium/E2E está completo; detenerse sin hacer commit.
+4 pruebas de integración backend y arranque/health del backend.
+PostgreSQL Compose fue validado: healthy, SELECT 1 = 1, DB/user adaptativa,
+sin tablas public y detenido al finalizar con volumen conservado.
+Maven verify y Spring Boot pendientes de autorización. Detenerse sin staging,
+commit ni push; no avanzar a Fase 1.

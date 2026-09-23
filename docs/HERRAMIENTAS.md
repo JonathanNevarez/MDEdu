@@ -1,6 +1,36 @@
 # Herramientas y preparación del entorno Windows
 
-## Estado actual: Docker Desktop instalado y validado — 22/09/2026
+## Estado actual: PostgreSQL Compose validado y detenido — 22/09/2026
+
+Servicio `postgres` del proyecto `educativa-adaptativa`, sin cambios en Compose,
+Spring, puertos, usuarios, volumen ni versiones. Imagen `postgres:17-bookworm`,
+linux/amd64; PostgreSQL **17.11 (Debian 17.11-1.pgdg12+2)**.
+Image ID: `sha256:639ab7ceb90e13123085b741fb31ef493fba25463002f6da665352e7b534b652`.
+RepoDigest: `postgres@sha256:639ab7ceb90e13123085b741fb31ef493fba25463002f6da665352e7b534b652`.
+Se registra el digest observado sin fijarlo en Compose, conforme al alcance autorizado.
+
+`.env` creado localmente con las variables de `.env.example`; ignorado por Git.
+DB_PASSWORD aleatorio de 64 caracteres, no impreso ni incorporado a documentación
+o archivos versionados. `docker compose config --quiet`: código 0.
+Puerto `127.0.0.1:5432 -> 5432/tcp`; database/user `adaptativa`, coherentes con
+`jdbc:postgresql://localhost:5432/adaptativa` y contraseña externa de Spring.
+No hay scripts de inicialización montados desde `docker/`.
+
+`docker compose pull postgres` y `docker compose up -d --wait postgres`: código 0.
+Contenedor `educativa-adaptativa-postgres-1`: running/healthy, pg_isready salida 0.
+Consulta real SELECT 1 = 1; current_database/current_user = adaptativa.
+Schema public: 0 tablas. Sin ejecutar Flyway ni modificar esquema manualmente.
+Volumen `educativa-adaptativa_postgres_data` (local), montado en
+`/var/lib/postgresql/data`; red `educativa-adaptativa_default` (bridge).
+
+`docker compose stop postgres`: código 0; estado final Exited (0), sin OOM ni error.
+Imagen, contenedor detenido, volumen y red conservados; hello-world conservada.
+Docker version/info posteriores: código 0, Engine 29.8.0 Linux, desktop-linux,
+0 contenedores en ejecución, 1 detenido, 2 imágenes. Los tres indicadores de
+reinicio estaban inactivos al inicio. Maven verify, BackendBootstrapIT y arranque
+Spring Boot pendientes de autorización; Fase 1 no iniciada. Sin staging/commit/push.
+
+## Histórico: Docker Desktop instalado y validado — 22/09/2026
 
 **Docker Desktop4.91.0**, build239619 (ejecutable4.91.0.239619), instalado per-user
 en `C:\Users\alexxxjon\AppData\Local\Programs\DockerDesktop` y registrado en HKCU.

@@ -8,6 +8,21 @@ Actualización documental: 22/09/2026. Maven verificado el 20/09/2026; frontend 
 Fases 1–13 no iniciadas. La raíz estaba vacía y no era un repositorio Git.
 El SVG original se conserva intacto.
 
+**PostgreSQL Compose VALIDADO — 22/09/2026.** Servicio `postgres`, imagen
+`postgres:17-bookworm`, PostgreSQL 17.11 (Debian 17.11-1.pgdg12+2), linux/amd64.
+Digest descargado: `sha256:639ab7ceb90e13123085b741fb31ef493fba25463002f6da665352e7b534b652`.
+Compose config --quiet terminó con código 0. `.env` local ignorado, contraseña
+aleatoria externa no revelada ni versionada; database/user `adaptativa`.
+Puerto publicado `127.0.0.1:5432 -> 5432/tcp`, coherente con Spring.
+El contenedor `educativa-adaptativa-postgres-1` alcanzó running/healthy;
+SELECT 1 devolvió 1 y current_database/current_user devolvieron adaptativa.
+Schema public sin tablas; no se ejecutaron migraciones ni cambios manuales.
+Al finalizar quedó **detenido, Exited (0)**. Volumen
+`educativa-adaptativa_postgres_data` y red `educativa-adaptativa_default`
+conservados, junto con ambas imágenes PostgreSQL y hello-world.
+Docker sigue operativo. Maven verify, BackendBootstrapIT y Spring Boot pendientes
+de autorización independiente; Fase 1 no iniciada.
+
 **Docker Desktop4.91.0 instalado y VALIDADO**, per-user, backend WSL2 y contenedores
 Linux. Ruta AppData/Local/Programs/DockerDesktop; hash oficial del instalador
 comprobado. Usuario aceptó manualmente los términos; no se inició sesión por el
@@ -16,7 +31,8 @@ código0. Contexto desktop-linux, x86_64, 16 CPU, RAM7.412 GiB, overlayfs,
 cgroupfs/v2 y kernel6.18.33.2-microsoft-standard-WSL2.
 hello-world oficial linux/amd64: código0, contenedor eliminado mediante --rm;
 docker ps -a vacío, imagen conservada. Sin reinicio pendiente ni errores críticos
-observados. No se ejecutaron PostgreSQL, Compose del proyecto ni Maven verify.
+observados. Ese paso no ejecutó PostgreSQL ni Compose; su validación posterior
+figura arriba. Maven verify continúa pendiente.
 
 **WSL2: instalado y validado tras el reinicio manual.** Los tres indicadores de
 reinicio están inactivos. wsl --version: **2.7.14.0**, kernel **6.18.33.2-2**,
@@ -43,9 +59,11 @@ Snapshot inicial creado y aceptado: **8262ec1**,
 `8262ec1f636b1928ff6f637b9d9ba983e5fcfa8d`. Se verificó working tree clean antes
 del paso Playwright. Su evidencia quedó en el segundo commit **41315c5**,
 `test: validate frontend e2e with chromium`. La validación WSL quedó en **e1df49e**,
-`chore: validate wsl2 environment`, publicado en MDEdu con los tres commits.
-Antes de instalar Docker, main estaba limpio y sincronizado con origin/main.
-Ahora solo cambian los tres documentos autorizados, sin staging, commit ni push;
+`chore: validate wsl2 environment`. Docker quedó publicado en **dc7ad0a**,
+`chore: validate docker desktop environment`. Antes de validar PostgreSQL,
+main/dc7ad0a estaba limpio y sincronizado con origin/main en MDEdu.
+Ahora solo cambian los tres documentos autorizados, más `.env` local ignorado;
+sin staging, commit ni push en este paso PostgreSQL;
 el historial y remoto permanecen intactos. Evidencia del cierre inicial en
 `.git/FASE_0_SNAPSHOT.txt`. La política MDE generada se decidirá en Fase1.
 
@@ -78,7 +96,7 @@ validate, clean compile y test. Compilación: 42 fuentes release21. Surefire: 3
 pruebas MVC, 0 fallos, 0 errores, 0 omitidas. Solo se añadió Maven/bin al PATH del
 usuario; JAVA_HOME y PATH de máquina permanecen intactos. El POM conserva su hash.
 
-BACKEND BUILD: **OK**. BACKEND RUNTIME: **pendiente de PostgreSQL y autorización**.
+BACKEND BUILD: **OK**. BACKEND RUNTIME: **pendiente de autorización**; DB Compose validada y detenida.
 El Wrapper fija versión y hash y es la vía preferida para tareas normales.
 WSL2 y Docker validados. Eclipse y componentes MDE siguen sin instalarse.
 
@@ -134,13 +152,14 @@ MVC de CORS y 4 pruebas de integración PostgreSQL/Actuator/Flyway.
 **Las 3 pruebas MVC, las 2 unitarias frontend y el escenario E2E Chromium pasaron.**
 Las 4 pruebas de integración siguen pendientes. BackendBootstrapIT se compiló pero no ejecutó:
 Docker ya está disponible, pero verify/BackendBootstrapIT siguen pendientes de
-autorización específica y preparación de PostgreSQL. No se deshabilitaron pruebas.
+autorización específica. PostgreSQL Compose ya fue validado y quedó detenido;
+esa comprobación no sustituye Testcontainers. No se deshabilitaron pruebas.
 
 | Criterio obligatorio de F0 | Estado |
 | --- | --- |
 | JDK21/javac, JAVA_HOME, PATH y compilación mínima | Completado: Temurin21.0.12.1 x64; salida Java environment OK |
 | Maven/Wrapper, POM efectivo y validate | Completado: Maven3.9.16, Java21.0.12.1, salidas0 |
-| Git y repositorio | Verificado: main/e1df49e publicado en origin MDEdu; identidad local |
+| Git y repositorio | Verificado al inicio: main/dc7ad0a publicado en origin MDEdu; identidad local |
 | WSL2 sin distribución personal | Validado: WSL2.7.14.0, kernel6.18.33.2-2, predeterminado2; VMP Enabled e hipervisor activo; sin reinicio pendiente |
 | Docker Desktop per-user / WSL2 | Validado: Desktop4.91.0, Engine29.8.0, Compose5.5.1, hello-world salida0 |
 | Frontend compila y pruebas unitarias pasan | Completado: TypeScript/Vite; 1 archivo, 2 pruebas correctas |
@@ -148,20 +167,21 @@ autorización específica y preparación de PostgreSQL. No se deshabilitaron pru
 | Frontend E2E en Chromium | Completado: Playwright1.63.0, Chromium153.0.8010.12/r1243; 1 aprobado, salida0 |
 | Backend compila y pruebas sin Docker pasan | Completado: 42 fuentes; 3 pruebas MVC, 0 fallos/errores/omitidas |
 | Backend: 4 pruebas de integración | Pendiente de autorización; no se ejecutó Maven verify |
-| PostgreSQL inicia y acepta consulta | Pendiente de autorización; PostgreSQL no descargado ni iniciado |
+| PostgreSQL inicia y acepta consulta | Validado: 17.11, healthy, SELECT 1 = 1; detenido al finalizar, volumen conservado |
 | Backend inicia y health comprueba DB | Pendiente |
 | Documentación y estructura creadas | Completado |
 
 ## Problemas conocidos
 
-1. WSL2 y Docker validados. PostgreSQL/BackendBootstrapIT pendientes de autorización;
+1. WSL2, Docker y PostgreSQL Compose validados. BackendBootstrapIT pendiente de autorización;
    Eclipse/MDE siguen sin instalar.
    JDK21, Maven/Wrapper, Node/npm y Git ya verificados.
 2. La política local de PowerShell bloquea scripts `.ps1`; el script opcional de
    inspección no se pudo ejecutar. La inspección mediante comandos directos sí
    se realizó. `npm.ps1` también está bloqueado; se usa `npm.cmd`, sin cambiar la política.
-3. Package-lock generado por npm y validado. El digest de imagen sigue pendiente.
-4. Compatibilidad runtime de DB/LLM/MDE todavía por verificar. E2E frontend completado.
+3. Package-lock generado por npm y validado. Digest PostgreSQL descargado registrado;
+   el tag y Compose se conservan sin modificaciones.
+4. Integración runtime backend/DB y LLM/MDE todavía por verificar. E2E frontend completado.
 5. La matriz Eclipse/MDE está pendiente; Xtext reciente requiere revisar el
    requisito JUnit 5, y Acceleo 3/4 tienen diferencias que deben resolverse.
 6. Spring Boot 3.5.16 tiene límite de soporte OSS documentado; revisar antes de
@@ -178,9 +198,9 @@ autorización específica y preparación de PostgreSQL. No se deshabilitaron pru
 
 ## Siguiente paso
 
-**Validación Docker Desktop completada; detenerse. No iniciar PostgreSQL, Compose
-del proyecto ni Maven verify. No hacer staging, commit ni push.
-No instalar otro componente ni conectar remotos hasta recibir nueva autorización
+**Validación PostgreSQL Compose completada; contenedor detenido. Detenerse.
+No ejecutar Maven verify, BackendBootstrapIT ni Spring Boot.
+No hacer staging, commit ni push. No instalar otro componente hasta recibir nueva autorización
 del usuario.** La propuesta de herramientas
 restantes está documentada, pero no se ejecuta. La estrategia Eclipse/MDE sigue
 pendiente de revisión específica antes de instalar plugins; no se crea ningún metamodelo.

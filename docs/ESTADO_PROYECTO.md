@@ -1,12 +1,41 @@
 # Estado del proyecto
 
-Actualización documental: 22/09/2026. Maven verificado el 20/09/2026; frontend el 21/09 y E2E el 22/09/2026.
+Actualización documental: 23/09/2026. Eclipse base validado el 23/09; los apartados históricos conservan sus fechas.
 
 ## Fase actual
 
 **Fase 0: preparación escrita, cierre pendiente de herramientas y verificación.**
 Fases 1–13 no iniciadas. La raíz estaba vacía y no era un repositorio Git.
 El SVG original se conserva intacto.
+
+**Eclipse Modeling Tools BASE VALIDADO — 23/09/2026.** Producto 2026-09
+(4.41.0), build About 20260903-0720; Platform 4.41.0.v20260828-1142,
+Windows x86_64. ZIP oficial de 694931027 bytes, SHA-512 oficial/calculado
+coincidente; evidencia completa en [VERIFICACION_FASE_0](VERIFICACION_FASE_0.md).
+Extraído sin UAC en
+`C:\Users\alexxxjon\AppData\Local\Programs\Eclipse\eclipse-modeling-2026-09-R`.
+Eclipse usa exclusivamente Temurin/JustJ 25.0.4.1+1-LTS embebido; JustJ feature
+25.0.4.v20260826-1347 y runtime 25.0.4.v20260826-0822. Java/javac globales siguen
+en Temurin 21.0.12.1 y JAVA_HOME en
+`C:\Program Files\Eclipse Adoptium\jdk-21.0.12.101-hotspot\`.
+PATH, JAVA_HOME y eclipse.ini no fueron modificados.
+
+EMF SDK 2.47.0.v20260704-1256, Ecore bundle 2.43.0.v20260704-1256,
+Ecore Editor 2.20.0.v20260704-1256 y Ecore Tools 3.6.0.202604070657 presentes.
+OCL incluido pero **NO utilizado**. Xtext runtime/UI/Xbase 2.44.0 parcialmente
+presentes; **SDK completo AUSENTE**, al igual que ATL y Acceleo 4.
+No se añadieron plugins ni se configuró Tycho.
+
+Workspace externo: `C:\Users\alexxxjon\AppData\Local\EclipseWorkspaces\MDEdu-fase0`.
+Eclipse y sus procesos asociados cerrados normalmente; instalación/workspace
+conservados y ZIP temporal eliminado tras validar. No se creó/importó ningún
+proyecto de trabajo ni metamodelo. EGit generó automáticamente metadata interna
+`.org.eclipse.egit.core.cmp` fuera del repositorio y avisó que HOME no está definido:
+advertencia menor, sin cambiar HOME ni configuración Git y sin cambios Git.
+El diálogo Defender desapareció antes de automatizarlo; no se añadieron exclusiones
+para Eclipse. Git quedó limpio en d36c77b antes de este cierre documental.
+Solo se autoriza documentar, crear el commit de este checkpoint y publicarlo.
+**Fase 1 no iniciada; Xtext SDK requiere una autorización posterior.**
 
 **Runtime manual Spring Boot + PostgreSQL Compose VALIDADO — 22/09/2026.**
 Desde backend/: `.\mvnw.cmd --batch-mode --no-transfer-progress spring-boot:run`.
@@ -95,9 +124,9 @@ del paso Playwright. Su evidencia quedó en el segundo commit **41315c5**,
 main/dc7ad0a estaba limpio y sincronizado con origin/main en MDEdu.
 PostgreSQL quedó publicado en f2cb080, punto de partida limpio del verify.
 Verify quedó publicado en ab95344, punto de partida limpio del runtime manual.
-Ahora solo cambian los tres documentos autorizados; `.env` y target/ ignorados;
-sin staging, commit ni push en este paso runtime;
-el historial y remoto permanecen intactos. Evidencia del cierre inicial en
+Runtime quedó publicado en d36c77b, punto de partida limpio y sincronizado del
+checkpoint Eclipse base. Este cierre autoriza únicamente los tres documentos
+de Eclipse; `.env` y target/ siguen ignorados. Evidencia del cierre inicial en
 `.git/FASE_0_SNAPSHOT.txt`. La política MDE generada se decidirá en Fase1.
 
 **Node.js24.19.0 LTS x64 y npm11.17.0 instalados y verificados.** WinGet instaló
@@ -131,7 +160,7 @@ usuario; JAVA_HOME y PATH de máquina permanecen intactos. El POM conserva su ha
 
 BACKEND BUILD: **OK**. BACKEND RUNTIME: **OK**, health/CORS/Flyway contra DB Compose real; servicios detenidos.
 El Wrapper fija versión y hash y es la vía preferida para tareas normales.
-WSL2 y Docker validados. Eclipse y componentes MDE siguen sin instalarse.
+WSL2 y Docker validados. Eclipse base validado; SDK Xtext, ATL y Acceleo 4 pendientes.
 
 **JDK21 instalado y verificado con autorización exclusiva para Java.** WinGet
 instaló Temurin x64 (paquete 21.0.12.101); java y javac devuelven **21.0.12.1**.
@@ -203,11 +232,13 @@ también pasó, con arranque y apagado controlados de Spring y Compose.
 | PostgreSQL inicia y acepta consulta | Validado: 17.11, healthy, SELECT 1 = 1; detenido al finalizar, volumen conservado |
 | Backend inicia y health comprueba DB | Validado: runtime manual 8080, health UP, Hikari/PostgreSQL, Flyway V1 y CORS; servicios detenidos |
 | Documentación y estructura creadas | Completado |
+| Eclipse Modeling Tools base | Validado: 2026-09 R / Platform 4.41, JustJ 25 embebido, Java 21 global intacto, EMF/Ecore/Ecore Tools presentes; IDE cerrado |
+| Features MDE adicionales | Xtext SDK completo, ATL y Acceleo 4 ausentes; OCL incluido pero no utilizado; Tycho sin configurar |
 
 ## Problemas conocidos
 
 1. WSL2, Docker, PostgreSQL Compose, BackendBootstrapIT y runtime manual validados;
-   Eclipse/MDE siguen sin instalar.
+   Eclipse base también validado; Xtext SDK, ATL y Acceleo 4 siguen pendientes.
    JDK21, Maven/Wrapper, Node/npm y Git ya verificados.
 2. La política local de PowerShell bloquea scripts `.ps1`; el script opcional de
    inspección no se pudo ejecutar. La inspección mediante comandos directos sí
@@ -215,8 +246,9 @@ también pasó, con arranque y apagado controlados de Spring y Compose.
 3. Package-lock generado por npm y validado. Digest PostgreSQL descargado registrado;
    el tag y Compose se conservan sin modificaciones.
 4. Integración backend/DB comprobada en pruebas y runtime manual; LLM/MDE pendientes. E2E frontend completado.
-5. La matriz Eclipse/MDE está pendiente; Xtext reciente requiere revisar el
-   requisito JUnit 5, y Acceleo 3/4 tienen diferencias que deben resolverse.
+5. Matriz MDE aceptada: Eclipse 2026-09 R, Xtext 2.44.0, ATL 4.12.0.v202505101449,
+   Acceleo 4.2.2 y Tycho 5.0.4 futuro. Solo Eclipse base validado; las validaciones
+   de features adicionales siguen pendientes. OCL incluido, uso diferido.
 6. Spring Boot 3.5.16 tiene límite de soporte OSS documentado; revisar antes de
    desplegar y mantener el requisito de pruebas del proyecto.
 7. Connection reset al descargar Actuator3.5.16, resuelto al reintentar sin cambiar
@@ -228,13 +260,14 @@ también pasó, con arranque y apagado controlados de Spring y Compose.
    no se actualizó npm ni se ejecutó audit fix.
 9. E2E emitió aviso NO_COLOR/FORCE_COLOR de Node, sin fallo. La prueba captura
    pageerror, pero no console.error por separado; no se amplió su alcance.
+10. EGit avisó HOME no definido y creó metadata interna fuera del repositorio;
+    no es un error del proyecto ni requiere cambiar variables en este checkpoint.
 
 ## Siguiente paso
 
-**Runtime manual Spring Boot + PostgreSQL Compose completado; ambos detenidos.
-Detenerse y esperar autorización para el siguiente paso. No reiniciar servicios.
-No hacer staging, commit ni push. No instalar otro componente hasta recibir nueva autorización
-del usuario.** La propuesta de herramientas
-restantes está documentada, pero no se ejecuta. La estrategia Eclipse/MDE sigue
-pendiente de revisión específica antes de instalar plugins; no se crea ningún metamodelo.
+**Eclipse Modeling Tools base validado. Este paso cierra únicamente su documentación
+en Git con el commit `chore: validate eclipse modeling tools environment` y push a main.**
+Después, detenerse y esperar autorización independiente para Xtext SDK.
+No instalar Xtext, ATL ni Acceleo; no configurar Tycho/OCL, crear proyectos o
+metamodelos ni reiniciar servicios en este cierre.
 **No avanzar a Fase 1 hasta cerrar Fase 0.** No hay cambios destructivos propuestos.

@@ -1,9 +1,144 @@
 # Verificación de Fase 0
 
-Registro inicial: 20/09/2026. Actualizado: 22/09/2026. Distingue inspección, revisión estática y pruebas
+Registro inicial: 20/09/2026. Actualizado: 23/09/2026. Distingue inspección, revisión estática y pruebas
 de aplicación. No se presenta una comprobación estática como compilación o arranque.
 
-## Runtime manual Spring Boot contra PostgreSQL Compose: VALIDADO — 22/09/2026
+## Eclipse Modeling Tools BASE: VALIDADO — 23/09/2026
+
+### Alcance y estado inicial
+
+Validación base aceptada por el usuario. Este checkpoint únicamente registra esa
+evidencia y autoriza su commit/push; no repite instalaciones ni abre Eclipse.
+Antes de instalar y antes del cierre documental: main/d36c77b, working tree clean,
+main sincronizada con origin/main, remoto `https://github.com/JonathanNevarez/MDEdu.git`.
+Java y javac: Temurin 21.0.12.1. Las comprobaciones mínimas no detectaron Eclipse previo.
+
+### Artefacto oficial, checksum y extracción
+
+- Archivo: `eclipse-modeling-2026-09-R-win32-x86_64.zip`, release estable 2026-09 R.
+- [URL oficial del ZIP](https://download.eclipse.org/technology/epp/downloads/release/2026-09/R/eclipse-modeling-2026-09-R-win32-x86_64.zip).
+- [SHA-512 oficial](https://download.eclipse.org/technology/epp/downloads/release/2026-09/R/eclipse-modeling-2026-09-R-win32-x86_64.zip.sha512).
+- Tamaño anunciado por HTTP Content-Length y tamaño real: **694931027 bytes**.
+- Eclipse publicó SHA-512, SHA-1 y MD5. El recurso .sha256 devolvió HTTP 404;
+  no se inventó ese checksum. Se utilizó SHA-512.
+- Descarga temporal fuera del repositorio:
+  `C:\Users\alexxxjon\AppData\Local\Temp\mde-eclipse-2026-09\eclipse-modeling-2026-09-R-win32-x86_64.zip`.
+
+SHA-512 oficial:
+
+```text
+0fce50604679aa668f66a28c1be0cfa56263d83157389ad5fac39c905470dcb0f277d160afa8ab3217563c98aa87d726a7d328bbd864a313ddfee0f13e6b8cf9
+```
+
+SHA-512 calculado mediante Get-FileHash -Algorithm SHA512, normalizado a minúsculas:
+
+```text
+0fce50604679aa668f66a28c1be0cfa56263d83157389ad5fac39c905470dcb0f277d160afa8ab3217563c98aa87d726a7d328bbd864a313ddfee0f13e6b8cf9
+SHA512_MATCH=True
+```
+
+Coincidencia exacta comprobada antes de extraer. Se verificaron 4465 entradas del
+ZIP y sus rutas de destino; 803806364 bytes sin comprimir. Extracción sin instalador
+ni UAC en `C:\Users\alexxxjon\AppData\Local\Programs\Eclipse\eclipse-modeling-2026-09-R`.
+Ejecutable: `C:\Users\alexxxjon\AppData\Local\Programs\Eclipse\eclipse-modeling-2026-09-R\eclipse.exe`.
+Existencia confirmada de eclipse.exe, eclipse.ini, configuration/, plugins/ y features/.
+Windows no expuso FileVersion/ProductVersion del ejecutable.
+
+### Arranque, producto y runtime real
+
+Workspace exclusivo: `C:\Users\alexxxjon\AppData\Local\EclipseWorkspaces\MDEdu-fase0`.
+Se inició eclipse.exe con `-data` apuntando a esa ruta, fuera del repositorio.
+Help > About Eclipse IDE confirmó:
+
+```text
+Eclipse Modeling Tools (includes Incubating components)
+Version: 2026-09 (4.41.0)
+Build id: 20260903-0720
+```
+
+Platform instalado: **4.41.0.v20260828-1142**. Package Modeling:
+**4.41.0.20260903-0719**. El build mostrado por About y el identificador de package
+se registran por separado. Log real del workspace:
+
+```text
+eclipse.buildId=4.41.0.20260903-0719
+java.version=25.0.4.1
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=es_EC
+Framework arguments:  -product org.eclipse.epp.package.modeling.product
+```
+
+Java embebido: **Temurin 25.0.4.1+1-LTS**. JustJ feature
+**25.0.4.v20260826-1347**; runtime **25.0.4.v20260826-0822**.
+El proceso Eclipse cargó jvm.dll desde
+`plugins/org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_25.0.4.v20260826-0822/jre/bin/server/jvm.dll`
+dentro de la instalación. Se confirmó el uso del runtime embebido, no del JDK21 global.
+eclipse.ini quedó idéntico al ZIP; no se añadieron/retiraron unidades instaladas
+al comparar el perfil p2 con el original del paquete.
+
+### Componentes base presentes y pendientes
+
+| Componente inspeccionado | Versión / resultado |
+| --- | --- |
+| EMF SDK | 2.47.0.v20260704-1256, presente |
+| Ecore bundle | 2.43.0.v20260704-1256, presente |
+| Ecore Editor bundle | 2.20.0.v20260704-1256, presente |
+| Ecore feature / Editor feature | 2.44.0.v20260704-1256 / 2.21.0.v20260704-1256; versiones distintas de los bundles |
+| Ecore Tools | 3.6.0.202604070657, presente |
+| OCL All SDK | 5.24.0.v20260601-1413, incluido pero NO utilizado por el proyecto |
+| Xtext runtime/UI/Xbase | 2.44.0.v20260824-1228, componentes parciales presentes |
+| org.eclipse.xtext.sdk.feature.group | AUSENTE; no equivale a los componentes indirectos anteriores |
+| ATL | AUSENTE |
+| Acceleo 4 | AUSENTE |
+
+No se instalaron plugins adicionales ni se configuró Tycho. No se creó/importó
+ningún proyecto de trabajo, no se importó MDEdu ni se crearon metamodelos,
+expresiones OCL o dependencias OCL del proyecto.
+
+### Java global intacto, cierre e incidencias
+
+PowerShell posterior, con los valores persistentes cargados únicamente en el proceso:
+
+```text
+openjdk version "21.0.12.1" 2026-08-18 LTS
+OpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)
+javac 21.0.12.1
+JAVA_HOME: C:\Program Files\Eclipse Adoptium\jdk-21.0.12.101-hotspot\
+where.exe java: C:\Program Files\Eclipse Adoptium\jdk-21.0.12.101-hotspot\bin\java.exe
+where.exe javac: C:\Program Files\Eclipse Adoptium\jdk-21.0.12.101-hotspot\bin\javac.exe
+```
+
+PATH y JAVA_HOME persistentes, de usuario y máquina, permanecieron sin cambios;
+Java 25/Eclipse no se añadieron al PATH. Sin UAC ni aceptación legal interactiva obligatoria.
+
+EGit informó **HOME no definido**: advertencia menor, no error del proyecto.
+No se creó ni modificó HOME ni configuración Git. EGit generó automáticamente
+metadata interna `.org.eclipse.egit.core.cmp` bajo .metadata del workspace externo,
+sin cambios en el repositorio. No es un proyecto de trabajo creado por el usuario/asistente.
+El diálogo de Defender desapareció antes de automatizarlo; no se añadieron
+exclusiones de Defender para Eclipse. No se cambió Defender.
+
+Cierre normal solicitado al IDE; Eclipse PID 23712 y sus siete procesos WebView
+asociados terminaron. Comprobaciones finales reales:
+
+```text
+RemainingRelatedProcesses=0
+ProcessesFromInstall=0
+TemporaryZipDeleted=True
+InstallationRetained=True
+WorkspaceRetained=True
+```
+
+Logs conservados fuera del repositorio. git status --short quedó vacío tras la
+validación; git status --ignored --short mostró únicamente los ignorados previos:
+.env, backend/target/, frontend/dist/, frontend/node_modules/ y frontend/test-results/.
+Este cierre modifica exclusivamente ESTADO_PROYECTO.md, HERRAMIENTAS.md y este
+documento; commit autorizado `chore: validate eclipse modeling tools environment`
+y push a main. **Eclipse base VALIDADO; Fase 1 no iniciada.**
+Detenerse después de publicar y verificar; Xtext SDK requiere nueva autorización.
+
+## Histórico: runtime manual Spring Boot contra PostgreSQL Compose: VALIDADO — 22/09/2026
 
 ### Condiciones y arranque real
 
@@ -1855,7 +1990,7 @@ No se ejecutaron comandos de build deliberadamente sabiendo que faltaban sus
 ejecutables. No se instalaron herramientas del sistema ni se generó un lock o
 digest ficticio. El Compose fue revisado como texto; no validado por Docker.
 
-## Resultado de aceptación actualizado al 22/09/2026
+## Resultado de aceptación actualizado al 23/09/2026
 
 **Fase 0 todavía no puede declararse completa.** Java, Maven/Wrapper y Node/npm
 están verificados. Backend y frontend compilan; pasan 3 pruebas MVC y 2 unitarias
@@ -1867,5 +2002,8 @@ health UP, CORS correcto, /actuator/env cerrado y Flyway V1 aplicada a adaptativ
 PostgreSQL Compose fue validado: healthy, SELECT 1 = 1, DB/user adaptativa,
 inicialmente sin tablas public; tras runtime contiene solo flyway_schema_history.
 Spring y PostgreSQL detenidos al finalizar, volumen conservado y puerto 8080 libre.
-Maven verify y runtime manual validados. Esperar el siguiente paso sin staging,
-commit ni push; no avanzar a Fase 1.
+Maven verify y runtime manual validados. Eclipse Modeling Tools 2026-09 R base
+también validado: JustJ 25 embebido, Java 21 global intacto, EMF/Ecore/Ecore Tools
+presentes y cierre correcto. OCL incluido pero no utilizado; Xtext SDK completo,
+ATL y Acceleo 4 ausentes. Este paso solo autoriza cerrar los tres documentos en
+Git y publicarlos; después esperar autorización para Xtext SDK. No avanzar a Fase 1.

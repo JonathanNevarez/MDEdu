@@ -1,6 +1,57 @@
 # Herramientas y preparación del entorno Windows
 
-## Estado actual: runtime manual Spring Boot validado — 22/09/2026
+## Estado actual: Eclipse Modeling Tools base validado — 23/09/2026
+
+Instalación por extracción del ZIP oficial `eclipse-modeling-2026-09-R-win32-x86_64.zip`,
+Windows x86_64, 694931027 bytes. SHA-512 oficial y calculado coinciden exactamente:
+
+```text
+0fce50604679aa668f66a28c1be0cfa56263d83157389ad5fac39c905470dcb0f277d160afa8ab3217563c98aa87d726a7d328bbd864a313ddfee0f13e6b8cf9
+```
+
+Fuente: [ZIP oficial](https://download.eclipse.org/technology/epp/downloads/release/2026-09/R/eclipse-modeling-2026-09-R-win32-x86_64.zip)
+y [checksum SHA-512 oficial](https://download.eclipse.org/technology/epp/downloads/release/2026-09/R/eclipse-modeling-2026-09-R-win32-x86_64.zip.sha512).
+No se usaron instalador, Marketplace ni mirrors de terceros; sin UAC.
+
+| Elemento | Valor validado |
+| --- | --- |
+| Instalación de usuario | `C:\Users\alexxxjon\AppData\Local\Programs\Eclipse\eclipse-modeling-2026-09-R` |
+| Ejecutable | `C:\Users\alexxxjon\AppData\Local\Programs\Eclipse\eclipse-modeling-2026-09-R\eclipse.exe` |
+| Producto / About | Eclipse Modeling Tools 2026-09 (4.41.0), build 20260903-0720 |
+| Platform | 4.41.0.v20260828-1142 |
+| Package Modeling | 4.41.0.20260903-0719 |
+| Arquitectura | Windows x86_64 |
+| Java exclusivo del IDE | Temurin 25.0.4.1+1-LTS embebido |
+| JustJ feature / runtime | 25.0.4.v20260826-1347 / 25.0.4.v20260826-0822 |
+| Java / javac globales | Temurin 21.0.12.1 / javac 21.0.12.1 |
+| JAVA_HOME global | `C:\Program Files\Eclipse Adoptium\jdk-21.0.12.101-hotspot\` |
+| Workspace de validación | `C:\Users\alexxxjon\AppData\Local\EclipseWorkspaces\MDEdu-fase0` |
+| EMF SDK | 2.47.0.v20260704-1256 |
+| Ecore bundle / Editor bundle | 2.43.0.v20260704-1256 / 2.20.0.v20260704-1256 |
+| Ecore Tools | 3.6.0.202604070657 |
+| OCL | Incluido, All SDK 5.24.0.v20260601-1413; NO utilizado por el proyecto |
+| Xtext | Runtime/UI/Xbase 2.44.0 parciales; SDK completo AUSENTE |
+| ATL / Acceleo 4 | AUSENTES |
+
+PATH y JAVA_HOME no fueron modificados; Java 25 no se añadió al PATH.
+eclipse.ini permaneció intacto. El IDE inició con su JVM embebida y se cerró
+normalmente junto con sus procesos asociados. Instalación y workspace conservados;
+ZIP temporal eliminado después de validar. No se creó/importó ningún proyecto
+de trabajo ni metamodelo, no se añadieron plugins y no se configuró Tycho.
+
+Advertencia menor: EGit informó HOME no definido y generó metadata interna
+`.org.eclipse.egit.core.cmp` dentro del workspace externo; no produjo cambios Git.
+No se creó/modificó HOME ni se cambió configuración Git. El diálogo Defender
+desapareció antes de automatizarlo; no se añadieron exclusiones para Eclipse.
+No se presentó aceptación legal interactiva obligatoria.
+
+Evidencia detallada en [VERIFICACION_FASE_0](VERIFICACION_FASE_0.md).
+Este checkpoint solo documenta y versiona la base validada. Xtext SDK 2.44.0,
+ATL 4.12.0.v202505101449 y Acceleo 4.2.2 requieren pasos independientes;
+Tycho 5.0.4 queda para futuro build headless y OCL continúa diferido.
+Fase 1 no iniciada. Los apartados siguientes conservan evidencia histórica.
+
+## Histórico: runtime manual Spring Boot validado — 22/09/2026
 
 Comando desde backend/: `.\mvnw.cmd --batch-mode --no-transfer-progress spring-boot:run`.
 Spring Boot 3.5.16, Java Temurin 21.0.12.1, Maven Wrapper existente; usuario normal

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.project.mde</groupId>
+  <artifactId>mdedu-mde</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>MDEdu MDE</name>
+  <properties>
+    <tycho.version>5.0.4</tycho.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <modules><module>com.project.mde.programming.model</module></modules>
+  <repositories>
+    <repository><id>eclipse-2026-09</id><layout>p2</layout><url>https://download.eclipse.org/releases/2026-09/</url></repository>
+  </repositories>
+  <build><plugins>
+    <plugin><groupId>org.eclipse.tycho</groupId><artifactId>tycho-maven-plugin</artifactId><version>${tycho.version}</version><extensions>true</extensions></plugin>
+    <plugin><groupId>org.eclipse.tycho</groupId><artifactId>target-platform-configuration</artifactId><version>${tycho.version}</version>
+      <configuration><executionEnvironment>JavaSE-21</executionEnvironment>
+        <environments><environment><os>win32</os><ws>win32</ws><arch>x86_64</arch></environment></environments>
+      </configuration>
+    </plugin>
+  </plugins></build>
+</project>

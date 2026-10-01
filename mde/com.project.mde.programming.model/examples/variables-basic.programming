@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ASCII"?>
+<programming:Program xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:programming="https://mdedu.espoch.edu.ec/model/programming/1.0" name="Variables b&#xe1;sicas">
+  <statements xsi:type="programming:VariableDeclaration" name="contador">
+    <initialValue xsi:type="programming:Literal" value="0"/>
+  </statements>
+  <statements xsi:type="programming:Assignment" target="//@statements.0">
+    <value xsi:type="programming:Literal" value="1"/>
+  </statements>
+</programming:Program>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.project.mde.programming.model/src-gen" modelPluginID="com.project.mde.programming.model"
+    modelName="Programming" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="21.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>programming.ecore</foreignModel>
+  <genPackages basePackage="com.project.mde" prefix="Programming" disposableProviderFactory="true" ecorePackage="programming.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="programming.ecore#//ValueType">
+      <genEnumLiterals ecoreEnumLiteral="programming.ecore#//ValueType/INTEGER"/>
+      <genEnumLiterals ecoreEnumLiteral="programming.ecore#//ValueType/BOOLEAN"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="programming.ecore#//ComparisonOperator">
+      <genEnumLiterals ecoreEnumLiteral="programming.ecore#//ComparisonOperator/EQUAL"/>
+      <genEnumLiterals ecoreEnumLiteral="programming.ecore#//ComparisonOperator/NOT_EQUAL"/>
+      <genEnumLiterals ecoreEnumLiteral="programming.ecore#//ComparisonOperator/LESS_THAN"/>
+      <genEnumLiterals ecoreEnumLiteral="programming.ecore#//ComparisonOperator/LESS_OR_EQUAL"/>
+      <genEnumLiterals ecoreEnumLiteral="programming.ecore#//ComparisonOperator/GREATER_THAN"/>
+      <genEnumLiterals ecoreEnumLiteral="programming.ecore#//ComparisonOperator/GREATER_OR_EQUAL"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="programming.ecore#//BooleanOperator">
+      <genEnumLiterals ecoreEnumLiteral="programming.ecore#//BooleanOperator/AND"/>
+      <genEnumLiterals ecoreEnumLiteral="programming.ecore#//BooleanOperator/OR"/>
+      <genEnumLiterals ecoreEnumLiteral="programming.ecore#//BooleanOperator/NOT"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="programming.ecore#//SensorKind">
+      <genEnumLiterals ecoreEnumLiteral="programming.ecore#//SensorKind/FRONT_CLEAR"/>
+      <genEnumLiterals ecoreEnumLiteral="programming.ecore#//SensorKind/LEFT_CLEAR"/>
+      <genEnumLiterals ecoreEnumLiteral="programming.ecore#//SensorKind/RIGHT_CLEAR"/>
+      <genEnumLiterals ecoreEnumLiteral="programming.ecore#//SensorKind/AT_GOAL"/>
+      <genEnumLiterals ecoreEnumLiteral="programming.ecore#//SensorKind/HAS_KEY"/>
+      <genEnumLiterals ecoreEnumLiteral="programming.ecore#//SensorKind/ON_KEY"/>
+      <genEnumLiterals ecoreEnumLiteral="programming.ecore#//SensorKind/DOOR_AHEAD"/>
+      <genEnumLiterals ecoreEnumLiteral="programming.ecore#//SensorKind/DOOR_OPEN"/>
+    </genEnums>
+    <genClasses ecoreClass="programming.ecore#//Program">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute programming.ecore#//Program/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference programming.ecore#//Program/statements"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="programming.ecore#//Statement"/>
+    <genClasses ecoreClass="programming.ecore#//Move"/>
+    <genClasses ecoreClass="programming.ecore#//TurnLeft"/>
+    <genClasses ecoreClass="programming.ecore#//TurnRight"/>
+    <genClasses ecoreClass="programming.ecore#//VariableDeclaration">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute programming.ecore#//VariableDeclaration/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute programming.ecore#//VariableDeclaration/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference programming.ecore#//VariableDeclaration/initialValue"/>
+    </genClasses>
+    <genClasses ecoreClass="programming.ecore#//Assignment">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference programming.ecore#//Assignment/target"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference programming.ecore#//Assignment/value"/>
+    </genClasses>
+    <genClasses ecoreClass="programming.ecore#//Repeat">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference programming.ecore#//Repeat/count"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference programming.ecore#//Repeat/body"/>
+    </genClasses>
+    <genClasses ecoreClass="programming.ecore#//While">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference programming.ecore#//While/condition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference programming.ecore#//While/body"/>
+    </genClasses>
+    <genClasses ecoreClass="programming.ecore#//If">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference programming.ecore#//If/condition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference programming.ecore#//If/thenBranch"/>
+    </genClasses>
+    <genClasses ecoreClass="programming.ecore#//IfElse">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference programming.ecore#//IfElse/elseBranch"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="programming.ecore#//Expression"/>
+    <genClasses ecoreClass="programming.ecore#//Literal">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute programming.ecore#//Literal/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute programming.ecore#//Literal/value"/>
+    </genClasses>
+    <genClasses ecoreClass="programming.ecore#//VariableReference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference programming.ecore#//VariableReference/declaration"/>
+    </genClasses>
+    <genClasses ecoreClass="programming.ecore#//Comparison">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute programming.ecore#//Comparison/operator"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference programming.ecore#//Comparison/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference programming.ecore#//Comparison/right"/>
+    </genClasses>
+    <genClasses ecoreClass="programming.ecore#//BooleanExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute programming.ecore#//BooleanExpression/operator"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference programming.ecore#//BooleanExpression/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference programming.ecore#//BooleanExpression/right"/>
+    </genClasses>
+    <genClasses ecoreClass="programming.ecore#//SensorExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute programming.ecore#//SensorExpression/sensor"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

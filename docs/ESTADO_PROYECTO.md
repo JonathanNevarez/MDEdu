@@ -4,6 +4,36 @@ Actualización documental: 01/10/2026.
 
 ## Estado actual
 
+**FASE 0: COMPLETADA Y VALIDADA. FASE 1: COMPLETADA Y VALIDADA.
+FASE 2: NO INICIADA.**
+
+El metamodelo de programación EMF está implementado en
+`mde/com.project.mde.programming.model`: 17 EClasses, 2 abstractas, 4 EEnums,
+GenModel Java 21 y 44 fuentes generados. Ecore Validate y Eclipse Problems:
+0 errores; Problems final sin warnings. Los cuatro XMI cargan, validan y
+conservan estructura y referencias en round-trip con EMF real.
+
+Build independiente Tycho 5.0.4 / Maven 3.9.16 / Java 21.0.12.1:
+**BUILD SUCCESS**, salida 0. No se usaron Xtext, ATL, Acceleo u OCL.
+Backend/frontend intactos; Eclipse cerrado y workspace Fase 1 externo conservado.
+Servicios de la aplicación no iniciados; Java global intacto.
+
+Diseño: [FASE_1_METAMODELO_PROGRAMACION](FASE_1_METAMODELO_PROGRAMACION.md).
+Evidencia: [VERIFICACION_FASE_1](VERIFICACION_FASE_1.md).
+
+Siguiente paso: **FASE 2 — Blockly / representación visual → modelo EMF
+conforme a programming.ecore**, únicamente tras nueva autorización.
+El cierre Git autorizado usa `feat: add emf programming metamodel` y push a main;
+el bloqueo inicial de cuatro líneas con whitespace en enums EMF quedó resuelto
+mediante la regla específica `mde/**/src-gen/** -whitespace` en .gitattributes.
+`git diff --cached --check` pasó con código 0. Los fuentes generados se conservan
+sin edición manual; el control sigue activo para archivos no generados.
+
+## Histórico: cierre de Fase 0 del 01/10/2026
+
+Los apartados siguientes conservan la evidencia y previsiones anteriores a Fase 1;
+sus menciones a pendientes o ausencia de metamodelos no describen el estado actual.
+
 **FASE 0: COMPLETADA Y VALIDADA. Fase 1 NO iniciada.**
 El entorno está preparado; el producto educativo todavía no está implementado.
 No se crearon metamodelos, DSL, transformaciones ATL, templates Acceleo ni código generado.

@@ -19,3 +19,6 @@
 *.bak
 .DS_Store
 Thumbs.db
+
+# Artefactos compilados de proyectos Eclipse MDE
+mde/**/bin/

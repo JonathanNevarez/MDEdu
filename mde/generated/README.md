@@ -1,12 +1,13 @@
 # Código generado
 
-Reservado para generación EMF/Xtext. No editar clases generadas manualmente.
-La Fase 1 definirá rutas de salida, tareas de regeneración y política de
-versionado al verificar el toolchain; se preferirán salidas en `target/` de los
-módulos reales para evitar duplicar fuentes de compilación.
+Placeholder conservado desde Fase 0. La preferencia inicial por salidas en
+`target/` era provisional. La política autorizada de Fase 1 establece que los
+fuentes EMF de `../com.project.mde.programming.model/src-gen/` **se versionan**.
+Se regeneran desde `.ecore` / `.genmodel` mediante **Generate Model Code**;
+no editar clases generadas manualmente. Binarios y temporales permanecen en
+`bin/` y `target/`, ignorados. Esta carpeta no duplica los fuentes del plugin.
 
-No se añade una exclusión global de `mde/generated/`: todavía no hay artefactos
-generados y la política exacta se decidirá en Fase 1 según EMF/Xtext/Tycho.
+No se añade una exclusión global de `mde/generated/`.
 Se versionarán las fuentes MDE (`.ecore`, `.genmodel`, gramáticas `.xtext`,
 transformaciones ATL y Acceleo), modelos de ejemplo relevantes y configuraciones
 reproducibles. Para cada salida generada se documentará su origen, tarea de

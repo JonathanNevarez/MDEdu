@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ASCII"?>
+<programming:Program xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:programming="https://mdedu.espoch.edu.ec/model/programming/1.0" name="Condicionales b&#xe1;sicos">
+  <statements xsi:type="programming:IfElse">
+    <condition xsi:type="programming:SensorExpression" sensor="HAS_KEY"/>
+    <thenBranch xsi:type="programming:Move"/>
+    <elseBranch xsi:type="programming:TurnLeft"/>
+  </statements>
+</programming:Program>

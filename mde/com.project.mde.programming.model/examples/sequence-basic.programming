@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ASCII"?>
+<programming:Program xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:programming="https://mdedu.espoch.edu.ec/model/programming/1.0" name="Secuencia b&#xe1;sica">
+  <statements xsi:type="programming:Move"/>
+  <statements xsi:type="programming:Move"/>
+  <statements xsi:type="programming:TurnLeft"/>
+  <statements xsi:type="programming:Move"/>
+  <statements xsi:type="programming:TurnRight"/>
+</programming:Program>

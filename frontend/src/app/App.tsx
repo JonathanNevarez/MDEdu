@@ -1,6 +1,8 @@
 import { NavLink, Outlet, Route, Routes } from 'react-router-dom';
 import { HomePage } from '../pages/HomePage';
 import { NotFoundPage } from '../pages/NotFoundPage';
+import { lazy, Suspense } from 'react';
+const LaboratoryPage = lazy(() => import('../features/programming/pages/LaboratoryPage').then(m => ({ default: m.LaboratoryPage })));
 
 function AppLayout() {
   return (
@@ -10,6 +12,7 @@ function AppLayout() {
         <span className="site-name">Lógica de programación</span>
         <nav aria-label="Navegación principal">
           <NavLink to="/" end>Inicio</NavLink>
+          <NavLink to="/laboratorio">Laboratorio libre</NavLink>
         </nav>
       </header>
       <main id="contenido" tabIndex={-1} className="page-content">
@@ -25,6 +28,7 @@ export function App() {
     <Routes>
       <Route element={<AppLayout />}>
         <Route index element={<HomePage />} />
+        <Route path="laboratorio" element={<Suspense fallback={<p>Cargando editor…</p>}><LaboratoryPage /></Suspense>} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

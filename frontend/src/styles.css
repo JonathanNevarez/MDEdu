@@ -71,6 +71,16 @@ p { max-width: 65ch; }
 
 .site-footer { padding: 1.5rem; text-align: center; color: #45605e; font-size: 0.9rem; }
 
+.lab-controls { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: end; margin: 1rem 0; }
+.lab-controls label { display: flex; flex-direction: column; gap: 0.25rem; }
+.lab-controls button, .lab-controls input, .lab-controls select {
+  font: inherit; padding: 0.5rem 0.75rem; border: 1px solid #688780; border-radius: 0.3rem;
+}
+.lab-controls button { background: #fff; color: #18323c; cursor: pointer; }
+.lab-controls button:disabled { opacity: 0.6; cursor: wait; }
+.blockly-host { height: 560px; width: 100%; border: 1px solid #688780; }
+.xmi-view { overflow: auto; max-height: 400px; padding: 1rem; background: #fff; }
+
 @media (max-width: 600px) {
   .page-content { margin: 2rem auto; }
 }

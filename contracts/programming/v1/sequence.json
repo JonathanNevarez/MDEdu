@@ -1,0 +1,21 @@
+{
+  "contractVersion": 1,
+  "name": "Secuencia básica",
+  "statements": [
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "turnLeft"
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "turnRight"
+    }
+  ]
+}

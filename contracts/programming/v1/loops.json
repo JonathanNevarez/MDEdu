@@ -1,0 +1,34 @@
+{
+  "contractVersion": 1,
+  "name": "Ciclos básicos",
+  "statements": [
+    {
+      "kind": "repeat",
+      "count": {
+        "kind": "literal",
+        "valueType": "INTEGER",
+        "value": "3"
+      },
+      "body": [
+        {
+          "kind": "move"
+        },
+        {
+          "kind": "turnRight"
+        }
+      ]
+    },
+    {
+      "kind": "while",
+      "condition": {
+        "kind": "sensorExpression",
+        "sensor": "FRONT_CLEAR"
+      },
+      "body": [
+        {
+          "kind": "move"
+        }
+      ]
+    }
+  ]
+}

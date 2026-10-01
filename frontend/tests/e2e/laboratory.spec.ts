@@ -1,0 +1,31 @@
+import { test, expect } from '@playwright/test';
+
+test('laboratorio conserva variables tras guardar, limpiar y recargar', async ({ page }) => {
+  const errors: string[] = []; page.on('pageerror', e => errors.push(e.message));
+  await page.goto('/laboratorio');
+  await expect(page.getByRole('heading', { name: 'Laboratorio libre' })).toBeVisible();
+  await expect(page.getByTestId('blockly-editor').locator('.blocklySvg')).toBeVisible();
+  await expect(page.getByTestId('blockly-editor').locator('.blocklyToolbox')).toBeVisible();
+  await page.getByRole('combobox', { name: 'Ejemplo', exact: true }).selectOption('variables');
+  await page.getByRole('button', { name: 'Cargar ejemplo' }).click();
+  const declaration = page.getByRole('figure', { name: /^Declarar, contador,/ });
+  const assignment = page.getByRole('figure', { name: /^Asignar a, contador,/ });
+  await expect(declaration).toBeVisible();
+  await expect(assignment).toBeVisible();
+  await page.getByRole('button', { name: 'Guardar workspace' }).click();
+  const before = await page.evaluate(() => localStorage.getItem('mdedu.blockly.workspace.v1'));
+  expect(before).not.toBeNull();
+  await page.getByRole('button', { name: 'Limpiar', exact: true }).click();
+  await expect(declaration).toHaveCount(0);
+  await expect(assignment).toHaveCount(0);
+  await page.reload();
+  await page.getByRole('button', { name: 'Restaurar workspace' }).click();
+  await expect(page.getByRole('status').filter({ hasText: 'Workspace restaurado.' })).toBeVisible();
+  await expect(page.getByLabel('Nombre del programa')).toHaveValue('Variables básicas');
+  await expect(declaration).toBeVisible();
+  await expect(assignment).toBeVisible();
+  await page.getByRole('button', { name: 'Guardar workspace' }).click();
+  const after = await page.evaluate(() => localStorage.getItem('mdedu.blockly.workspace.v1'));
+  expect(JSON.parse(after!)).toEqual(JSON.parse(before!));
+  expect(errors).toEqual([]);
+});

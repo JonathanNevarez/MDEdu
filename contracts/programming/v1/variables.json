@@ -1,0 +1,26 @@
+{
+  "contractVersion": 1,
+  "name": "Variables básicas",
+  "statements": [
+    {
+      "kind": "variableDeclaration",
+      "declarationId": "contador-declaration",
+      "name": "contador",
+      "valueType": "INTEGER",
+      "initialValue": {
+        "kind": "literal",
+        "valueType": "INTEGER",
+        "value": "0"
+      }
+    },
+    {
+      "kind": "assignment",
+      "targetDeclarationId": "contador-declaration",
+      "value": {
+        "kind": "literal",
+        "valueType": "INTEGER",
+        "value": "1"
+      }
+    }
+  ]
+}

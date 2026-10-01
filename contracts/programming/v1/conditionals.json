@@ -1,0 +1,23 @@
+{
+  "contractVersion": 1,
+  "name": "Condicionales básicos",
+  "statements": [
+    {
+      "kind": "ifElse",
+      "condition": {
+        "kind": "sensorExpression",
+        "sensor": "HAS_KEY"
+      },
+      "thenBranch": [
+        {
+          "kind": "move"
+        }
+      ],
+      "elseBranch": [
+        {
+          "kind": "turnLeft"
+        }
+      ]
+    }
+  ]
+}

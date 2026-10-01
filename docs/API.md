@@ -15,6 +15,31 @@ fallo (HTTP 503 por defecto). Si PostgreSQL no está disponible al arrancar,
 Flyway puede impedir el inicio; no se promete que el endpoint responda en ese caso.
 Su ejecución real sigue pendiente. Solo health está expuesto; no env ni beans.
 
+## Implementado en Fase 2: POST /api/programming/models
+
+Construye y valida un Program EMF en memoria. No guarda en PostgreSQL ni ejecuta
+el programa. Contrato completo y ejemplos compartidos:
+[ProgramDto V1](../contracts/programming/v1/README.md).
+
+Request mínimo:
+
+```json
+{"contractVersion":1,"name":"Secuencia","statements":[{"kind":"move"}]}
+```
+
+HTTP 200, Content-Type application/json: `valid: true`, `diagnostics: []`,
+`summary: {rootType: "Program", statementCount: 1, namespace:
+"https://mdedu.espoch.edu.ec/model/programming/1.0"}` y `xmi` como string UTF-8
+serializado por EMF. El resumen cuenta también instrucciones anidadas.
+
+HTTP 400: JSON mal formado, kind desconocido, versión incompatible, campos
+obligatorios ausentes, enum inválido, IDs duplicados o referencias inexistentes.
+Devuelve `valid: false`, diagnostics con code/message y summary/xmi nulos, sin
+stack trace. HTTP 422: diagnóstico estructural real de Diagnostician; probado con
+VariableDeclaration.name nulo (atributo obligatorio Ecore). No se inventa un
+error EMF para simular 422. La validación no es un intérprete ni un analizador
+semántico de tipos.
+
 ## Endpoints educativos planificados — NO implementados
 
 | Método y ruta | Entrada prevista | Salida DTO prevista / fase |

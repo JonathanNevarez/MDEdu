@@ -1,7 +1,18 @@
 # Arquitectura inicial
 
-Estado: diseño objetivo. En esta entrega solo existen los componentes de arranque
-de Fase 0. Ningún diagrama implica que el ciclo pedagógico esté implementado.
+Estado: los diagramas generales describen el diseño objetivo. Ya existen el
+arranque de Fase 0, el metamodelo de Fase 1 y el flujo estructural de Fase 2
+descrito a continuación. El ciclo pedagógico completo no está implementado.
+
+## Flujo implementado en Fase 2
+
+`Blockly → ProgramDto V1 → Spring API → mapper → Program EMF → Diagnostician → XMI`.
+El mapper resuelve variables en dos pasadas mediante referencias EObject reales.
+El modelo generado de Fase 1 se consume como artefacto Maven, sin modificarlo.
+La API opera en memoria y no añade persistencia DB. El workspace visual se guarda
+y restaura con serialización Blockly en localStorage. ProgramDto transporta el
+programa; Program EMF sigue siendo el modelo canónico. El cliente HTTP está
+separado del adaptador Blockly. Detalles: [Fase 2](FASE_2_BLOCKLY_MODELO_EMF.md).
 
 ## Responsabilidades y límites
 

@@ -1,0 +1,7 @@
+package com.project.programming.application;
+
+public class ContractException extends RuntimeException {
+    private final String code;
+    public ContractException(String code, String message) { super(message); this.code = code; }
+    public String code() { return code; }
+}

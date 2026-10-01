@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(properties = {
+@WebMvcTest(controllers = CorsConfigurationTest.ProbeController.class, properties = {
         "spring.config.import=",
         "app.cors.allowed-origins=http://localhost:5173,http://127.0.0.1:5173"
 })

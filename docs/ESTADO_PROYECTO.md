@@ -5,6 +5,31 @@ Actualización documental: 01/10/2026.
 ## Estado actual
 
 **FASE 0: COMPLETADA Y VALIDADA. FASE 1: COMPLETADA Y VALIDADA.
+FASE 2: COMPLETADA Y VALIDADA. FASE 3: NO INICIADA.**
+
+Partida de Fase 2: `44600d55fad10b58af812a35032807ad1b08dba4`.
+Implementado el laboratorio `/laboratorio`, Blockly 13.3.0, ProgramDto V1,
+fixtures compartidos, persistencia visual local y API DTO → EMF → XMI.
+El modelo formal se consume como artefacto Maven y permanece intacto.
+
+Validaciones finales: typecheck y build PASS; 19 pruebas frontend en 2 suites;
+2 E2E Chromium; backend test/verify BUILD SUCCESS (25 unit/MVC + 4 IT históricas);
+MDE clean verify BUILD SUCCESS. Revisión visual full-stack en Opera: variables,
+guardar/limpiar/restaurar, POST HTTP 200, valid=true, 2 instrucciones y XMI visible.
+Frontend, backend y PostgreSQL Compose quedaron detenidos. Sin nueva persistencia
+DB ni Flyway V2. Docker Desktop permanece operativo; no quedan contenedores en
+ ejecución. El warning de bundle >500 kB queda como deuda de optimización.
+
+Documentación: [diseño Fase 2](FASE_2_BLOCKLY_MODELO_EMF.md),
+[evidencia y cronología](VERIFICACION_FASE_2.md),
+[contrato V1](../contracts/programming/v1/README.md).
+Cierre Git autorizado: `feat: connect blockly editor to emf model`, solo main.
+Siguiente fase, pendiente de autorización: Fase 3 — M2T con Acceleo,
+Program EMF → JavaScript. No se ha iniciado.
+
+## Histórico: cierre de Fase 1
+
+**FASE 0: COMPLETADA Y VALIDADA. FASE 1: COMPLETADA Y VALIDADA.
 FASE 2: NO INICIADA.**
 
 El metamodelo de programación EMF está implementado en

@@ -1,9 +1,274 @@
 # Verificación de Fase 0
 
+## Estado final del entorno — 01/10/2026
+
+**FASE 0: COMPLETADA Y VALIDADA. Fase 1 NO iniciada.**
+Esta sección registra el cierre del entorno; las pruebas previas aceptadas permanecen
+más abajo como histórico. La tabla completa de criterios obligatorios y la asignación
+tecnológica final están en [ESTADO_PROYECTO](ESTADO_PROYECTO.md).
+
+### Condiciones iniciales y alcance
+
+Comprobaciones iniciales: git status limpio, main sincronizada con origin/main,
+HEAD `6ba9017983f4cc16e258b332f54791b8c002f6a3`, último commit
+`6ba9017 chore: validate eclipse modeling tools environment`.
+Remoto: `https://github.com/JonathanNevarez/MDEdu.git`.
+Java/javac globales 21.0.12.1; sin servicios MDEdu escuchando en 8080/5173/4173/5432.
+Docker no se inició. No se repitieron Maven verify, BackendBootstrapIT, Compose
+ni las pruebas frontend previamente aceptadas.
+
+Instalación Eclipse existente:
+`C:\Users\alexxxjon\AppData\Local\Programs\Eclipse\eclipse-modeling-2026-09-R`.
+Workspace externo: `C:\Users\alexxxjon\AppData\Local\EclipseWorkspaces\MDEdu-fase0`.
+Fuente única elegida para plugins: `https://download.eclipse.org/releases/2026-09`.
+En Install New Software se desmarcó Contact all update sites during install.
+No se utilizaron otras versiones, Marketplace ni repositorios alternativos.
+
+### Xtext SDK: instalación y prueba funcional
+
+Raíz instalada: `org.eclipse.xtext.sdk.feature.group`, **2.44.0.v20260824-1228**.
+El usuario había aceptado manualmente el Eclipse Foundation Software User Agreement;
+se respetó esa aceptación y se continuó desde el estado existente. Instalación
+aplicada y Eclipse reiniciado. No se marcó ningún acuerdo mediante automatización.
+
+| Componente real | Versión |
+| --- | --- |
+| Xtext SDK | 2.44.0.v20260824-1228 |
+| Xtext Runtime / UI | 2.44.0.v20260824-1228 |
+| Xbase / Xbase lib | 2.44.0.v20260824-1228 |
+| Xtend SDK / lib | 2.44.0.v20260824-1228 |
+| MWE core / utils | 1.21.0.v20260823-0702 |
+| MWE2 language SDK / launcher / runtime SDK | 2.27.0.v20260823-0702 |
+
+Comparación p2 base -> perfil Xtext `1790863369015.profile.gz`:
+ninguna unidad existente cambió de versión ni fue eliminada. Se añadieron SDK,
+Xtend SDK/lib, MWE2 language/runtime SDK y launcher, Xtext docs/examples/redist,
+Xtext language UI y graph. Runtime/UI/Xbase 2.44.0 fueron reutilizados.
+Los ejemplos son componentes del SDK; no se crearon proyectos de ejemplo.
+
+File > New > Other mostró Xtext Project y Xtext Project From Existing Ecore Models.
+Se abrió New Xtext Project correctamente y se canceló. Se repitió la apertura
+tras instalar ATL/Acceleo: correcta. El formulario propone JavaSE-25 por el runtime
+del IDE; no se completó ni se alteró el Java global.
+
+### ATL: instalación y prueba funcional
+
+Raíz instalada: `org.eclipse.m2m.atl.feature.group`, **4.12.0.v202505101449**.
+Se seleccionó únicamente ATL, sin seleccionar ATL SDK como raíz adicional.
+La resolución mostró ATL Development Toolkit, Runtime, EMFTVM runtime y EMFTVM UI,
+todos **4.12.0.v202505101449**. Sin conflictos ni cambios a Platform/EMF/JustJ/Xtext.
+Finish estaba habilitado sin nueva pantalla legal; no se aceptaron acuerdos automáticamente.
+Instalación completada y reinicio únicamente de Eclipse.
+
+Perfil ATL: `1790864297696.profile.gz`; comparación con Xtext:
+`CHANGED []`, `REMOVED []`.
+
+| Función comprobada en bundles instalados | Bundle / versión |
+| --- | --- |
+| Editor | org.eclipse.m2m.atl.adt.editor / 4.12.0.v202505101449 |
+| Engine | org.eclipse.m2m.atl.engine, org.eclipse.m2m.atl.engine.emfvm / 4.12.0.v202505101449 |
+| Soporte EMF | org.eclipse.m2m.atl.core.emf, org.eclipse.m2m.atl.drivers.emf4atl / 4.12.0.v202505101449 |
+| Launch configuration | org.eclipse.m2m.atl.engine.emfvm.launch / 4.12.0.v202505101449 |
+| EMFTVM / launcher | org.eclipse.m2m.atl.emftvm, org.eclipse.m2m.atl.emftvm.launcher / 4.12.0.v202505101449 |
+
+File > New > Other > ATL mostró ATL File, ATL Plugin y ATL Project.
+New ATL Project abrió correctamente; se canceló con nombre vacío. No se creó
+proyecto, transformación ni configuración de ejecución.
+
+### Acceleo 4: instalación y prueba funcional
+
+Raíz instalada: `org.eclipse.acceleo.aql.feature.feature.group`, **4.2.2**.
+Resolución visible: Acceleo 4.2.2 y Acceleo Query JDT Integration 8.1.2.
+No se mostró nueva pantalla legal ni aviso inesperado de trust/firma. Instalación
+completada y reinicio únicamente de Eclipse. Perfil final
+`1790864774074.profile.gz`: respecto a ATL, `CHANGED []`, `REMOVED []`.
+
+| Componente instalado | Versión |
+| --- | --- |
+| org.eclipse.acceleo.aql | 4.2.2 |
+| org.eclipse.acceleo.aql.ide / ide.ui | 4.2.2 |
+| org.eclipse.acceleo.aql.ls | 4.2.2 |
+| org.eclipse.acceleo.aql.ls.debug.ide / ide.ui | 4.2.2 |
+| org.eclipse.acceleo.aql.profiler / editor | 4.2.2 |
+| org.eclipse.acceleo.query | 8.1.2 |
+| org.eclipse.acceleo.query.ide / ide.jdt / ide.ui | 8.1.2 |
+| org.eclipse.acceleo.query.jdt.feature.group | 8.1.2 |
+
+plugin.xml confirma el editor genérico integrado, el wizard Acceleo Module File
+(categoría Acceleo 4) y el launcher `Acceleo 4 Launcher`, tipo
+`org.eclipse.acceleo.aql.ls.debug.ide.launchConfigurationType`, modos run/debug/profile.
+El launcher viene en los bundles IDE/debug; no se necesitó otra feature raíz.
+
+El wizard Acceleo Module File abrió y se canceló sin editar ni generar nada.
+Mostró `The path of the parent folder of the module cannot be empty.` porque no
+hay proyecto/carpeta seleccionada: validación esperada del formulario, no fallo de instalación.
+No se creó módulo MTL/AQL ni template. El inventario p2 no contiene unidades Acceleo 3.x
+ni raíz Acceleo 3 no deseada; AQL 8.1.2 no es Acceleo 3.
+
+### Comprobación conjunta del IDE
+
+Comparación del perfil final con el original del paquete:
+
+```text
+BASE_CHANGED []
+BASE_REMOVED []
+```
+
+Raíces p2 exactas Xtext SDK/ATL/Acceleo confirmadas en iuProperties.
+
+| Componente conservado | Versión real |
+| --- | --- |
+| Modeling Tools / About | 2026-09 (4.41.0), build 20260903-0720 |
+| Package Modeling | 4.41.0.20260903-0719 |
+| Platform | 4.41.0.v20260828-1142 |
+| EMF SDK | 2.47.0.v20260704-1256 |
+| Ecore bundle | 2.43.0.v20260704-1256 |
+| Ecore Editor bundle | 2.20.0.v20260704-1256 |
+| Ecore Tools | 3.6.0.202604070657 |
+| OCL All SDK | 5.24.0.v20260601-1413, DISPONIBLE / DIFERIDO |
+| JustJ feature / runtime | 25.0.4.v20260826-1347 / 25.0.4.v20260826-0822 |
+
+Último arranque real del workspace:
+
+```text
+!SESSION 2026-10-01 09:26:45.759
+eclipse.buildId=4.41.0.20260903-0719
+java.version=25.0.4.1
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=es_EC
+```
+
+Tooling final Ecore/EMF visible: Ecore Model, Ecore Modeling Project, EMF Generator
+Model; Xtext Project volvió a abrir. ATL y Acceleo comprobados según los apartados
+anteriores. Ningún wizard se completó. No se usó OCL ni se alteró su instalación.
+
+Cierre normal mediante Alt+F4. Eclipse y procesos relacionados terminados;
+instalación/workspace conservados. Workspace contiene únicamente `.metadata`.
+El único `.project` está en la metadata interna de EGit
+`.metadata/.plugins/org.eclipse.egit.core/.org.eclipse.egit.core.cmp/.project`;
+no es un proyecto del producto. No hay proyectos MDEdu creados/importados.
+
+### Java global y Maven en nueva PowerShell
+
+Se cargó el PATH persistente únicamente en el proceso nuevo; no se modificaron
+variables de usuario/máquina. Comandos java -version, javac -version,
+$env:JAVA_HOME, where.exe java y where.exe javac:
+
+```text
+openjdk version "21.0.12.1" 2026-08-18 LTS
+OpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)
+javac 21.0.12.1
+C:\Program Files\Eclipse Adoptium\jdk-21.0.12.101-hotspot\
+C:\Program Files\Eclipse Adoptium\jdk-21.0.12.101-hotspot\bin\java.exe
+C:\Program Files\Eclipse Adoptium\jdk-21.0.12.101-hotspot\bin\javac.exe
+```
+
+`mvn -version`:
+
+```text
+Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)
+Maven home: C:\Users\alexxxjon\AppData\Local\Programs\Apache\Maven\apache-maven-3.9.16
+Java version: 21.0.12.1, vendor: Eclipse Adoptium, runtime: C:\Program Files\Eclipse Adoptium\jdk-21.0.12.101-hotspot
+Default locale: es_EC, platform encoding: UTF-8
+OS name: "windows 11", version: "10.0", arch: "amd64", family: "windows"
+```
+
+Java 25 no aparece como resolución de java/javac ni se añadió al PATH. JAVA_HOME
+y eclipse.ini permanecen intactos; el -vm de Eclipse apunta a JustJ embebido.
+
+### Tycho 5.0.4: resolución fuera del repositorio
+
+Carpeta temporal creada para esta comprobación:
+`C:\Users\alexxxjon\AppData\Local\Temp\mdedu-tycho-5.0.4-validation`.
+Desde ella se ejecutó Maven 3.9.16 instalado, con Java 21.0.12.1:
+
+```text
+mvn -B -ntp help:describe -Dplugin=org.eclipse.tycho:tycho-maven-plugin:5.0.4 -Ddetail
+```
+
+Salida real relevante, código **0**:
+
+```text
+[INFO] Building Maven Stub Project (No POM) 1
+[INFO] --- help:3.5.2:describe (default-cli) @ standalone-pom ---
+[INFO] org.eclipse.tycho:tycho-maven-plugin:5.0.4
+Name: Tycho Maven Build Extension
+Description: The Tycho Maven Plugin provides extensions to build Eclipse
+  projects.
+Group Id: org.eclipse.tycho
+Artifact Id: tycho-maven-plugin
+Version: 5.0.4
+Goal Prefix: tycho
+This plugin has 0 goal:
+[INFO] BUILD SUCCESS
+[INFO] Total time:  4.069 s
+[INFO] Finished at: 2026-10-01T09:31:04-05:00
+```
+
+El registro Maven `_remote.repositories` identifica `central` para JAR y POM.
+Lectura del descriptor `META-INF/maven/plugin.xml` del JAR resuelto:
+
+```text
+groupId org.eclipse.tycho
+artifactId tycho-maven-plugin
+version 5.0.4
+requiredJavaVersion 21
+requiredMavenVersion 3.9.9
+```
+
+Los cero goals son coherentes con su naturaleza de build extension; el descriptor
+fue accesible. Maven 3.9.16 >= 3.9.9 y Java 21 cumplen los requisitos.
+No se creó POM temporal porque help:describe funcionó sin POM. Carpeta temporal
+vacía eliminada mediante ruta literal verificada; Test-Path posterior: False.
+La caché Maven permanece. No se instaló Tycho dentro de Eclipse ni se añadió al
+backend, Wrapper o mde/. No se construyó plugin Eclipse real; ese build queda para
+el trabajo futuro del producto, no es un criterio incumplido de esta validación.
+
+### Git, limpieza e incidencias
+
+Antes de documentar, git status --short no produjo salida.
+`git status --ignored --short`:
+
+```text
+!! .env
+!! backend/target/
+!! frontend/dist/
+!! frontend/node_modules/
+!! frontend/test-results/
+```
+
+Recorrido del repositorio: ningún nuevo `.metadata`, `.settings`, `.project` ni
+`.classpath`. No hay listeners en 8080/5173/4173/5432 ni procesos de aplicación.
+Docker está cerrado y no fue iniciado; PostgreSQL continúa detenido.
+No se alteraron código, configuración, ramas, identidad Git ni mde/.
+
+Incidencias menores: aviso EGit HOME no definido, sin cambiar HOME; referencia de
+ventana obsoleta durante reinicio, resuelta seleccionando la ventana actual.
+El rg no estaba en el PATH refrescado de una comprobación y se utilizó un recorrido
+Python de solo lectura. Una orden combinada de inspección/limpieza fue bloqueada
+por la revisión automática antes de ejecutarse; se separó la inspección y se eliminó
+solo la carpeta temporal vacía por ruta literal, correctamente. Sin fallos de p2,
+sin cambio de versiones y sin errores de firma observados. No hubo nuevos acuerdos
+legales en ATL/Acceleo ni aceptación automática de términos.
+La revisión documental detectó y corrigió la codificación de acentos del texto
+nuevo antes del commit; el histórico se conservó y git diff --check pasó.
+
+Este cierre modifica únicamente ESTADO_PROYECTO.md, HERRAMIENTAS.md y este documento.
+Commit de cierre autorizado: `chore: complete phase 0 development environment`,
+seguido de push a main y comprobación de igualdad de hashes local/tracking/remoto.
+No se inicia Fase 1.
+
+## Historial conservado
+
+Todo lo que sigue corresponde a checkpoints previos al cierre del 01/10/2026.
+Las expresiones de estado actual, ausencias o pendientes dentro de ese historial
+se refieren a la fecha de cada checkpoint, no al estado final de arriba.
+
 Registro inicial: 20/09/2026. Actualizado: 23/09/2026. Distingue inspección, revisión estática y pruebas
 de aplicación. No se presenta una comprobación estática como compilación o arranque.
 
-## Eclipse Modeling Tools BASE: VALIDADO — 23/09/2026
+## Histórico: Eclipse Modeling Tools BASE: VALIDADO — 23/09/2026
 
 ### Alcance y estado inicial
 
@@ -1990,7 +2255,7 @@ No se ejecutaron comandos de build deliberadamente sabiendo que faltaban sus
 ejecutables. No se instalaron herramientas del sistema ni se generó un lock o
 digest ficticio. El Compose fue revisado como texto; no validado por Docker.
 
-## Resultado de aceptación actualizado al 23/09/2026
+## Histórico: resultado de aceptación al 23/09/2026
 
 **Fase 0 todavía no puede declararse completa.** Java, Maven/Wrapper y Node/npm
 están verificados. Backend y frontend compilan; pasan 3 pruebas MVC y 2 unitarias

@@ -1,6 +1,69 @@
 # Herramientas y preparación del entorno Windows
 
-## Estado actual: Eclipse Modeling Tools base validado — 23/09/2026
+## Estado actual — cierre de Fase 0, 01/10/2026
+
+**FASE 0: COMPLETADA Y VALIDADA. Fase 1 NO iniciada.**
+La matriz final y todos los criterios obligatorios están en
+[ESTADO_PROYECTO](ESTADO_PROYECTO.md); comandos y resultados reales en
+[VERIFICACION_FASE_0](VERIFICACION_FASE_0.md).
+
+| Componente | Versión instalada / validación |
+| --- | --- |
+| Eclipse Modeling Tools | 2026-09 R, About 20260903-0720, package 4.41.0.20260903-0719 |
+| Platform | 4.41.0.v20260828-1142 |
+| EMF SDK / Ecore | 2.47.0.v20260704-1256 / 2.43.0.v20260704-1256 |
+| Ecore Tools | 3.6.0.202604070657 |
+| Xtext SDK, Runtime, UI, Xbase, Xtend | 2.44.0.v20260824-1228 |
+| MWE core/utils / MWE2 | 1.21.0.v20260823-0702 / 2.27.0.v20260823-0702 |
+| ATL | 4.12.0.v202505101449 |
+| Acceleo / AQL | 4.2.2 / 8.1.2; Acceleo 3 ausente |
+| Tycho | 5.0.4, resolución y descriptor correctos, no plugin del IDE |
+| Maven para Tycho | 3.9.16 con Java 21.0.12.1 |
+| OCL All SDK | 5.24.0.v20260601-1413, DISPONIBLE / DIFERIDO |
+| JustJ feature / runtime | 25.0.4.v20260826-1347 / 25.0.4.v20260826-0822 |
+| Java interno Eclipse | Temurin 25.0.4.1+1-LTS |
+| Java global / javac | Temurin 21.0.12.1 / 21.0.12.1 |
+
+Raíces p2 instaladas exactas:
+
+- `org.eclipse.xtext.sdk.feature.group`: `2.44.0.v20260824-1228`.
+- `org.eclipse.m2m.atl.feature.group`: `4.12.0.v202505101449`.
+- `org.eclipse.acceleo.aql.feature.feature.group`: `4.2.2`.
+
+Fuente de instalación: `https://download.eclipse.org/releases/2026-09`.
+Se desactivó la consulta de otros sitios durante la resolución p2. No se usaron
+Marketplace, nightly, staging ni versiones alternativas. Las unidades base
+permanecieron intactas. Eclipse se reinició para aplicar los plugins.
+
+Xtext añadió SDK, Xtend, MWE2, documentación y tooling de desarrollo de lenguajes;
+reutilizó Runtime/UI/Xbase 2.44.0. ATL aporta editor, engine, soporte EMF, EMFTVM y
+launchers. Acceleo incluye IDE, editor, language server y launcher Acceleo 4
+(run/debug/profile), con integración AQL JDT 8.1.2. Wizards comprobados y
+cancelados; ningún proyecto ni template creado.
+
+Tycho se comprobó fuera de MDEdu con
+`mvn -B -ntp help:describe -Dplugin=org.eclipse.tycho:tycho-maven-plugin:5.0.4 -Ddetail`.
+Resultado: salida 0, BUILD SUCCESS; descriptor requiere Java 21 y Maven 3.9.9.
+No se construyó un plugin real, no se creó POM MDE ni se modificó backend/pom.xml.
+La carpeta temporal se eliminó; la caché Maven puede conservarse.
+
+Instalación: `C:\Users\alexxxjon\AppData\Local\Programs\Eclipse\eclipse-modeling-2026-09-R`.
+Workspace: `C:\Users\alexxxjon\AppData\Local\EclipseWorkspaces\MDEdu-fase0`.
+JAVA_HOME: `C:\Program Files\Eclipse Adoptium\jdk-21.0.12.101-hotspot\`.
+Sin cambios persistentes a PATH/JAVA_HOME ni eclipse.ini. Java 25 es exclusivo del IDE.
+Eclipse cerrado, instalación/workspace conservados y servicios del proyecto detenidos.
+
+El usuario aceptó manualmente el Eclipse Foundation Software User Agreement de
+Xtext. ATL y Acceleo no mostraron otra pantalla de aceptación legal ni avisos
+inesperados de firma/trust durante esta instalación; no se automatizó aceptación.
+EGit repitió HOME no definido, sin modificar variables ni configuración Git.
+
+## Historial conservado
+
+Las secciones siguientes registran estados y propuestas anteriores al 01/10/2026.
+Sus pendientes describen esas fechas; prevalece la matriz final de arriba.
+
+## Histórico: Eclipse Modeling Tools base validado — 23/09/2026
 
 Instalación por extracción del ZIP oficial `eclipse-modeling-2026-09-R-win32-x86_64.zip`,
 Windows x86_64, 694931027 bytes. SHA-512 oficial y calculado coinciden exactamente:
@@ -455,7 +518,7 @@ autorizada de `winget --version` fuera de él devolvió `v1.29.290`, salida 0.
 Las consultas `winget show` también se realizaron fuera del aislamiento. Esto
 no demuestra que las aplicaciones consultadas estén instaladas.
 
-## Propuesta concreta para revisar antes de instalar
+## Histórico: propuesta concreta anterior a las instalaciones
 
 Preferencia: WinGet para JDK/Node/Git/Docker, con versiones comprobadas en el
 catálogo local. No instalar Chocolatey/Scoop. Para Maven, ZIP oficial en carpeta
@@ -566,7 +629,7 @@ carpetas habituales de Program Files, AppData/Local/Programs, Eclipse, .p2/.m2,
 Scoop/Chocolatey y registros Windows de desinstalación. Instalaciones portables
 en otras rutas siguen siendo posibles. JAVA_HOME, MAVEN_HOME y M2_HOME estaban vacíos.
 
-## Instalación recomendada, pendiente de realizar
+## Histórico: instalación recomendada antes de realizarla
 
 1. **JDK 21**: descargar Temurin 21 JDK para Windows x64 e instalar el MSI;
    habilitar PATH y JAVA_HOME. No basta un JRE. Abrir una terminal nueva y comprobar
@@ -596,7 +659,7 @@ Eclipse IDE facilita autoría, pero la construcción final deberá poder reprodu
 sin abrir el IDE. Las versiones concretas de MDE y sus coordenadas se fijarán con
 pruebas reales; no se inventa un comando de integración de plugins todavía.
 
-## Comprobación posterior
+## Histórico: comprobación posterior propuesta
 
 Desde la raíz:
 

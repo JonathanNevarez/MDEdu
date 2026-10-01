@@ -1,8 +1,102 @@
 # Estado del proyecto
 
+Actualización documental: 01/10/2026.
+
+## Estado actual
+
+**FASE 0: COMPLETADA Y VALIDADA. Fase 1 NO iniciada.**
+El entorno está preparado; el producto educativo todavía no está implementado.
+No se crearon metamodelos, DSL, transformaciones ATL, templates Acceleo ni código generado.
+
+Eclipse Modeling Tools 2026-09 R conserva Platform 4.41.0.v20260828-1142,
+EMF SDK 2.47.0.v20260704-1256, Ecore 2.43.0.v20260704-1256 y Ecore Tools
+3.6.0.202604070657. Xtext SDK 2.44.0.v20260824-1228, ATL
+4.12.0.v202505101449 y Acceleo 4.2.2 con AQL 8.1.2 quedaron instalados y
+validados desde SimRel 2026-09. Ninguna unidad preexistente fue reemplazada o eliminada.
+Los wizards se comprobaron y cancelaron sin crear proyectos. Acceleo 3 no está instalado.
+
+Tycho `org.eclipse.tycho:tycho-maven-plugin:5.0.4` resolvió desde Maven Central:
+`help:describe`, salida 0, BUILD SUCCESS y descriptor accesible. Maven 3.9.16 y
+Java 21.0.12.1 cumplen los mínimos 3.9.9/21 del descriptor. Esta comprobación se
+hizo fuera del repositorio y no constituye un build real de plugins Eclipse.
+La carpeta temporal se eliminó; la caché Maven permanece.
+
+Java global sigue en Temurin 21.0.12.1; JAVA_HOME:
+`C:\Program Files\Eclipse Adoptium\jdk-21.0.12.101-hotspot\`.
+Eclipse mantiene su Temurin/JustJ 25.0.4.1+1-LTS interno. No se modificaron
+JAVA_HOME, PATH persistente ni eclipse.ini; Java 25 no se añadió al PATH.
+
+Eclipse quedó cerrado, sin procesos asociados. Se conservan instalación y workspace
+externos `C:\Users\alexxxjon\AppData\Local\EclipseWorkspaces\MDEdu-fase0`.
+No hay servicios MDEdu ejecutándose ni listeners en 8080/5173/4173/5432.
+Docker no se inició en este bloque; PostgreSQL continúa detenido.
+
+## Criterios finales de Fase 0
+
+Las pruebas previamente aceptadas conservan su evidencia histórica; no se repitieron
+builds o servicios de la aplicación durante el cierre MDE.
+
+| Criterio obligatorio | Resultado |
+| --- | --- |
+| JDK 21 | OK: Temurin 21.0.12.1, javac y compilación mínima |
+| Maven | OK: 3.9.16 con Java 21 |
+| Maven Wrapper | OK: 3.3.4 |
+| Node/npm | OK: 24.19.0 / 11.17.0 |
+| Frontend build | OK: TypeScript/Vite |
+| Frontend unit | OK: 2/2 |
+| Frontend HTTP | OK: HTTP 200 |
+| Frontend E2E | OK: Chromium, 1/1 |
+| Git | OK: main, origin MDEdu; limpio antes de documentar |
+| WSL2 | OK: 2.7.14.0, predeterminado 2 |
+| Docker | OK: Desktop 4.91.0, Engine 29.8.0 |
+| PostgreSQL | OK: Compose, 17.11, SELECT 1; detenido |
+| Backend compile/test | OK: compilación Java 21, 3/3 MVC |
+| BackendBootstrapIT | OK: 4/4, Maven verify y Testcontainers |
+| Spring runtime | OK: Spring Boot 3.5.16, PostgreSQL/Flyway/health/CORS |
+| Eclipse Modeling Tools | OK: 2026-09 R / Platform 4.41 |
+| EMF/Ecore | OK: SDK 2.47.0 / Ecore 2.43.0 |
+| Ecore Tools | OK: 3.6.0.202604070657 |
+| Xtext SDK | OK: 2.44.0.v20260824-1228, wizard funcional |
+| ATL | OK: 4.12.0.v202505101449, editor/engine/EMF/launcher/wizard |
+| Acceleo 4 | OK: 4.2.2, AQL 8.1.2, IDE/launcher/wizard |
+| Tycho resoluble/headless tooling | OK: 5.0.4, descriptor resuelto; sin build de plugin real |
+| Documentación | OK: estado, herramientas y evidencia final actualizados |
+
+OCL: **DISPONIBLE / DIFERIDO**, incluido por Modeling Tools y no utilizado.
+No queda ningún criterio obligatorio del entorno Fase 0 pendiente.
+
+## Asignación tecnológica y separación
+
+| Función | Tecnología |
+| --- | --- |
+| Metamodelado | EMF / Ecore |
+| Serialización | XMI / EMF |
+| Futuro DSL de adaptación ECA | Xtext 2.44 |
+| M2M | ATL 4.12 |
+| M2T | Acceleo 4.2.2 |
+| Futuros builds Eclipse/OSGi headless | Tycho 5.0.4 |
+| OCL | Disponible, uso diferido |
+| backend/ | Spring Boot normal, separado de Eclipse |
+| frontend/ | React/Vite separado |
+| mde/ | Reservado para el futuro ecosistema Eclipse/EMF/Xtext/ATL/Acceleo/Tycho |
+
+No se añadieron dependencias Eclipse/Tycho al backend ni se modificaron frontend/ o mde/.
+La advertencia EGit sobre HOME no definido no impide la validación; no se cambió HOME.
+
+## Siguiente paso
+
+**Fase 1 — metamodelo de programación / EMF-Ecore**, únicamente tras nueva autorización.
+El cierre actual se limita a los tres documentos, commit
+`chore: complete phase 0 development environment` y publicación en main.
+
+## Historial conservado
+
+Todo lo que sigue describe checkpoints anteriores al cierre del 01/10/2026.
+Las menciones a ausencias, pendientes y autorizaciones son históricas, no el estado actual.
+
 Actualización documental: 23/09/2026. Eclipse base validado el 23/09; los apartados históricos conservan sus fechas.
 
-## Fase actual
+## Histórico: estado al 23/09/2026
 
 **Fase 0: preparación escrita, cierre pendiente de herramientas y verificación.**
 Fases 1–13 no iniciadas. La raíz estaba vacía y no era un repositorio Git.
@@ -184,7 +278,7 @@ concretas de instaladores; eso no implica que estén instalados o probados.
 La propuesta de las herramientas todavía pendientes está en
 [HERRAMIENTAS](HERRAMIENTAS.md). No hubo cambios de arquitectura.
 
-## Entregables terminados como archivos
+## Histórico: entregables registrados
 
 - Inspección de raíz, herramientas, configuraciones y marco conceptual.
 - Plan secuencial con riesgos, criterios y alcance exacto de F0.
@@ -200,7 +294,7 @@ La propuesta de las herramientas todavía pendientes está en
 Estos entregables no son funcionalidades educativas terminadas. No hay modelo
 EMF generado, Blockly, intérprete, reglas, LLM ni IU adaptativa aún.
 
-## Pruebas y comprobaciones
+## Histórico: pruebas y comprobaciones al 23/09/2026
 
 Ver [VERIFICACION_FASE_0](VERIFICACION_FASE_0.md) para comandos y resultados.
 La instalación Java cuenta ahora con comprobación real de versión, rutas, variables,
@@ -235,7 +329,7 @@ también pasó, con arranque y apagado controlados de Spring y Compose.
 | Eclipse Modeling Tools base | Validado: 2026-09 R / Platform 4.41, JustJ 25 embebido, Java 21 global intacto, EMF/Ecore/Ecore Tools presentes; IDE cerrado |
 | Features MDE adicionales | Xtext SDK completo, ATL y Acceleo 4 ausentes; OCL incluido pero no utilizado; Tycho sin configurar |
 
-## Problemas conocidos
+## Histórico: problemas conocidos al 23/09/2026
 
 1. WSL2, Docker, PostgreSQL Compose, BackendBootstrapIT y runtime manual validados;
    Eclipse base también validado; Xtext SDK, ATL y Acceleo 4 siguen pendientes.
@@ -263,7 +357,7 @@ también pasó, con arranque y apagado controlados de Spring y Compose.
 10. EGit avisó HOME no definido y creó metadata interna fuera del repositorio;
     no es un error del proyecto ni requiere cambiar variables en este checkpoint.
 
-## Siguiente paso
+## Histórico: siguiente paso previsto el 23/09/2026
 
 **Eclipse Modeling Tools base validado. Este paso cierra únicamente su documentación
 en Git con el commit `chore: validate eclipse modeling tools environment` y push a main.**

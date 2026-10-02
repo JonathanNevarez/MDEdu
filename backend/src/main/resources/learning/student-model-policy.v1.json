@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "initialMastery": 0.0,
+  "successWithoutHintDelta": 0.1,
+  "successWithHintDelta": 0.05,
+  "failureDelta": -0.03,
+  "repeatedErrorDelta": -0.02,
+  "recentErrorWindow": 5,
+  "maxRecentErrorPatterns": 10
+}

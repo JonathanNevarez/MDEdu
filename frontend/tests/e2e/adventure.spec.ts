@@ -4,7 +4,7 @@ import { test, expect } from '@playwright/test';
 test('mapa, secuencia real, replay, reinicio y progreso persistido', async ({ page }, testInfo) => {
   const errors: string[] = []; let executions = 0;
   page.on('pageerror', error => errors.push(error.message));
-  page.on('request', request => { if (request.url().endsWith('/SEQUENCES/execute')) executions++; });
+  page.on('request', request => { if (request.url().endsWith('/api/attempts')) executions++; });
   await page.goto('/aventura');
   await expect(page.getByRole('heading', { name: 'Mi primera programación' })).toBeVisible();
   await expect(page.getByRole('button', { name: /: .*\.( Disponible| Bloqueado)/ })).toHaveCount(4);
@@ -34,6 +34,7 @@ test('mapa, secuencia real, replay, reinicio y progreso persistido', async ({ pa
   await expect(page.getByRole('figure', { name: /^Avanzar/ })).toHaveCount(4);
   await page.getByRole('link', { name: '← Volver al mapa' }).click();
   await expect(page.getByRole('button', { name: /Variables:.*Disponible/ })).toBeVisible();
+  await page.evaluate(() => localStorage.removeItem('mdedu.game.progress.v1'));
   await page.reload();
   await expect(page.getByRole('button', { name: /Variables:.*Disponible/ })).toBeVisible();
   await expect(page.getByRole('button', { name: /Secuencias:.*Completado/ })).toBeVisible();

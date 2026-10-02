@@ -3,7 +3,7 @@
 Estado: los diagramas generales describen el diseño objetivo. Ya existen el
 arranque de Fase 0, el metamodelo de Fase 1 y el flujo estructural de Fase 2
 descrito a continuación, el M2T aislado de Fase 3 y el juego determinista de Fase 4.
-La evaluación determinista de Fase 5 está implementada. El ciclo adaptativo completo sigue siendo diseño futuro.
+La evaluación determinista de Fase 5 y el modelo/persistencia de aprendizaje de Fase 6 están implementados. El ciclo adaptativo completo sigue siendo diseño futuro.
 
 ## Flujo implementado en Fase 2
 
@@ -44,7 +44,7 @@ con cuatro niveles; desbloqueo por prerequisites declarativas. Progreso local pr
 sin persistencia DB. API en execution/api; motor de dominio Java independiente de Spring.
 El replay consume snapshots del servidor. `/aventura` y `/aventura/:levelId` conviven
 con `/laboratorio`. [Semántica y límites](FASE_4_GRIDWORLD_JUEGO.md).
-StudentModel, reglas y LLM en los diagramas generales siguientes siguen siendo diseño futuro.
+El StudentModel se incorporó en Fase 6; reglas ECA y LLM siguen siendo diseño futuro.
 
 ## Evaluación implementada en Fase 5
 
@@ -70,9 +70,28 @@ sola ejecución para obtener las cuatro dimensiones y activityPassed.
 Exactamente 15 patrones y cuatro configuraciones JSON versionadas; paths,
 fingerprints y evidencia deterministas sobre EMF/traza. El frontend acredita
 completion solo con activityPassed; el progreso local es monotónico.
-No añade DB, StudentModel, adaptación, ECA ni LLM. Los diagramas generales siguientes
+Fase 5 no añadió DB ni StudentModel; Fase 6 los incorpora como se detalla abajo. Los diagramas generales siguientes
 son **objetivos futuros**, salvo los componentes expresamente implementados arriba.
 [Diseño y límites](FASE_5_EVALUACION_PEDAGOGICA.md).
+
+## Modelo del estudiante implementado en Fase 6
+
+`Program EMF → execution → evaluation → Attempt → MasteryUpdater → PostgreSQL
+→ StudentModel EMF validado → ModelDto/ProgressDto → aventura`.
+
+Plugin independiente learning.ecore → learning.genmodel → 26 fuentes EMF generadas.
+JPA almacena estado normalizado mediante Flyway V2; StudentModelProjectionService
+construye la proyección con LearningFactory y valida antes de devolver DTOs.
+El snapshot contiene catálogos para resolver referencias XMI; no se guarda como blob.
+
+Política JSON V1: .10/.05/-.03 y -.02 por error repetido; grafo desde relaciones
+persistidas, threshold .05 y unlock/completion monotónicos. POST attempts serializa
+por Student mediante lock de fila, ejecuta una vez y persiste atómicamente.
+El endpoint execute de Fase 5 permanece stateless y determinista.
+
+La aventura conserva solo studentId local y recibe progreso de backend. Identidad
+pseudónima sin login, exactamente cuatro actividades actuales. No adaptación,
+reglas ECA, Xtext ni LLM implementados. [Diseño](FASE_6_MODELO_ESTUDIANTE.md).
 
 ## Responsabilidades y límites
 

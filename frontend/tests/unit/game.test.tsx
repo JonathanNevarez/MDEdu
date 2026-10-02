@@ -48,7 +48,7 @@ describe('Aventura provisional', () => {
     expect(gameToolbox(catalog.levels[3]!.allowedBlockGroups).contents.flatMap(c => c.contents).some(b => b.type === 'mdedu_repeat')).toBe(true);
   });
   it('el clic bloqueado explica el requisito sin abrir la actividad', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => catalog }));
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/api/game/levels') ? catalog : url.endsWith('/api/students') ? { id: 'student' } : { levels: catalog.levels.map((l, i) => ({ levelId: l.id, completed: false, unlocked: i === 0 })) } })));
     render(<MemoryRouter initialEntries={['/aventura']}><Routes><Route path="/aventura" element={<AdventurePage />} /></Routes></MemoryRouter>);
     const locked = await screen.findByRole('button', { name: /Variables:.*Bloqueado/ });
     await userEvent.click(locked);
@@ -57,7 +57,7 @@ describe('Aventura provisional', () => {
     expect(screen.queryByTestId('game-blockly')).not.toBeInTheDocument();
   });
   it('una URL directa no abre un nivel bloqueado', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => catalog }));
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/api/game/levels') ? catalog : url.endsWith('/api/students') ? { id: 'student' } : { levels: catalog.levels.map((l, i) => ({ levelId: l.id, completed: false, unlocked: i === 0 })) } })));
     render(<MemoryRouter initialEntries={['/aventura/LOOPS']}><Routes><Route path="/aventura/:levelId" element={<AdventurePage />} /></Routes></MemoryRouter>);
     expect(await screen.findByRole('heading', { name: 'Nivel bloqueado' })).toBeVisible();
     expect(screen.queryByTestId('game-blockly')).not.toBeInTheDocument();

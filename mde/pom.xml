@@ -14,6 +14,7 @@
   <modules>
     <module>com.project.mde.programming.model</module>
     <module>com.project.mde.programming.generator</module>
+    <module>com.project.mde.learning.model</module>
   </modules>
   <repositories>
     <repository><id>eclipse-2026-09</id><layout>p2</layout><url>https://download.eclipse.org/releases/2026-09/</url></repository>

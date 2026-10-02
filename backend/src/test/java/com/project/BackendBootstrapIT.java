@@ -62,15 +62,15 @@ class BackendBootstrapIT {
     }
 
     @Test
-    void bootstrapMigrationRunsAgainstPostgresqlAndCreatesNoEducationalTables() {
-        assertThat(flyway.info().current().getVersion().getVersion()).isEqualTo("1");
+    void bootstrapAndLearningMigrationsRunAgainstPostgresql() {
+        assertThat(flyway.info().current().getVersion().getVersion()).isEqualTo("2");
         assertThat(flyway.info().pending()).isEmpty();
         assertThat(jdbc.queryForObject("SELECT success FROM flyway_schema_history WHERE version = '1'",
                 Boolean.class)).isTrue();
         assertThat(jdbc.queryForList("""
                 SELECT tablename FROM pg_catalog.pg_tables
                 WHERE schemaname = 'public' ORDER BY tablename
-                """, String.class)).containsExactly("flyway_schema_history");
+                """, String.class)).containsExactly("attempt_error_patterns", "attempts", "concept_prerequisites", "concepts", "error_patterns", "flyway_schema_history", "hint_usages", "learning_activities", "student_activity_progress", "student_concept_mastery", "students");
     }
 
     @Test

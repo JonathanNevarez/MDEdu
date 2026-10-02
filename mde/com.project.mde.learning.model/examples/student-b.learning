@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ASCII"?>
+<learning:StudentModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:learning="https://mdedu.espoch.edu.ec/model/learning/1.0" lastUpdated="2026-10-02T00:16:14.925-0500">
+  <student id="3aa4170b-f0cd-419b-8e37-d1151553d27f" displayName="Estudiante B" createdAt="2026-10-02T00:16:14.870-0500"/>
+  <concepts id="SEQUENCES" name="Secuencias" minimumMasteryToUnlock="0.05" activities="//@activities.2"/>
+  <concepts id="VARIABLES" name="Variables" prerequisites="//@concepts.0" minimumMasteryToUnlock="0.05" activities="//@activities.3"/>
+  <concepts id="CONDITIONALS" name="Condicionales" prerequisites="//@concepts.1" minimumMasteryToUnlock="0.05" activities="//@activities.0"/>
+  <concepts id="LOOPS" name="Ciclos" prerequisites="//@concepts.2" minimumMasteryToUnlock="0.05" activities="//@activities.1"/>
+  <activities id="CONDITIONALS" title="La puerta y la llave" concept="//@concepts.2" learningObjectives="//@learningObjectives.0"/>
+  <activities id="LOOPS" title="Repite el camino" concept="//@concepts.3" learningObjectives="//@learningObjectives.1"/>
+  <activities id="SEQUENCES" title="Primeros pasos" concept="//@concepts.0" learningObjectives="//@learningObjectives.2"/>
+  <activities id="VARIABLES" title="Guarda y cambia" concept="//@concepts.1" learningObjectives="//@learningObjectives.3"/>
+  <learningObjectives id="OBJECTIVE_CONDITIONALS" description="Aplicar Condicionales en La puerta y la llave" concept="//@concepts.2"/>
+  <learningObjectives id="OBJECTIVE_LOOPS" description="Aplicar Ciclos en Repite el camino" concept="//@concepts.3"/>
+  <learningObjectives id="OBJECTIVE_SEQUENCES" description="Aplicar Secuencias en Primeros pasos" concept="//@concepts.0"/>
+  <learningObjectives id="OBJECTIVE_VARIABLES" description="Aplicar Variables en Guarda y cambia" concept="//@concepts.1"/>
+  <errorPatterns id="CONSTANT_CONDITION" concept="//@concepts.2" severity="ERROR" pedagogicalMeaning="La condici&#xc3;&#xb3;n se puede resolver sin observar el mundo ni una variable."/>
+  <errorPatterns id="IDENTICAL_BRANCHES" concept="//@concepts.2" severity="ERROR" pedagogicalMeaning="Las dos alternativas contienen las mismas instrucciones."/>
+  <errorPatterns id="INCORRECT_REPETITION_COUNT" concept="//@concepts.3" severity="ERROR" pedagogicalMeaning="El ciclo seleccionado no coincide con las iteraciones esperadas para el camino."/>
+  <errorPatterns id="INCORRECT_UPDATE" concept="//@concepts.1" severity="ERROR" pedagogicalMeaning="El cambio observado todav&#xc3;&#xad;a no cumple el objetivo de pasar de 0 a 1."/>
+  <errorPatterns id="LOOP_NEVER_EXECUTES" concept="//@concepts.3" severity="ERROR" pedagogicalMeaning="Este ciclo no llega a ejecutar su cuerpo al comenzar."/>
+  <errorPatterns id="MISSING_ACTION" concept="//@concepts.0" severity="ERROR" pedagogicalMeaning="Tu secuencia conserva el orden, pero a&#xc3;&#xba;n faltan acciones del recorrido."/>
+  <errorPatterns id="MISSING_CONDITION" concept="//@concepts.2" severity="ERROR" pedagogicalMeaning="Falta el condicional que representa la decisi&#xc3;&#xb3;n de esta actividad."/>
+  <errorPatterns id="MISSING_REQUIRED_BRANCH" concept="//@concepts.2" severity="ERROR" pedagogicalMeaning="Falta una alternativa o una de las ramas est&#xc3;&#xa1; vac&#xc3;&#xad;a."/>
+  <errorPatterns id="POSSIBLE_INFINITE_LOOP" concept="//@concepts.3" severity="ERROR" pedagogicalMeaning="La condici&#xc3;&#xb3;n permanece constante en verdadero o el control Mientras agot&#xc3;&#xb3; el presupuesto."/>
+  <errorPatterns id="REDUNDANT_REASSIGNMENT" concept="//@concepts.1" severity="WARNING" pedagogicalMeaning="Una asignaci&#xc3;&#xb3;n queda sobrescrita antes de que se lea su valor."/>
+  <errorPatterns id="REPETITIVE_SEQUENCE_WITHOUT_LOOP" concept="//@concepts.3" severity="ERROR" pedagogicalMeaning="Tu programa repite manualmente varias veces las mismas instrucciones."/>
+  <errorPatterns id="UNNECESSARY_INSTRUCTION" concept="//@concepts.0" severity="WARNING" pedagogicalMeaning="Tu secuencia incluye acciones adicionales al recorrido de referencia."/>
+  <errorPatterns id="UNNECESSARY_LOOP" concept="//@concepts.3" severity="WARNING" pedagogicalMeaning="Este Repetir ejecuta su cuerpo una sola vez."/>
+  <errorPatterns id="UNUSED_VARIABLE" concept="//@concepts.1" severity="WARNING" pedagogicalMeaning="Declaraste una variable sin leerla ni asignarle otro valor despu&#xc3;&#xa9;s."/>
+  <errorPatterns id="WRONG_ORDER" concept="//@concepts.0" severity="ERROR" pedagogicalMeaning="Las acciones est&#xc3;&#xa1;n presentes, pero su orden cambia el recorrido."/>
+  <conceptMasteries student="//@student" concept="//@concepts.0" attemptCount="1" failureCount="1" consecutiveFailures="1" averageResolutionTime="1000.0" lastUpdated="2026-10-02T00:16:14.925-0500" recentErrorPatterns="//@errorPatterns.5"/>
+  <conceptMasteries student="//@student" concept="//@concepts.1" lastUpdated="2026-10-02T00:16:14.870-0500"/>
+  <conceptMasteries student="//@student" concept="//@concepts.2" lastUpdated="2026-10-02T00:16:14.870-0500"/>
+  <conceptMasteries student="//@student" concept="//@concepts.3" lastUpdated="2026-10-02T00:16:14.870-0500"/>
+  <attempts id="d252033e-bf63-4b65-8770-3a2887abad74" student="//@student" activity="//@activities.2" concept="//@concepts.0" resolutionTime="1000" submittedAt="2026-10-02T00:16:14.925-0500" errorPatterns="//@errorPatterns.5"/>
+  <progress activity="//@activities.2" concept="//@concepts.0" unlocked="true"/>
+  <progress activity="//@activities.3" concept="//@concepts.1"/>
+  <progress activity="//@activities.0" concept="//@concepts.2"/>
+  <progress activity="//@activities.1" concept="//@concepts.3"/>
+</learning:StudentModel>

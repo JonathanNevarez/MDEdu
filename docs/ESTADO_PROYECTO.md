@@ -1,8 +1,42 @@
 # Estado del proyecto
 
-Actualización documental: 01/10/2026.
+Actualización documental: 02/10/2026.
 
 ## Estado actual
+
+**FASE 0 COMPLETADA. FASE 1 COMPLETADA. FASE 2 COMPLETADA.
+FASE 3 COMPLETADA. FASE 4 COMPLETADA. FASE 5 COMPLETADA.
+FASE 6 COMPLETADA Y VALIDADA. FASE 7 NO INICIADA.**
+
+Partida: `693e40a2153d66ce5711a6ebe97a22c78498f84b`.
+Plugin learning independiente: 10 EClasses, 26 Java generados, GenModel Java 21 y
+dos XMI autocontenidos validados. PostgreSQL normalizado con Flyway V2, proyección
+JPA → LearningFactory → StudentModel EMF validado → DTO. Política JSON V1,
+contadores, historial reciente y grafo persistido con threshold .05.
+Transacciones y lock por estudiante; completion/unlock históricos no retroceden.
+
+Aventura usa UUID pseudónimo local y progreso backend; no acredita progreso antiguo.
+Cuatro conceptos/actividades, cero refuerzos. Endpoint stateless Fase 5 intacto.
+Dos estudiantes en contextos separados demuestran independencia y persistencia
+tras reload: A éxito .10/Variables unlocked; B fallo .00/Variables locked.
+
+Validaciones: 147 pruebas backend + 14 IT (4 históricas y 10 learning), 44 pruebas
+frontend, typecheck/build y 5 E2E PASS. Reactor MDE completo BUILD SUCCESS; Acceleo
+con 25 pruebas, CLI y node --check PASS. ValidateLearning: Ecore válido y dos
+round-trips PASS. Full-stack posterior en Chromium visible: 2 escenarios PASS.
+Programming Ecore/GenModel/44 src-gen, Acceleo/golden y ProgramDto conservados.
+
+Backend/preview/PostgreSQL de prueba y Docker Desktop detenidos al cierre;
+volumen PostgreSQL conservado con V1/V2 y datos pseudónimos de validación.
+Sin adaptation.ecore, context.ecore, Xtext, ECA, LLM ni programación avanzada.
+Warning histórico de bundle Blockly >500 kB conservado.
+
+[Diseño](FASE_6_MODELO_ESTUDIANTE.md) · [Evidencia](VERIFICACION_FASE_6.md).
+Cierre Git autorizado: `feat: add emf student learning model`, solo main.
+Siguiente: **FASE 7 — adaptation.ecore + Xtext + DSL ECA**, pendiente de nueva
+autorización. No iniciada.
+
+## Histórico: cierre de Fase 5
 
 **FASE 0 COMPLETADA. FASE 1 COMPLETADA. FASE 2 COMPLETADA.
 FASE 3 COMPLETADA. FASE 4 COMPLETADA.

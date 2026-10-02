@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated learning -->
+      <package
+            uri="https://mdedu.espoch.edu.ec/model/learning/1.0"
+            class="com.project.mde.learning.LearningPackage"
+            genModel="model/learning.genmodel"/>
+   </extension>
+
+</plugin>

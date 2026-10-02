@@ -1,45 +1,45 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { getCatalog, execute } from './api';
-import { readProgress, levelStatus, saveProgress } from './progress';
-import { applyEvaluation, evaluationMessage } from './evaluation';
+import { getCatalog } from './api';
+import { ensureStudent, serverLevelStatus, submitAttempt, type StudentProgress } from './learning';
+import { evaluationMessage } from './evaluation';
 import { EvaluationFeedback } from './EvaluationFeedback';
 import { initialState, replayState } from './replay';
 import { GameEditor } from './GameEditor';
 import { WorldBoard } from './WorldBoard';
-import type { Catalog, ExecutionResult, EvaluationResult, Level } from './types';
+import type { Catalog, ExecutionResult, Level } from './types';
 import type { ProgramDto } from '../programming/dto/program';
 import './game.css';
 
 export function AdventurePage() {
   const { levelId } = useParams(); const navigate = useNavigate();
   const [catalog, setCatalog] = useState<Catalog | null>(null);
-  const [progress, setProgress] = useState(readProgress);
-  const progressRef = useRef(progress);
+  const [progress, setProgress] = useState<StudentProgress | null>(null);
+  const [studentId, setStudentId] = useState<string | null>(null);
   const [message, setMessage] = useState('');
-  useEffect(() => { const request = new AbortController(); void getCatalog(request.signal).then(setCatalog).catch(e => {
-    if (!request.signal.aborted) setMessage(e instanceof Error ? e.message : 'No se pudo cargar la aventura.');
-  }); return () => request.abort(); }, []);
-  const complete = useCallback((id: string, evaluation: EvaluationResult) => {
-    const next = applyEvaluation(progressRef.current, id, evaluation); progressRef.current = next; setProgress(next);
-    if (!saveProgress(next)) setMessage('El progreso se conserva en esta sesión; el navegador no permite guardarlo.');
+  useEffect(() => { const request = new AbortController();
+    void Promise.all([getCatalog(request.signal), ensureStudent()]).then(([loaded, student]) => {
+      if (!request.signal.aborted) { setCatalog(loaded); setStudentId(student.studentId); setProgress(student.progress); }
+    }).catch(e => { if (!request.signal.aborted) setMessage(e instanceof Error ? e.message : 'No se pudo cargar la aventura.'); });
+    return () => request.abort();
   }, []);
-  if (!catalog) return <section className="adventure"><h1>Mi primera programación</h1><p role="status">{message || 'Preparando tu aventura…'}</p>
+  const updateProgress = useCallback((next: StudentProgress) => setProgress(next), []);
+  if (!catalog || !progress || !studentId) return <section className="adventure"><h1>Mi primera programación</h1><p role="status">{message || 'Preparando tu aventura…'}</p>
     {message && <button onClick={() => window.location.reload()}>Reintentar</button>}</section>;
   if (levelId) {
     const level = catalog.levels.find(l => l.id === levelId);
     if (!level) return <section><h1>Nivel no encontrado</h1><Link to="/aventura">Volver al mapa</Link></section>;
-    if (levelStatus(level, progress) === 'LOCKED') return <section><h1>Nivel bloqueado</h1><p>Completa el nivel anterior para continuar.</p><Link to="/aventura">Volver al mapa</Link></section>;
-    return <Activity key={level.id} level={level} onComplete={complete} />;
+    if (serverLevelStatus(level.id, progress) === 'LOCKED') return <section><h1>Nivel bloqueado</h1><p>Completa el nivel anterior para continuar.</p><Link to="/aventura">Volver al mapa</Link></section>;
+    return <Activity key={level.id} level={level} studentId={studentId} onProgress={updateProgress} />;
   }
-  const completed = catalog.levels.filter(l => levelStatus(l, progress) === 'COMPLETED').length;
+  const completed = catalog.levels.filter(l => serverLevelStatus(l.id, progress) === 'COMPLETED').length;
   return <section className="adventure" aria-labelledby="adventure-title">
     <div className="adventure-intro"><div><p className="eyebrow">TU AVENTURA CON BLOQUES</p><h1 id="adventure-title">Mi primera programación</h1>
       <p>Un pequeño paso, una gran idea. Programa el camino y descubre lo que puedes crear.</p></div>
       <div className="progress-badge" aria-label={`${completed} de 4 niveles completados`}><strong>{completed} / 4</strong><span>niveles completados</span></div></div>
     <div className="adventure-map" aria-label="Mapa de cuatro niveles">
       <div className="map-trail" aria-hidden="true" />
-      {catalog.levels.map(level => { const status = levelStatus(level, progress); return <button key={level.id}
+      {catalog.levels.map(level => { const status = serverLevelStatus(level.id, progress); return <button key={level.id}
         className={`level-node ${status.toLowerCase()}`} aria-disabled={status === 'LOCKED'}
         aria-label={`${level.concept}: ${level.title}. ${status === 'LOCKED' ? 'Bloqueado' : status === 'COMPLETED' ? 'Completado' : 'Disponible'}`}
         onClick={() => { if (status === 'LOCKED') setMessage('Completa el nivel anterior para continuar.'); else navigate(`/aventura/${level.id}`); }}>
@@ -50,10 +50,11 @@ export function AdventurePage() {
       </button>; })}
     </div>
     <p role="status" className="map-message">{message || 'Empieza con Secuencias. Cada reto completado abre un nuevo camino.'}</p>
-    <p className="local-progress-note">Tu avance se guarda en este navegador. <Link to="/laboratorio">Explorar el laboratorio libre</Link></p>
+    <p className="local-progress-note">Tu avance se guarda para tu identidad de estudiante. <Link to="/laboratorio">Explorar el laboratorio libre</Link></p>
   </section>;
 }
-function Activity({ level, onComplete }: { level: Level; onComplete: (id: string, evaluation: EvaluationResult) => void }) {
+function Activity({ level, studentId, onProgress }: { level: Level; studentId: string; onProgress: (next: StudentProgress) => void }) {
+  const openedAt = useRef(performance.now());
   const [result, setResult] = useState<ExecutionResult | null>(null);
   const [index, setIndex] = useState(-1); const [playing, setPlaying] = useState(false);
   const [busy, setBusy] = useState(false); const [message, setMessage] = useState('Construye tu camino con bloques.');
@@ -64,18 +65,19 @@ function Activity({ level, onComplete }: { level: Level; onComplete: (id: string
     if (index >= result.trace.length - 1) {
       setPlaying(false);
       setMessage(evaluationMessage(result));
-      if (result.evaluation?.activityPassed) onComplete(level.id, result.evaluation);
       return;
     }
     const timer = window.setTimeout(() => setIndex(i => i + 1), 220);
     return () => window.clearTimeout(timer);
-  }, [playing, index, result, level.id, onComplete]);
+  }, [playing, index, result]);
   const initial = initialState(level.worldConfig); const state = replayState(result?.trace ?? [], index, initial);
   async function run(dto: ProgramDto) {
     pending.current?.abort(); const request = new AbortController(); pending.current = request;
     setPlaying(false); setIndex(-1); setResult(null); setBusy(true); setMessage('Preparando el recorrido…');
-    try { const response = await execute(level.id, dto, request.signal);
+    try { const attempt = await submitAttempt(studentId, level.id, dto, Math.min(86400000, Math.max(0, Math.round(performance.now() - openedAt.current))), request.signal);
+      const response = attempt.execution;
       if (request.signal.aborted) return;
+      onProgress(attempt.progress);
       setResult(response); setPlaying(response.trace.length > 0);
       setMessage(response.trace.length ? 'Recorriendo tu programa…' : response.errors[0]?.message ?? 'Revisa tu programa.');
     } catch (e) { if (!request.signal.aborted) setMessage(e instanceof Error ? e.message : 'No se pudo ejecutar.'); }

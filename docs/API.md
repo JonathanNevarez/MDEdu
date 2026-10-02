@@ -393,3 +393,180 @@ defaultHintLevel y evidence (statementPath, traceIndex opcional, observed, expec
 Orden estable de catálogo y recorrido estructural; sin timestamps. Catálogo y
 configuración versión 1. [Semántica](FASE_5_EVALUACION_PEDAGOGICA.md) y
 [pruebas/determinismo](VERIFICACION_FASE_5.md).
+
+
+## Aprendizaje persistente — Fase 6
+
+Identidad pseudónima de prototipo, sin autenticación. No se envían email/contraseña.
+Los endpoints devuelven DTOs construidos a partir de StudentModel EMF validado.
+POST attempts usa una transacción y una sola ejecución/evaluación de Fase 5.
+
+| Método y ruta | Contrato |
+| --- | --- |
+| POST /api/students | {} o displayName opcional (máximo 80); 201 con UUID, nombre y createdAt UTC; inicializa cuatro masteries en cero. |
+| GET /api/students/{id}/model | 200: student, modelVersion, cuatro conceptMasteries, hasta 20 recentAttempts, lastUpdated. |
+| GET /api/students/{id}/progress | 200: levels, exactamente cuatro entradas actuales con levelId/conceptId/completed/unlocked/masteryScore/attemptCount. |
+| POST /api/attempts | 201: attemptId, execution (incluye evaluation), studentModel, progress y masteryUpdate. |
+
+404 para estudiante/nivel inexistente, 400 para JSON/ProgramDto inválido o rangos,
+422 para EMF inválido y 409 para actividad rastreada bloqueada. Esos rechazos no
+persisten intentos ni cambios de mastery. Runtime error o fallo pedagógico de un
+programa válido sí se registra y devuelve 201 con activityPassed=false.
+
+resolutionTimeMs es entero 0..86400000; hintCount entero 0..100. Timestamps vienen
+del servidor. masteryUpdate.delta es el delta de política antes de clamp; after
+está siempre en 0..1. Razones explican éxito, fallo, repetición y clamp.
+La UI envía hintCount=0; no se fabrican filas HintUsage a partir del conteo.
+El endpoint original /api/game/levels/{levelId}/execute sigue aceptando ProgramDto
+sin Student y no recibe timestamps/identidad en execution/evaluation.
+
+### Ejemplos reales de validación
+
+POST /api/students, request:
+
+```json
+{"displayName":"Validación Fase 6"}
+```
+
+Respuesta 201:
+
+```json
+{
+  "id": "8849dedf-c003-437d-87d2-9609bb9580ac",
+  "displayName": "Validación Fase 6",
+  "createdAt": "2026-10-02T05:23:33.390466800Z"
+}
+```
+
+POST /api/attempts, request real (éxito con una pista declarada para probar la política):
+
+```json
+{
+  "studentId": "8849dedf-c003-437d-87d2-9609bb9580ac",
+  "levelId": "SEQUENCES",
+  "resolutionTimeMs": 15000,
+  "hintCount": 1,
+  "program": {
+    "contractVersion": 1,
+    "name": "SEQUENCES",
+    "statements": [
+      {
+        "kind": "move"
+      },
+      {
+        "kind": "move"
+      },
+      {
+        "kind": "turnRight"
+      },
+      {
+        "kind": "move"
+      },
+      {
+        "kind": "move"
+      }
+    ]
+  }
+}
+```
+
+Respuesta 201, extracto exacto de attemptId, masteryUpdate y progress. La respuesta
+completa también contiene execution con evaluation y studentModel:
+
+```json
+{
+  "attemptId": "b3e0ad43-54ff-438a-a19b-d1a889abfd79",
+  "masteryUpdate": {
+    "state": {
+      "score": 0.05,
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "consecutiveFailures": 0,
+      "averageTime": 15000.0,
+      "hints": 1
+    },
+    "before": 0.0,
+    "delta": 0.05,
+    "after": 0.05,
+    "reasons": [
+      "ACTIVITY_SUCCESS_WITH_HINT"
+    ]
+  },
+  "progress": {
+    "levels": [
+      {
+        "levelId": "SEQUENCES",
+        "conceptId": "SEQUENCES",
+        "completed": true,
+        "unlocked": true,
+        "masteryScore": 0.05,
+        "attemptCount": 1
+      },
+      {
+        "levelId": "VARIABLES",
+        "conceptId": "VARIABLES",
+        "completed": false,
+        "unlocked": true,
+        "masteryScore": 0.0,
+        "attemptCount": 0
+      },
+      {
+        "levelId": "CONDITIONALS",
+        "conceptId": "CONDITIONALS",
+        "completed": false,
+        "unlocked": false,
+        "masteryScore": 0.0,
+        "attemptCount": 0
+      },
+      {
+        "levelId": "LOOPS",
+        "conceptId": "LOOPS",
+        "completed": false,
+        "unlocked": false,
+        "masteryScore": 0.0,
+        "attemptCount": 0
+      }
+    ]
+  }
+}
+```
+
+Ese mismo ProgressDto es el contrato de GET /api/students/{id}/progress.
+No hay cálculo de unlocked definitivo en el frontend.
+
+GET /api/students/39c25c38-4da9-43b7-84fa-9ec7669d43ca/model, respuesta 200:
+extracto real con student, modelVersion, la primera conceptMastery y lastUpdated
+(las otras tres masteries están presentes en la respuesta completa):
+
+```json
+{
+  "student": {
+    "id": "39c25c38-4da9-43b7-84fa-9ec7669d43ca",
+    "displayName": null,
+    "createdAt": "2026-10-02T05:23:36.724Z"
+  },
+  "modelVersion": 1,
+  "conceptMasteries": [
+    {
+      "conceptId": "SEQUENCES",
+      "masteryScore": 0.1,
+      "attemptCount": 1,
+      "successCount": 1,
+      "failureCount": 0,
+      "consecutiveFailures": 0,
+      "averageResolutionTime": 216,
+      "hintCount": 0,
+      "recentErrorPatterns": [],
+      "lastUpdated": "2026-10-02T05:23:37.141Z"
+    }
+  ],
+  "lastUpdated": "2026-10-02T05:23:37.141Z"
+}
+```
+
+En el contexto B independiente, GET /model devolvió Secuencias con attemptCount=1,
+successCount=0, failureCount=1, masteryScore=0 y MISSING_ACTION reciente. Variables
+permaneció bloqueado. El contexto A conservó Variables disponible tras recargar.
+[Política, grafo y límites](FASE_6_MODELO_ESTUDIANTE.md) ·
+[verificación](VERIFICACION_FASE_6.md).

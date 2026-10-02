@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.project.mde.learning.model/src-gen" modelPluginID="com.project.mde.learning.model" modelName="Learning" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" complianceLevel="21.0" importerID="org.eclipse.emf.importer.ecore" operationReflection="true" importOrganizing="true">
+  <foreignModel>learning.ecore</foreignModel>
+  <genPackages basePackage="com.project.mde" prefix="Learning" ecorePackage="learning.ecore#/">
+    <genClasses ecoreClass="learning.ecore#//Student">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//Student/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//Student/displayName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//Student/createdAt"/>
+    </genClasses>
+    <genClasses ecoreClass="learning.ecore#//StudentModel">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//StudentModel/modelVersion"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//StudentModel/lastUpdated"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference learning.ecore#//StudentModel/student"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference learning.ecore#//StudentModel/concepts"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference learning.ecore#//StudentModel/activities"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference learning.ecore#//StudentModel/learningObjectives"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference learning.ecore#//StudentModel/errorPatterns"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference learning.ecore#//StudentModel/conceptMasteries"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference learning.ecore#//StudentModel/attempts"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference learning.ecore#//StudentModel/hintUsages"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference learning.ecore#//StudentModel/progress"/>
+    </genClasses>
+    <genClasses ecoreClass="learning.ecore#//Concept">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//Concept/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//Concept/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference learning.ecore#//Concept/prerequisites"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//Concept/minimumMasteryToUnlock"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference learning.ecore#//Concept/activities"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference learning.ecore#//Concept/reinforcementActivities"/>
+    </genClasses>
+    <genClasses ecoreClass="learning.ecore#//ConceptMastery">
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference learning.ecore#//ConceptMastery/student"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference learning.ecore#//ConceptMastery/concept"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//ConceptMastery/masteryScore"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//ConceptMastery/attemptCount"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//ConceptMastery/successCount"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//ConceptMastery/failureCount"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//ConceptMastery/consecutiveFailures"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//ConceptMastery/hintCount"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//ConceptMastery/averageResolutionTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//ConceptMastery/lastUpdated"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference learning.ecore#//ConceptMastery/recentErrorPatterns"/>
+    </genClasses>
+    <genClasses ecoreClass="learning.ecore#//LearningObjective">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//LearningObjective/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//LearningObjective/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference learning.ecore#//LearningObjective/concept"/>
+    </genClasses>
+    <genClasses ecoreClass="learning.ecore#//Activity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//Activity/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//Activity/title"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference learning.ecore#//Activity/concept"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference learning.ecore#//Activity/learningObjectives"/>
+    </genClasses>
+    <genClasses ecoreClass="learning.ecore#//Attempt">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//Attempt/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference learning.ecore#//Attempt/student"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference learning.ecore#//Attempt/activity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference learning.ecore#//Attempt/concept"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//Attempt/successful"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//Attempt/functionalPassed"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//Attempt/resolutionTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//Attempt/hintCount"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//Attempt/submittedAt"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference learning.ecore#//Attempt/errorPatterns"/>
+    </genClasses>
+    <genClasses ecoreClass="learning.ecore#//ErrorPattern">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//ErrorPattern/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference learning.ecore#//ErrorPattern/concept"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//ErrorPattern/severity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//ErrorPattern/pedagogicalMeaning"/>
+    </genClasses>
+    <genClasses ecoreClass="learning.ecore#//HintUsage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//HintUsage/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference learning.ecore#//HintUsage/student"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference learning.ecore#//HintUsage/activity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//HintUsage/hintLevel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//HintUsage/usedAt"/>
+    </genClasses>
+    <genClasses ecoreClass="learning.ecore#//Progress">
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference learning.ecore#//Progress/activity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference learning.ecore#//Progress/concept"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//Progress/completed"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//Progress/unlocked"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute learning.ecore#//Progress/completedAt"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="learning" nsURI="https://mdedu.espoch.edu.ec/model/learning/1.0" nsPrefix="learning">
+  <eClassifiers xsi:type="ecore:EClass" name="Student">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="displayName" lowerBound="0" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="createdAt" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StudentModel">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="modelVersion" lowerBound="0" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastUpdated" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="student" lowerBound="1" upperBound="1" eType="#//Student" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="concepts" lowerBound="0" upperBound="-1" eType="#//Concept" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="activities" lowerBound="0" upperBound="-1" eType="#//Activity" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="learningObjectives" lowerBound="0" upperBound="-1" eType="#//LearningObjective" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="errorPatterns" lowerBound="0" upperBound="-1" eType="#//ErrorPattern" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="conceptMasteries" lowerBound="0" upperBound="-1" eType="#//ConceptMastery" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attempts" lowerBound="0" upperBound="-1" eType="#//Attempt" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hintUsages" lowerBound="0" upperBound="-1" eType="#//HintUsage" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="progress" lowerBound="0" upperBound="-1" eType="#//Progress" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Concept">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="prerequisites" lowerBound="0" upperBound="-1" eType="#//Concept"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="minimumMasteryToUnlock" lowerBound="0" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="activities" lowerBound="0" upperBound="-1" eType="#//Activity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reinforcementActivities" lowerBound="0" upperBound="-1" eType="#//Activity"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConceptMastery">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="student" lowerBound="1" upperBound="1" eType="#//Student"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="concept" lowerBound="1" upperBound="1" eType="#//Concept"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="masteryScore" lowerBound="0" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="attemptCount" lowerBound="0" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="successCount" lowerBound="0" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="failureCount" lowerBound="0" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="consecutiveFailures" lowerBound="0" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hintCount" lowerBound="0" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="averageResolutionTime" lowerBound="0" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastUpdated" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="recentErrorPatterns" lowerBound="0" upperBound="-1" eType="#//ErrorPattern"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LearningObjective">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="concept" lowerBound="1" upperBound="1" eType="#//Concept"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Activity">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="concept" lowerBound="1" upperBound="1" eType="#//Concept"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="learningObjectives" lowerBound="0" upperBound="-1" eType="#//LearningObjective"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Attempt">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="student" lowerBound="1" upperBound="1" eType="#//Student"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="activity" lowerBound="1" upperBound="1" eType="#//Activity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="concept" lowerBound="1" upperBound="1" eType="#//Concept"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="successful" lowerBound="0" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="functionalPassed" lowerBound="0" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="resolutionTime" lowerBound="0" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hintCount" lowerBound="0" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="submittedAt" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="errorPatterns" lowerBound="0" upperBound="-1" eType="#//ErrorPattern"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ErrorPattern">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="concept" lowerBound="1" upperBound="1" eType="#//Concept"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="severity" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pedagogicalMeaning" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="HintUsage">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="student" lowerBound="1" upperBound="1" eType="#//Student"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="activity" lowerBound="1" upperBound="1" eType="#//Activity"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hintLevel" lowerBound="0" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="usedAt" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Progress">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="activity" lowerBound="1" upperBound="1" eType="#//Activity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="concept" lowerBound="1" upperBound="1" eType="#//Concept"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="completed" lowerBound="0" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unlocked" lowerBound="0" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="completedAt" lowerBound="0" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+  </eClassifiers>
+</ecore:EPackage>

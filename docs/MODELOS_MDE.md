@@ -1,4 +1,4 @@
-# Modelos MDE — diseño previsto
+# Modelos MDE — estado y diseño previsto
 
 ## Transformación implementada: T_M2T_PROGRAM_JS
 
@@ -15,7 +15,28 @@
 
 Proyecto separado `mde/com.project.mde.programming.generator`. Identidad por
 referencias EMF/posición estructural, strings escapados como datos.
-[Diseño](FASE_3_M2T_ACCELEO.md). Runtime GridWorld no implementado.
+[Diseño](FASE_3_M2T_ACCELEO.md). Runtime GridWorld implementado en Fase 4, evaluación en Fase 5 y aprendizaje en Fase 6.
+
+## Modelo implementado en Fase 6: learning.ecore
+
+Plugin `mde/com.project.mde.learning.model`; nsURI
+`https://mdedu.espoch.edu.ec/model/learning/1.0`; raíz **StudentModel** versión 1.
+Diez EClasses: Student, StudentModel, Concept, ConceptMastery, LearningObjective,
+Activity, Attempt, ErrorPattern, HintUsage y Progress. GenModel Java 21, 26 src-gen.
+
+StudentModel contiene estudiante, catálogos, masteries, intentos recientes,
+hintUsages y progreso. Mastery enlaza Student/Concept; Attempt enlaza Student,
+Activity, Concept y ErrorPattern; Progress enlaza Activity/Concept. Catálogos
+contenidos hacen el XMI autocontenido. Concept ID es EString; prerequisites y listas
+de actividades principales/refuerzo admiten un grafo futuro distinto sin regeneración.
+Actualmente son cuatro conceptos/actividades y cero refuerzos.
+
+Fuente operativa: PostgreSQL normalizado (V2). StudentModelProjectionService usa
+LearningFactory para reconstruir y validar EMF, luego producir DTOs REST. No copia
+src-gen al backend ni persiste un blob XMI. Invariantes manuales fuera de src-gen.
+Ejemplos student-a.learning y student-b.learning con estados distintos y round-trip
+real, también a partir de Testcontainers. [Diseño](FASE_6_MODELO_ESTUDIANTE.md) y
+[evidencia/hashes](VERIFICACION_FASE_6.md). adaptation.ecore y context.ecore pendientes.
 
 ## Diseño histórico de Fase 0
 

@@ -2,7 +2,7 @@
 
 Estado: los diagramas generales describen el diseño objetivo. Ya existen el
 arranque de Fase 0, el metamodelo de Fase 1 y el flujo estructural de Fase 2
-descrito a continuación. El ciclo pedagógico completo no está implementado.
+descrito a continuación, junto al M2T aislado de Fase 3. El ciclo pedagógico completo no está implementado.
 
 ## Flujo implementado en Fase 2
 
@@ -13,6 +13,16 @@ La API opera en memoria y no añade persistencia DB. El workspace visual se guar
 y restaura con serialización Blockly en localStorage. ProgramDto transporta el
 programa; Program EMF sigue siendo el modelo canónico. El cliente HTTP está
 separado del adaptador Blockly. Detalles: [Fase 2](FASE_2_BLOCKLY_MODELO_EMF.md).
+
+## Transformación implementada en Fase 3
+
+Flujo disponible: **Blockly → ProgramDto V1 → Program EMF → Acceleo M2T → JavaScript**.
+El último tramo es un launcher headless separado; no hay conexión automática UI/API
+al generador. `com.project.mde.programming.generator` consume el plugin formal y
+nsURI existente. Las plantillas Acceleo generan llamadas a una API runtime cerrada,
+sin ejecutar el programa. Modelo, DTO y adaptadores Fase 2 permanecen intactos.
+GridWorld corresponde a Fase 4, **no iniciada**.
+[Mapping, contrato y comandos](FASE_3_M2T_ACCELEO.md).
 
 ## Responsabilidades y límites
 

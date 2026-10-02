@@ -1,5 +1,27 @@
 # Modelos MDE — diseño previsto
 
+## Transformación implementada: T_M2T_PROGRAM_JS
+
+| Elemento | Valor real Fase 3 |
+| --- | --- |
+| Source metamodel | programming.ecore (inmutable) |
+| Source root | Program EMF, XMI .programming |
+| nsURI | https://mdedu.espoch.edu.ec/model/programming/1.0 |
+| Technology | Acceleo 4.2.2 / AQL 8.1.2 |
+| Module | com::project::mde::generator::main |
+| Target | JavaScript controlado, UTF-8/LF, program.js |
+| Entry | function runProgram(runtime) |
+| Validation | 25 tests, cuatro golden, A/B byte-equivalent, node --check |
+
+Proyecto separado `mde/com.project.mde.programming.generator`. Identidad por
+referencias EMF/posición estructural, strings escapados como datos.
+[Diseño](FASE_3_M2T_ACCELEO.md). Runtime GridWorld no implementado.
+
+## Diseño histórico de Fase 0
+
+Las previsiones siguientes son históricas; para programación rigen Fases 1, 2 y 3.
+
+
 En Fase 0 no hay Ecore/GenModel/XMI ejecutables. Este documento especifica qué
 deberán formalizar y probar las siguientes fases. Un diagrama o DTO no demuestra
 conformidad EMF.

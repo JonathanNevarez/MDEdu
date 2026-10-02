@@ -4,6 +4,22 @@ Actualización documental: 01/10/2026.
 
 ## Estado actual
 
+**FASE 0: COMPLETADA. FASE 1: COMPLETADA. FASE 2: COMPLETADA.
+FASE 3: COMPLETADA Y VALIDADA. FASE 4: NO INICIADA.**
+
+Partida Fase 3: `0e3b6b8105a766ed967cc56e5e3e60dee565e4da`.
+Generador separado Acceleo 4.2.2 / AQL 8.1.2: Program EMF → JavaScript controlado.
+Lógica en main.mtl; launcher headless, cuatro golden files, 25 pruebas y 29 syntax
+checks por suite. Cuatro generaciones A/B idénticas; reactor MDE y copia limpia
+con repositorio Maven nuevo: BUILD SUCCESS. Ecore/GenModel/44 src-gen intactos.
+Backend/frontend sin modificaciones. Sin ejecución del código ni servicios.
+[Diseño](FASE_3_M2T_ACCELEO.md) y [evidencia](VERIFICACION_FASE_3.md).
+Cierre Git: `feat: add acceleo javascript generator`, solo main.
+Siguiente paso, pendiente de autorización independiente:
+**FASE 4 — GridWorld y ejecución determinista**, no iniciada.
+
+## Histórico: cierre de Fase 2
+
 **FASE 0: COMPLETADA Y VALIDADA. FASE 1: COMPLETADA Y VALIDADA.
 FASE 2: COMPLETADA Y VALIDADA. FASE 3: NO INICIADA.**
 

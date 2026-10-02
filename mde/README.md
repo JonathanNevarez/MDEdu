@@ -1,4 +1,4 @@
-# Subsistema MDE: metamodelo de programación EMF
+# Subsistema MDE: modelo EMF y generador Acceleo
 
 Fase 1 implementa secuencias, variables, condicionales y ciclos en el proyecto
 PDE/EMF `com.project.mde.programming.model`, independiente de UI y backend.
@@ -21,7 +21,8 @@ mvn.cmd --batch-mode --no-transfer-progress clean verify
 ```
 
 El reactor independiente usa Tycho 5.0.4 y p2 SimRel 2026-09. Compila y empaqueta
-el plugin; no constituye una suite semántica. `target/` y `bin/` se ignoran.
+el plugin y el generador, y ejecuta 25 pruebas M2T con 29 node --check.
+`target/` y `bin/` se ignoran. Node 24.19.0 debe estar en PATH.
 No depende de los servicios ni del build backend/frontend.
 **Fase 1 no utiliza Xtext, ATL ni Acceleo**, aunque estén instalados; OCL diferido.
 
@@ -40,3 +41,26 @@ tentativas de la tabla histórica:
 
 La propuesta histórica está en [MODELOS_MDE](../docs/MODELOS_MDE.md).
 La definición concreta vigente de programación está en el documento de Fase 1.
+
+## Generador Fase 3
+
+`com.project.mde.programming.generator` es un proyecto Maven separado con Acceleo
+4.2.2 / AQL 8.1.2. `src/main/resources/com/project/mde/generator/main.mtl` contiene
+la lógica M2T. Generate.java carga/valida XMI y lanza Acceleo.
+Cuatro snapshots revisados en expected/*.expected.js se versionan.
+Outputs de tests/CLI bajo target se ignoran.
+
+Tras clean verify, desde mde instalar artefactos locales para la CLI:
+
+```powershell
+mvn.cmd --batch-mode --no-transfer-progress install
+cd com.project.mde.programming.generator
+mvn.cmd --batch-mode --no-transfer-progress compile exec:exec "-Dmodel=../com.project.mde.programming.model/examples/sequence-basic.programming" "-Doutput=target/headless/sequence-basic"
+node --check target/headless/sequence-basic/program.js
+```
+
+Sustituir sequence-basic por variables-basic, conditionals-basic o loops-basic.
+No abre Eclipse ni ejecuta el programa generado. Tests: snapshots, determinismo,
+operadores/sensores, referencias EMF y escaping.
+[Contrato](../docs/FASE_3_M2T_ACCELEO.md),
+[evidencia](../docs/VERIFICACION_FASE_3.md). Fase 4 no iniciada.

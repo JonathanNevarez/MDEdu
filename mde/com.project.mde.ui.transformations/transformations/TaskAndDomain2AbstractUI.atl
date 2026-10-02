@@ -1,0 +1,57 @@
+module TaskAndDomain2AbstractUI;
+create OUT : UI from IN : UI;
+
+rule Task {
+ from s : UI!TaskAndDomainModel
+ to t : UI!AbstractUIModel (
+ activityId <- s.activityId, conceptId <- s.conceptId, originId <- s.activityId,
+ elements <- Sequence{if s.requiresEditor then Sequence{thisModule.Workspace(s)} else Sequence{} endif,
+if s.requiresSimulator then Sequence{thisModule.Simulation(s)} else Sequence{} endif,
+Sequence{thisModule.Instructions(s)},
+if s.supportsFeedback then Sequence{thisModule.Feedback(s)} else Sequence{} endif,
+if s.supportsHints then Sequence{thisModule.Hints(s)} else Sequence{} endif,
+if s.supportsNavigation then Sequence{thisModule.Navigation(s)} else Sequence{} endif,
+if s.supportsCodeView then Sequence{thisModule.Code(s)} else Sequence{} endif,
+if s.supportsTutor then Sequence{thisModule.Tutor(s)} else Sequence{} endif}->flatten()
+ )
+}
+
+lazy rule Workspace {
+ from s : UI!TaskAndDomainModel
+ to t : UI!AbstractElement (kind <- #WORKSPACE, originId <- s.activityId + ':WORKSPACE')
+}
+
+lazy rule Simulation {
+ from s : UI!TaskAndDomainModel
+ to t : UI!AbstractElement (kind <- #SIMULATION_AREA, originId <- s.activityId + ':SIMULATION_AREA')
+}
+
+lazy rule Instructions {
+ from s : UI!TaskAndDomainModel
+ to t : UI!AbstractElement (kind <- #INSTRUCTION_AREA, originId <- s.activityId + ':INSTRUCTION_AREA')
+}
+
+lazy rule Feedback {
+ from s : UI!TaskAndDomainModel
+ to t : UI!AbstractElement (kind <- #FEEDBACK_AREA, originId <- s.activityId + ':FEEDBACK_AREA')
+}
+
+lazy rule Hints {
+ from s : UI!TaskAndDomainModel
+ to t : UI!AbstractElement (kind <- #HINT_AREA, originId <- s.activityId + ':HINT_AREA')
+}
+
+lazy rule Navigation {
+ from s : UI!TaskAndDomainModel
+ to t : UI!AbstractElement (kind <- #NAVIGATION_AREA, originId <- s.activityId + ':NAVIGATION_AREA')
+}
+
+lazy rule Code {
+ from s : UI!TaskAndDomainModel
+ to t : UI!AbstractElement (kind <- #CODE_AREA, originId <- s.activityId + ':CODE_AREA')
+}
+
+lazy rule Tutor {
+ from s : UI!TaskAndDomainModel
+ to t : UI!AbstractElement (kind <- #TUTOR_AREA, originId <- s.activityId + ':TUTOR_AREA')
+}

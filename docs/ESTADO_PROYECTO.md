@@ -4,6 +4,35 @@ Actualización documental: 02/10/2026.
 
 ## Estado actual
 
+**FASES 0–9 COMPLETADAS Y VALIDADAS. FASE 10 COMPLETADA Y VALIDADA.
+FASE 11 NO INICIADA.**
+
+Partida: `3b54a0ee540343f77e2b88cfd8a127f6ca66273d`.
+UI MDE formal independiente: seis EClasses, diez enums, 28 fuentes EMF y 14 XMI.
+Cadena ATL Task→Abstract→Concrete real en build headless; configuración final EMF
+creada como overlay de AdaptationDecision y feedback opcional. React interpreta
+configuración, con hints, código Acceleo de lectura, navegación, Transitioner y Luma acotada.
+
+V5 autorizada guarda ProgramDto validado + SHA-256 por intento, atómicamente.
+V1–V4 permanecen intactas. UI derivada sin persistencia propia. Legacy sin código explícito.
+
+Validación: 239 unit/MVC + 46 IT; 53 tests frontend; typecheck/build PASS;
+8 E2E DISABLED + tres adaptativos FAKE y repetición focalizada DISABLED PASS.
+MDE clean verify PASS (ATL 2, Xtext 22, Acceleo 25); CLI y node --check PASS.
+100 configuraciones/fingerprints idénticos. Dos estudiantes producen interfaces distintas.
+UI segura ante fallos, código/feedback escapados, reduced motion y autoridad backend probados.
+158 archivos protegidos comparados sin diferencias. Cuatro actividades, cero refuerzos.
+
+Validaciones secuenciales, heaps limitados y un worker Chromium; sin ajustes globales.
+Servicios de prueba detenidos, volumen PostgreSQL conservado. No hubo nuevas instalaciones.
+No se implementaron telemetría, Meta-UI ni temas avanzados.
+
+[Diseño](FASE_10_UI_ADAPTATIVA.md) · [Evidencia](VERIFICACION_FASE_10.md).
+Cierre autorizado: `feat: add adaptive mde user interface`, push únicamente main.
+Siguiente fase requiere nueva autorización; Fase 11 no iniciada.
+
+## Histórico: cierre de Fase 9
+
 **FASES 0–8 COMPLETADAS Y VALIDADAS. FASE 9 COMPLETADA Y VALIDADA.
 FASE 10 NO INICIADA.**
 

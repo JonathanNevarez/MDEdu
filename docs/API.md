@@ -629,3 +629,17 @@ No endpoints de prompts. Feedback se trata como texto, sin render HTML.
 El modelo de acceso sigue siendo pseudónimo de prototipo, no auth de producción.
 
 [Diseño](FASE_9_LLM.md) · [Evidencia](VERIFICACION_FASE_9.md).
+
+## Configuración UI adaptativa (Fase 10)
+
+- `GET /api/students/{studentId}/attempts/{attemptId}/ui-configuration`: valida propietario;
+  intento inexistente/ajeno 404, actividad bloqueada 409.
+- `GET /api/students/{studentId}/activities/{activityId}/ui-configuration`: reconstruye el
+  último intento de esa actividad o configuración inicial; actividad bloqueada 409.
+
+Respuesta: `{configuration, attemptId, feedback, code, fingerprint, safeDefault, reason}`.
+`configuration` usa versión 1 y enums del modelo UI; incluye visibilidad, layout,
+ayudas, dificultad y navegación. `code` opcional contiene `{available,text,reason}` y
+solo se genera si la decisión permite mostrarlo. No existe endpoint que acepte
+configuración suministrada por el cliente. Los errores de proyección retornan safe default.
+El POST existente `/api/feedback/generate` sigue recibiendo solo studentId/attemptId.

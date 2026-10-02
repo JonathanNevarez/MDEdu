@@ -283,3 +283,13 @@ Fase 9 no modifica StudentModel ni acciones/fingerprint. API Responses por HttpC
 Fake determinista y fallback local disponibles. Sin key la aplicación funciona.
 UI adaptativa completa, Luma y Transitioner siguen siendo Fase 10 NO INICIADA.
 [Diseño y límites](FASE_9_LLM.md).
+
+## Extensión de Fase 10: presentación adaptativa
+
+Blockly → Program EMF → ejecución → evaluación → StudentModel → ContextModel →
+Xtext/ECA → AdaptationManager → AdaptationDecision → feedback opcional → UI MDE →
+FinalUIConfiguration → DTO → React. Task→Abstract→Concrete se ejecuta realmente
+con ATL en el build headless. El backend consume las bases XMI verificadas.
+La configuración derivada se solicita después del intento y al refrescar.
+Una proyección fallida no revierte el aprendizaje persistido; devuelve safe default.
+V5 autorizada conserva únicamente el programa original por intento para Acceleo de lectura.

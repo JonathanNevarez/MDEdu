@@ -1,3 +1,5 @@
+import { useAdaptiveUi } from '../adaptive/useAdaptiveUi';
+import { AdaptiveRenderer } from '../adaptive/AdaptiveRenderer';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getCatalog } from './api';
@@ -54,6 +56,7 @@ export function AdventurePage() {
   </section>;
 }
 function Activity({ level, studentId, onProgress }: { level: Level; studentId: string; onProgress: (next: StudentProgress) => void }) {
+  const adaptive = useAdaptiveUi(studentId, level.id);
   const openedAt = useRef(performance.now());
   const [result, setResult] = useState<ExecutionResult | null>(null);
   const [index, setIndex] = useState(-1); const [playing, setPlaying] = useState(false);
@@ -78,13 +81,14 @@ function Activity({ level, studentId, onProgress }: { level: Level; studentId: s
       const response = attempt.execution;
       if (request.signal.aborted) return;
       onProgress(attempt.progress);
+      void adaptive.load(attempt.attemptId);
       setResult(response); setPlaying(response.trace.length > 0);
       setMessage(response.trace.length ? 'Recorriendo tu programa…' : response.errors[0]?.message ?? 'Revisa tu programa.');
     } catch (e) { if (!request.signal.aborted) setMessage(e instanceof Error ? e.message : 'No se pudo ejecutar.'); }
     finally { if (!request.signal.aborted) setBusy(false); }
   }
   function reset() { pending.current?.abort(); setBusy(false); setPlaying(false); setResult(null); setIndex(-1); setMessage('Tablero reiniciado. Tus bloques siguen aquí.'); }
-  return <section className="game-activity">
+  return <section className="game-activity" data-layout={adaptive.value.configuration.activityLayout}>
     <Link to="/aventura">← Volver al mapa</Link>
     <header className="activity-heading"><div><p className="eyebrow">{level.concept} · RETO {level.order} DE 4</p><h1>{level.title}</h1><p>{level.description}</p></div>
       <span className="goal-chip">Objetivo: llegar a la bandera</span></header>
@@ -99,5 +103,6 @@ function Activity({ level, studentId, onProgress }: { level: Level; studentId: s
           {state.variables.length ? <ul>{state.variables.map(v => <li key={v.id}>{v.name} = <strong>{String(v.value)}</strong></li>)}</ul> : <p>Aún no hay variables.</p>}</section>
         {result && <details><summary>Ver recorrido · {result.steps} operaciones</summary><ol className="game-trace">{result.trace.map(event => <li key={event.index} aria-current={event.index === index ? 'step' : undefined}>{event.index + 1}. {event.detail}</li>)}</ol></details>}
       </aside></div>
+    <AdaptiveRenderer value={adaptive.value} loading={adaptive.loading} error={adaptive.error} success={!!result?.evaluation?.activityPassed && !playing} onRepeat={reset}/>
   </section>;
 }

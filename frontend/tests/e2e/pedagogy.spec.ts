@@ -33,7 +33,7 @@ test('Ciclos distingue repetición manual y un ciclo correcto', async ({ page, r
   expect(manual.success).toBe(true); expect(manual.evaluation.activityPassed).toBe(false);
   expect(manual.evaluation.patterns.map((p: { id: string }) => p.id)).toContain('REPETITIVE_SEQUENCE_WITHOUT_LOOP');
   await expect(page.getByRole('status').filter({ hasText: 'todavía falta aplicar el concepto' })).toBeVisible();
-  await expect(page.getByText('Prueba a representar esa repetición con un ciclo.', { exact: false })).toBeVisible();
+  await expect(page.locator('.evaluation-feedback').getByText('Prueba a representar esa repetición con un ciclo.', { exact: false })).toBeVisible();
   await page.screenshot({ path: testInfo.outputPath('manual-pedagogical-failure.png'), fullPage: true });
   expect((await (await request.get(`${api}/api/students/${studentId}/progress`)).json()).levels.find((l: { levelId: string }) => l.levelId === 'LOOPS').completed).toBe(false);
   await page.getByRole('link', { name: '← Volver al mapa' }).click();

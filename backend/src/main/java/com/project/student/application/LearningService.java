@@ -18,9 +18,11 @@ public class LearningService {
     private final StudentModelProjectionService projection;
     private final com.project.adaptation.manager.AdaptationManager adaptation;
     private final com.project.llm.application.FeedbackEvidenceCapture feedbackEvidence;
+    private final com.project.ui.infrastructure.AttemptProgramStore attemptPrograms;
     public LearningService(StudentRepository students,LearningStore store,StudentModelPolicy policy,ConceptGraphService graph,
-                           GameExecutionService execution,LevelCatalog levels,StudentModelProjectionService projection,com.project.adaptation.manager.AdaptationManager adaptation,com.project.llm.application.FeedbackEvidenceCapture feedbackEvidence) {
+                           GameExecutionService execution,LevelCatalog levels,StudentModelProjectionService projection,com.project.adaptation.manager.AdaptationManager adaptation,com.project.llm.application.FeedbackEvidenceCapture feedbackEvidence,com.project.ui.infrastructure.AttemptProgramStore attemptPrograms) {
         this.students=students;this.store=store;this.policy=policy;this.graph=graph;this.execution=execution;this.levels=levels;this.projection=projection;this.adaptation=adaptation;this.feedbackEvidence=feedbackEvidence;
+        this.attemptPrograms=attemptPrograms;
     }
     @Transactional
     public StudentDto create(String displayName) {
@@ -51,6 +53,7 @@ public class LearningService {
         attempt.hintCount=request.hintCount();attempt.submittedAt=now;attempt.policyVersion=policy.values().version();attempt.masteryBefore=change.before();attempt.masteryDelta=change.delta();attempt.masteryAfter=change.after();attempt.updateReasons=String.join(",",change.reasons());attempt.patterns.addAll(ids);store.save(attempt);
         if(attempt.successful && progress.completedAt==null)progress.completedAt=now;
         unlock(student.id,now);store.flush();
+        attemptPrograms.capture(attempt.id,request.program());
         var model=projection.project(student.id);
         var decision=adaptation.captureAndDecide(model,model.getAttempts().getFirst(),result.evaluation(),change);
         feedbackEvidence.capture(attempt.id,level,request.program(),result,decision,request.hintCount());

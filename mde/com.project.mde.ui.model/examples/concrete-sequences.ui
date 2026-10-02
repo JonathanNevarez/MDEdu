@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ASCII"?>
+<ui:ConcreteUIModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ui="https://mdedu.espoch.edu.ec/model/ui/1.0" activityId="SEQUENCES" conceptId="SEQUENCES" originId="SEQUENCES">
+  <elements originId="SEQUENCES:WORKSPACE"/>
+  <elements kind="GRIDWORLD_VIEW" originId="SEQUENCES:SIMULATION_AREA"/>
+  <elements kind="INSTRUCTION_PANEL" originId="SEQUENCES:INSTRUCTION_AREA"/>
+  <elements kind="FEEDBACK_PANEL" originId="SEQUENCES:FEEDBACK_AREA"/>
+  <elements kind="HINT_PANEL" originId="SEQUENCES:HINT_AREA"/>
+  <elements kind="NAVIGATION_PANEL" originId="SEQUENCES:NAVIGATION_AREA"/>
+  <elements kind="CODE_PANEL" originId="SEQUENCES:CODE_AREA"/>
+  <elements kind="LUMA_TUTOR" originId="SEQUENCES:TUTOR_AREA"/>
+</ui:ConcreteUIModel>

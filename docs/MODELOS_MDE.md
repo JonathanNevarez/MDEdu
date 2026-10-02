@@ -183,3 +183,15 @@ la decisión y explicación principales son EObjects adaptation existentes.
 [Diseño Fase 8](FASE_8_ADAPTATION_MANAGER.md) y hashes en
 [Verificación Fase 8](VERIFICACION_FASE_8.md). Las restricciones históricas de Fase 7
 sobre decisiones vacías quedan reemplazadas únicamente por esta autorización.
+
+## Modelo UI de Fase 10
+
+Plugin `mde/com.project.mde.ui.model`; nsURI `https://mdedu.espoch.edu.ec/model/ui/1.0`.
+EClasses: TaskAndDomainModel, AbstractUIModel, AbstractElement, ConcreteUIModel,
+ConcreteElement, FinalUIConfiguration. Containment: AbstractUIModel.elements y
+ConcreteUIModel.elements. Enums: AbstractKind, ConcreteKind, HintPanelMode,
+FeedbackDetailLevel, ActivityLayout, NavigationMode, DifficultyMode, TutorMode,
+TransitionMode, HintStage. GenModel Java 21; fuentes producidas por EMF.
+Dos transformaciones ATL reales separan necesidades, UI abstracta y concreta.
+El backend crea FinalUIConfiguration como overlay de la decisión resuelta.
+Véase [Fase 10](FASE_10_UI_ADAPTATIVA.md) y sus ejemplos XMI.

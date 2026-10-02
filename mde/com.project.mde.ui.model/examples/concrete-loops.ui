@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ASCII"?>
+<ui:ConcreteUIModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ui="https://mdedu.espoch.edu.ec/model/ui/1.0" activityId="LOOPS" conceptId="LOOPS" originId="LOOPS">
+  <elements originId="LOOPS:WORKSPACE"/>
+  <elements kind="GRIDWORLD_VIEW" originId="LOOPS:SIMULATION_AREA"/>
+  <elements kind="INSTRUCTION_PANEL" originId="LOOPS:INSTRUCTION_AREA"/>
+  <elements kind="FEEDBACK_PANEL" originId="LOOPS:FEEDBACK_AREA"/>
+  <elements kind="HINT_PANEL" originId="LOOPS:HINT_AREA"/>
+  <elements kind="NAVIGATION_PANEL" originId="LOOPS:NAVIGATION_AREA"/>
+  <elements kind="CODE_PANEL" originId="LOOPS:CODE_AREA"/>
+  <elements kind="LUMA_TUTOR" originId="LOOPS:TUTOR_AREA"/>
+</ui:ConcreteUIModel>

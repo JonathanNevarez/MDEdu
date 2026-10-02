@@ -175,3 +175,13 @@ usa configuración/versiones; advisory lock de sesión evita duplicados entre
 instancias sin sostener la transacción educativa. Mantiene una conexión ocupada;
 no promete exactly-once tras crash externo. Persistencia final atómica incluye tags.
 Texto final es recuperable. No se añaden metamodelos, telemetría general ni UI final.
+
+## Fase 10: modelo formal y renderer único
+
+React interpreta FinalUIConfiguration; no duplica pedagogía. ATL implementa los niveles
+Task/Abstract/Concrete; runtime aplica un overlay cerrado sobre la decisión persistida.
+Transitioner solo comunica diferencias visuales. Luma es tutor acotado, no chatbot.
+Feedback y código son texto escapado. DISABLED y FAKE permiten validar sin API real.
+Se autorizó V5 exclusivamente porque los intentos no conservaban ProgramDto: snapshot
+atómico con hash, sin backfill ni cambios en V1–V4. La configuración UI permanece derivada.
+La dificultad modifica presentación, no objetivos ni evaluación.

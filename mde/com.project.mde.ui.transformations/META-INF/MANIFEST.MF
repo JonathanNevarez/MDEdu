@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MDEdu UI ATL transformations
+Bundle-SymbolicName: com.project.mde.ui.transformations
+Bundle-Version: 0.1.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Require-Bundle: com.project.mde.ui.model,
+ org.eclipse.m2m.atl.engine,
+ org.eclipse.m2m.atl.core.emf,
+ org.eclipse.m2m.atl.engine.emfvm,
+ org.eclipse.emf.ecore.xmi,
+ org.junit

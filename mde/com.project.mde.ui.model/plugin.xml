@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated ui -->
+      <package
+            uri="https://mdedu.espoch.edu.ec/model/ui/1.0"
+            class="com.project.mde.ui.UiPackage"/>
+   </extension>
+
+</plugin>

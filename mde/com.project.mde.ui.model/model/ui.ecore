@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="ui" nsURI="https://mdedu.espoch.edu.ec/model/ui/1.0" nsPrefix="ui">
+<eClassifiers xsi:type="ecore:EClass" name="TaskAndDomainModel">
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="activityId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="conceptId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="requiresEditor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="requiresSimulator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="supportsCodeView" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="supportsHints" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="supportsFeedback" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="supportsNavigation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="supportsTutor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" lowerBound="1"/>
+</eClassifiers>
+<eClassifiers xsi:type="ecore:EClass" name="AbstractUIModel">
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="activityId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="conceptId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="originId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EReference" name="elements" eType="#//AbstractElement" containment="true" upperBound="-1"/>
+</eClassifiers>
+<eClassifiers xsi:type="ecore:EClass" name="AbstractElement">
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" eType="#//AbstractKind" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="originId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" lowerBound="1"/>
+</eClassifiers>
+<eClassifiers xsi:type="ecore:EClass" name="ConcreteUIModel">
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="activityId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="conceptId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="originId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="layout" eType="#//ActivityLayout" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EReference" name="elements" eType="#//ConcreteElement" containment="true" upperBound="-1"/>
+</eClassifiers>
+<eClassifiers xsi:type="ecore:EClass" name="ConcreteElement">
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" eType="#//ConcreteKind" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="originId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" lowerBound="1"/>
+</eClassifiers>
+<eClassifiers xsi:type="ecore:EClass" name="FinalUIConfiguration">
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="configurationVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" lowerBound="1" defaultValueLiteral="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="activityId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="showCodePanel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="hintPanelMode" eType="#//HintPanelMode" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="feedbackDetailLevel" eType="#//FeedbackDetailLevel" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="activityLayout" eType="#//ActivityLayout" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="enabledAssistance" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="navigationMode" eType="#//NavigationMode" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="difficultyMode" eType="#//DifficultyMode" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="tutorMode" eType="#//TutorMode" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="transitionMode" eType="#//TransitionMode" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="nextActivityId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="repeatCurrentActivity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="hintStage" eType="#//HintStage" lowerBound="1"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="feedbackMessage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="generatedCodeVisible" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" lowerBound="1"/>
+</eClassifiers>
+<eClassifiers xsi:type="ecore:EEnum" name="AbstractKind">
+<eLiterals name="WORKSPACE" value="0"/>
+<eLiterals name="SIMULATION_AREA" value="1"/>
+<eLiterals name="INSTRUCTION_AREA" value="2"/>
+<eLiterals name="FEEDBACK_AREA" value="3"/>
+<eLiterals name="HINT_AREA" value="4"/>
+<eLiterals name="NAVIGATION_AREA" value="5"/>
+<eLiterals name="CODE_AREA" value="6"/>
+<eLiterals name="TUTOR_AREA" value="7"/>
+</eClassifiers>
+<eClassifiers xsi:type="ecore:EEnum" name="ConcreteKind">
+<eLiterals name="BLOCKLY_EDITOR" value="0"/>
+<eLiterals name="GRIDWORLD_VIEW" value="1"/>
+<eLiterals name="INSTRUCTION_PANEL" value="2"/>
+<eLiterals name="FEEDBACK_PANEL" value="3"/>
+<eLiterals name="HINT_PANEL" value="4"/>
+<eLiterals name="NAVIGATION_PANEL" value="5"/>
+<eLiterals name="CODE_PANEL" value="6"/>
+<eLiterals name="LUMA_TUTOR" value="7"/>
+</eClassifiers>
+<eClassifiers xsi:type="ecore:EEnum" name="HintPanelMode">
+<eLiterals name="HIDDEN" value="0"/>
+<eLiterals name="COMPACT" value="1"/>
+<eLiterals name="EXPANDED" value="2"/>
+</eClassifiers>
+<eClassifiers xsi:type="ecore:EEnum" name="FeedbackDetailLevel">
+<eLiterals name="STANDARD" value="0"/>
+<eLiterals name="MINIMAL" value="1"/>
+<eLiterals name="DETAILED" value="2"/>
+</eClassifiers>
+<eClassifiers xsi:type="ecore:EEnum" name="ActivityLayout">
+<eLiterals name="STANDARD" value="0"/>
+<eLiterals name="ASSISTED" value="1"/>
+<eLiterals name="FOCUSED" value="2"/>
+</eClassifiers>
+<eClassifiers xsi:type="ecore:EEnum" name="NavigationMode">
+<eLiterals name="STAY" value="0"/>
+<eLiterals name="REPEAT" value="1"/>
+<eLiterals name="ADVANCE" value="2"/>
+</eClassifiers>
+<eClassifiers xsi:type="ecore:EEnum" name="DifficultyMode">
+<eLiterals name="STANDARD" value="0"/>
+<eLiterals name="REDUCED" value="1"/>
+<eLiterals name="INCREASED" value="2"/>
+</eClassifiers>
+<eClassifiers xsi:type="ecore:EEnum" name="TutorMode">
+<eLiterals name="HIDDEN" value="0"/>
+<eLiterals name="GUIDE" value="1"/>
+<eLiterals name="HINT" value="2"/>
+<eLiterals name="FEEDBACK" value="3"/>
+<eLiterals name="SUCCESS" value="4"/>
+</eClassifiers>
+<eClassifiers xsi:type="ecore:EEnum" name="TransitionMode">
+<eLiterals name="NONE" value="0"/>
+<eLiterals name="SUBTLE" value="1"/>
+<eLiterals name="NOTICEABLE" value="2"/>
+</eClassifiers>
+<eClassifiers xsi:type="ecore:EEnum" name="HintStage">
+<eLiterals name="NONE" value="0"/>
+<eLiterals name="SOCRATIC_QUESTION" value="1"/>
+<eLiterals name="CONCEPTUAL_HINT" value="2"/>
+<eLiterals name="ANALOGOUS_EXAMPLE" value="3"/>
+<eLiterals name="PARTIAL_HELP" value="4"/>
+</eClassifiers>
+</ecore:EPackage>

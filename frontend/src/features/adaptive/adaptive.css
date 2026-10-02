@@ -1,0 +1,15 @@
+.adaptive-panels { display:grid; gap:1rem; margin-top:1rem; }
+.adaptive-panels section { border:1px solid #b5cdbb; border-radius:1rem; padding:1rem; background:#f7fbf5; }
+.luma-tutor { display:flex; align-items:center; gap:1rem; }
+.luma-avatar { display:grid; place-items:center; width:3rem; height:3rem; border-radius:50%; background:#205e49; color:#fff; font-size:2rem; flex-shrink:0; }
+.hint-compact { max-width:48rem; } .hint-expanded { border-left:4px solid #367e5e; padding-left:.75rem; }
+.code-panel pre { overflow:auto; max-height:22rem; white-space:pre; background:#142a24; color:#f3f8f4; padding:1rem; border-radius:.5rem; }
+.ui-transition { min-height:1.4em; margin:0; } .ui-transition.subtle { animation:ui-appear .2s ease-out; }
+.ui-transition.noticeable { padding:.75rem; background:#edf5d9; }
+.game-activity[data-layout="ASSISTED"] .game-simulation { border:2px solid #367e5e; }
+.game-activity[data-layout="FOCUSED"] .game-layout { gap:1.5rem; }
+.adaptive-continue { justify-self:start; padding:.7rem 1rem; border-radius:.5rem; color:white; background:#205e49; }
+.adaptive-panels :focus-visible { outline:3px solid #c28017; outline-offset:3px; }
+@keyframes ui-appear { from {opacity:.6} to {opacity:1} }
+@media(prefers-reduced-motion:reduce) { .ui-transition { animation:none!important; transition:none!important; } }
+@media(max-width:640px) { .adaptive-panels section {padding:.75rem} .code-panel pre {max-width:calc(100vw - 5rem)} }

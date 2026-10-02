@@ -1,0 +1,47 @@
+module AbstractUI2ConcreteUI;
+create OUT : UI from IN : UI;
+rule Model {
+ from s : UI!AbstractUIModel
+ to t : UI!ConcreteUIModel (activityId <- s.activityId, conceptId <- s.conceptId,
+ originId <- s.originId, layout <- #STANDARD, elements <- s.elements)
+}
+
+rule BLOCKLY_EDITOR {
+ from s : UI!AbstractElement (s.kind = #WORKSPACE)
+ to t : UI!ConcreteElement (kind <- #BLOCKLY_EDITOR, originId <- s.originId)
+}
+
+rule GRIDWORLD_VIEW {
+ from s : UI!AbstractElement (s.kind = #SIMULATION_AREA)
+ to t : UI!ConcreteElement (kind <- #GRIDWORLD_VIEW, originId <- s.originId)
+}
+
+rule INSTRUCTION_PANEL {
+ from s : UI!AbstractElement (s.kind = #INSTRUCTION_AREA)
+ to t : UI!ConcreteElement (kind <- #INSTRUCTION_PANEL, originId <- s.originId)
+}
+
+rule FEEDBACK_PANEL {
+ from s : UI!AbstractElement (s.kind = #FEEDBACK_AREA)
+ to t : UI!ConcreteElement (kind <- #FEEDBACK_PANEL, originId <- s.originId)
+}
+
+rule HINT_PANEL {
+ from s : UI!AbstractElement (s.kind = #HINT_AREA)
+ to t : UI!ConcreteElement (kind <- #HINT_PANEL, originId <- s.originId)
+}
+
+rule NAVIGATION_PANEL {
+ from s : UI!AbstractElement (s.kind = #NAVIGATION_AREA)
+ to t : UI!ConcreteElement (kind <- #NAVIGATION_PANEL, originId <- s.originId)
+}
+
+rule CODE_PANEL {
+ from s : UI!AbstractElement (s.kind = #CODE_AREA)
+ to t : UI!ConcreteElement (kind <- #CODE_PANEL, originId <- s.originId)
+}
+
+rule LUMA_TUTOR {
+ from s : UI!AbstractElement (s.kind = #TUTOR_AREA)
+ to t : UI!ConcreteElement (kind <- #LUMA_TUTOR, originId <- s.originId)
+}

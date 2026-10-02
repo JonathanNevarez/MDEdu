@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.project.mde.ui.model/src-gen" modelPluginID="com.project.mde.ui.model" modelName="Ui" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" complianceLevel="21.0" importerID="org.eclipse.emf.importer.ecore" operationReflection="true" importOrganizing="true">
+<foreignModel>ui.ecore</foreignModel>
+<genPackages basePackage="com.project.mde" prefix="Ui" ecorePackage="ui.ecore#/">
+<genClasses ecoreClass="ui.ecore#//TaskAndDomainModel">
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//TaskAndDomainModel/activityId"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//TaskAndDomainModel/conceptId"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//TaskAndDomainModel/requiresEditor"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//TaskAndDomainModel/requiresSimulator"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//TaskAndDomainModel/supportsCodeView"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//TaskAndDomainModel/supportsHints"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//TaskAndDomainModel/supportsFeedback"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//TaskAndDomainModel/supportsNavigation"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//TaskAndDomainModel/supportsTutor"/>
+</genClasses>
+<genClasses ecoreClass="ui.ecore#//AbstractUIModel">
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//AbstractUIModel/activityId"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//AbstractUIModel/conceptId"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//AbstractUIModel/originId"/>
+<genFeatures createChild="true" ecoreFeature="ecore:EReference ui.ecore#//AbstractUIModel/elements"/>
+</genClasses>
+<genClasses ecoreClass="ui.ecore#//AbstractElement">
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//AbstractElement/kind"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//AbstractElement/originId"/>
+</genClasses>
+<genClasses ecoreClass="ui.ecore#//ConcreteUIModel">
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//ConcreteUIModel/activityId"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//ConcreteUIModel/conceptId"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//ConcreteUIModel/originId"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//ConcreteUIModel/layout"/>
+<genFeatures createChild="true" ecoreFeature="ecore:EReference ui.ecore#//ConcreteUIModel/elements"/>
+</genClasses>
+<genClasses ecoreClass="ui.ecore#//ConcreteElement">
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//ConcreteElement/kind"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//ConcreteElement/originId"/>
+</genClasses>
+<genClasses ecoreClass="ui.ecore#//FinalUIConfiguration">
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//FinalUIConfiguration/configurationVersion"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//FinalUIConfiguration/activityId"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//FinalUIConfiguration/showCodePanel"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//FinalUIConfiguration/hintPanelMode"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//FinalUIConfiguration/feedbackDetailLevel"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//FinalUIConfiguration/activityLayout"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//FinalUIConfiguration/enabledAssistance"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//FinalUIConfiguration/navigationMode"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//FinalUIConfiguration/difficultyMode"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//FinalUIConfiguration/tutorMode"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//FinalUIConfiguration/transitionMode"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//FinalUIConfiguration/nextActivityId"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//FinalUIConfiguration/repeatCurrentActivity"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//FinalUIConfiguration/hintStage"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//FinalUIConfiguration/feedbackMessage"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute ui.ecore#//FinalUIConfiguration/generatedCodeVisible"/>
+</genClasses>
+<genEnums typeSafeEnumCompatible="false" ecoreEnum="ui.ecore#//AbstractKind">
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//AbstractKind/WORKSPACE"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//AbstractKind/SIMULATION_AREA"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//AbstractKind/INSTRUCTION_AREA"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//AbstractKind/FEEDBACK_AREA"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//AbstractKind/HINT_AREA"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//AbstractKind/NAVIGATION_AREA"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//AbstractKind/CODE_AREA"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//AbstractKind/TUTOR_AREA"/>
+</genEnums>
+<genEnums typeSafeEnumCompatible="false" ecoreEnum="ui.ecore#//ConcreteKind">
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//ConcreteKind/BLOCKLY_EDITOR"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//ConcreteKind/GRIDWORLD_VIEW"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//ConcreteKind/INSTRUCTION_PANEL"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//ConcreteKind/FEEDBACK_PANEL"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//ConcreteKind/HINT_PANEL"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//ConcreteKind/NAVIGATION_PANEL"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//ConcreteKind/CODE_PANEL"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//ConcreteKind/LUMA_TUTOR"/>
+</genEnums>
+<genEnums typeSafeEnumCompatible="false" ecoreEnum="ui.ecore#//HintPanelMode">
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//HintPanelMode/HIDDEN"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//HintPanelMode/COMPACT"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//HintPanelMode/EXPANDED"/>
+</genEnums>
+<genEnums typeSafeEnumCompatible="false" ecoreEnum="ui.ecore#//FeedbackDetailLevel">
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//FeedbackDetailLevel/STANDARD"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//FeedbackDetailLevel/MINIMAL"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//FeedbackDetailLevel/DETAILED"/>
+</genEnums>
+<genEnums typeSafeEnumCompatible="false" ecoreEnum="ui.ecore#//ActivityLayout">
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//ActivityLayout/STANDARD"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//ActivityLayout/ASSISTED"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//ActivityLayout/FOCUSED"/>
+</genEnums>
+<genEnums typeSafeEnumCompatible="false" ecoreEnum="ui.ecore#//NavigationMode">
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//NavigationMode/STAY"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//NavigationMode/REPEAT"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//NavigationMode/ADVANCE"/>
+</genEnums>
+<genEnums typeSafeEnumCompatible="false" ecoreEnum="ui.ecore#//DifficultyMode">
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//DifficultyMode/STANDARD"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//DifficultyMode/REDUCED"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//DifficultyMode/INCREASED"/>
+</genEnums>
+<genEnums typeSafeEnumCompatible="false" ecoreEnum="ui.ecore#//TutorMode">
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//TutorMode/HIDDEN"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//TutorMode/GUIDE"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//TutorMode/HINT"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//TutorMode/FEEDBACK"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//TutorMode/SUCCESS"/>
+</genEnums>
+<genEnums typeSafeEnumCompatible="false" ecoreEnum="ui.ecore#//TransitionMode">
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//TransitionMode/NONE"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//TransitionMode/SUBTLE"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//TransitionMode/NOTICEABLE"/>
+</genEnums>
+<genEnums typeSafeEnumCompatible="false" ecoreEnum="ui.ecore#//HintStage">
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//HintStage/NONE"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//HintStage/SOCRATIC_QUESTION"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//HintStage/CONCEPTUAL_HINT"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//HintStage/ANALOGOUS_EXAMPLE"/>
+<genEnumLiterals ecoreEnumLiteral="ui.ecore#//HintStage/PARTIAL_HELP"/>
+</genEnums>
+</genPackages></genmodel:GenModel>

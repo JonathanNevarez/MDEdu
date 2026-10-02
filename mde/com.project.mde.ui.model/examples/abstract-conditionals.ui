@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ASCII"?>
+<ui:AbstractUIModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ui="https://mdedu.espoch.edu.ec/model/ui/1.0" activityId="CONDITIONALS" conceptId="CONDITIONALS" originId="CONDITIONALS">
+  <elements originId="CONDITIONALS:WORKSPACE"/>
+  <elements kind="SIMULATION_AREA" originId="CONDITIONALS:SIMULATION_AREA"/>
+  <elements kind="INSTRUCTION_AREA" originId="CONDITIONALS:INSTRUCTION_AREA"/>
+  <elements kind="FEEDBACK_AREA" originId="CONDITIONALS:FEEDBACK_AREA"/>
+  <elements kind="HINT_AREA" originId="CONDITIONALS:HINT_AREA"/>
+  <elements kind="NAVIGATION_AREA" originId="CONDITIONALS:NAVIGATION_AREA"/>
+  <elements kind="CODE_AREA" originId="CONDITIONALS:CODE_AREA"/>
+  <elements kind="TUTOR_AREA" originId="CONDITIONALS:TUTOR_AREA"/>
+</ui:AbstractUIModel>

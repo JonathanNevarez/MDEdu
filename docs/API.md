@@ -606,3 +606,26 @@ de versión con contenido de reglas/parámetros distinto (VERSION_CONTENT_MISMAT
 No se añadió GET /api/adaptation/rules. No endpoints LLM ni edición de reglas.
 Identidades pseudónimas por UUID siguen el prototipo Fase 6: estos GET no incorporan
 un sistema de autenticación nuevo. El contenido auditado no incluye displayName.
+
+## Fase 9 — Feedback posterior a la decisión
+
+POST `/api/feedback/generate` recibe `{ "studentId": "UUID", "attemptId": "UUID" }`.
+200 tanto para proveedor válido como fallback. Backend deriva diagnóstico, etapa y
+contexto; no acepta prompt, mastery, pattern, tag o decisión del cliente como autoridad.
+Campos extra se ignoran. No se llama al proveedor dentro de POST attempts.
+
+Respuesta: feedbackId, attemptId, adaptationDecisionId, purpose=FEEDBACK_GENERATION,
+message, question nullable, focus, hintStage, language=es, source, provider, model, llmUsed,
+fallbackReason nullable, classification nullable, versiones, promptHash,
+sanitizedContextHash y createdAt UTC. Source OPENAI/FAKE/FALLBACK; Fake tiene
+llmUsed=false. Classification contiene recognized, errorTags, explanation, confidence;
+es complementaria y nunca reemplaza los patrones de evaluación.
+
+GET `/api/feedback/{feedbackId}` recupera el DTO persistido, sin generar nuevamente.
+400:request/UUID inválido.404:alumno/intento ajeno o inexistente, decisión/feedback
+ausente.409:evidencia histórica anterior aV4 no disponible o generación aún ocupada.
+Idempotencia por intento/decisión/propósito/versiones/configuración; no regenerate.
+No endpoints de prompts. Feedback se trata como texto, sin render HTML.
+El modelo de acceso sigue siendo pseudónimo de prototipo, no auth de producción.
+
+[Diseño](FASE_9_LLM.md) · [Evidencia](VERIFICACION_FASE_9.md).

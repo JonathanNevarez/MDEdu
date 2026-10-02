@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "classificationConfidenceThreshold": 0.7,
+  "feedbackEnabled": true,
+  "unknownCaseClassificationEnabled": true,
+  "maxPromptChars": 12000,
+  "maxOutputChars": 4000,
+  "maxPreviousHints": 3,
+  "maxMessageChars": 600,
+  "maxQuestionChars": 300,
+  "maxFocusChars": 100
+}

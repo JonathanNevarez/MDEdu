@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "tags": {
+    "LOGIC_FLOW_ISSUE": [
+      "SEQUENCES",
+      "VARIABLES",
+      "CONDITIONALS",
+      "LOOPS"
+    ],
+    "STATE_UPDATE_ISSUE": [
+      "VARIABLES"
+    ],
+    "CONDITION_LOGIC_ISSUE": [
+      "CONDITIONALS"
+    ],
+    "REPETITION_LOGIC_ISSUE": [
+      "LOOPS"
+    ],
+    "UNCLASSIFIED": [
+      "SEQUENCES",
+      "VARIABLES",
+      "CONDITIONALS",
+      "LOOPS"
+    ]
+  }
+}

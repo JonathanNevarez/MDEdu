@@ -54,7 +54,7 @@ class AdaptationIT {
         assertEquals(List.of("ReforzarCiclos","ErrorRepetido","FuncionalSinConcepto"),resultB.matches().stream().map(m->m.ruleId()).toList());
         assertEquals(.80,projection.project(a).getConceptMasteries().get(3).getMasteryScore());
         assertEquals(0,projection.project(b).getConceptMasteries().get(3).getMasteryScore());
-        assertEquals(3,jdbc.queryForObject("select count(*) from flyway_schema_history where success",Integer.class));
+        assertEquals(4,jdbc.queryForObject("select count(*) from flyway_schema_history where success",Integer.class));
         assertEquals(4,jdbc.queryForObject("select count(*) from information_schema.tables where table_schema='public' and table_name like 'adaptation%'",Integer.class));
         Files.createDirectories(Path.of("target/adaptation-evidence"));
         Files.writeString(Path.of("target/adaptation-evidence/students-ab.json"),json.writerWithDefaultPrettyPrinter().writeValueAsString(Map.of("A",resultA,"B",resultB)));

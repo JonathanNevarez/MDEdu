@@ -253,3 +253,33 @@ lock por estudiante y constraint única por intento/versiones.
 
 El manager decide intenciones; React, Luma y el feedback Fase 5 no cambian.
 LLM = Fase 9, NO INICIADA. UI adaptativa completa = Fase 10, NO INICIADA.
+
+## Implementado en Fase 9 — LLM posterior a decisión
+
+```mermaid
+flowchart TD
+  A[AdaptationDecision persistida] --> F[FeedbackOrchestrator]
+  F --> S[ContextSanitizer]
+  S --> K{Patrón conocido?}
+  K -->|Sí| P[PedagogicalPromptBuilder]
+  K -->|No, fallo analizable| U[UnknownCasePromptBuilder]
+  U --> C[LlmProvider classifyUncoveredCase]
+  C --> V[ClosedVocabularyValidator]
+  V --> P
+  P --> L[LlmProvider generatePedagogicalFeedback]
+  L --> O[PedagogicalFeedbackValidator]
+  O --> R[FeedbackRecord]
+  C -->|Fallo| B[Fallback determinista]
+  L -->|Fallo| B
+  V -->|Rechazo| B
+  O -->|Rechazo| B
+  B --> R
+```
+
+El intento captura evidencia mínima sin invocar red. La llamada externa no mantiene
+transacción educativa ni lock de estudiante. Advisory lock de sesión serializa la
+misma generación; guardado final de feedback/tags/auditoría es atómico.
+Fase 9 no modifica StudentModel ni acciones/fingerprint. API Responses por HttpClient,
+Fake determinista y fallback local disponibles. Sin key la aplicación funciona.
+UI adaptativa completa, Luma y Transitioner siguen siendo Fase 10 NO INICIADA.
+[Diseño y límites](FASE_9_LLM.md).

@@ -4,6 +4,35 @@ Actualización documental: 02/10/2026.
 
 ## Estado actual
 
+**FASES 0–8 COMPLETADAS Y VALIDADAS. FASE 9 COMPLETADA Y VALIDADA.
+FASE 10 NO INICIADA.**
+
+Partida: `a0afbe6306eef3eac14093fd457247b30110ade6`.
+Feedback LLM controlado posterior a AdaptationDecision; proveedores DISABLED, FAKE,
+OPENAI. Responses API/HttpClient JDK21, Structured Output y validación backend.
+ContextSanitizer, prompts/policy/tags V1, cuatro etapas de pistas y fallback de catálogo.
+V4 añade evidencia mínima, feedback, tags ytrazabilidad de llamadas. Endpoint POST
+feedback/generate y GET feedback; idempotencia, concurrencia yrollback comprobados.
+
+Validación:227 unit/MVC+40 IT PASS;44 tests frontend, typecheck, build y 5 E2E PASS;
+MDE clean verify y Acceleo PASS. Full-stack sin key y Fake PASS. OpenAI validado
+mediante HTTP loopback; ninguna llamada pagada. Caso unknown con fixture integrado.
+StudentModel y AdaptationDecision/fingerprint inmutables tras feedback.
+
+308 archivos protegidos sin cambios:todo MDE/frontend, migraciones V1–V3, catálogos,
+reglas y políticas previas. Cuatro conceptos/actividades, cero refuerzos, sin ui.ecore
+ni temas avanzados. Sin frontend adaptativo, Transitioner, Luma completa o telemetría.
+
+Se retomó tras reinicios de Windows:logs mostraron bugchecks, causa no diagnosticada.
+Se finalizó secuencialmente con heaps de 384 MiB y Chromium un worker; sin ajustes globales.
+Servicios de prueba detenidos y volumen PostgreSQL conservado.
+
+[Diseño](FASE_9_LLM.md) · [Evidencia](VERIFICACION_FASE_9.md).
+Cierre autorizado: `feat: add controlled llm feedback`, solo main.
+Siguiente: FASE 10 — UI adaptativa + Luma; no iniciada.
+
+## Histórico: cierre de Fase 8
+
 **FASES 0–7 COMPLETADAS Y VALIDADAS. FASE 8 COMPLETADA Y VALIDADA.
 FASE 9 NO INICIADA.**
 

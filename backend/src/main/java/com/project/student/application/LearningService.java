@@ -17,9 +17,10 @@ public class LearningService {
     private final ConceptGraphService graph;private final GameExecutionService execution;private final LevelCatalog levels;
     private final StudentModelProjectionService projection;
     private final com.project.adaptation.manager.AdaptationManager adaptation;
+    private final com.project.llm.application.FeedbackEvidenceCapture feedbackEvidence;
     public LearningService(StudentRepository students,LearningStore store,StudentModelPolicy policy,ConceptGraphService graph,
-                           GameExecutionService execution,LevelCatalog levels,StudentModelProjectionService projection,com.project.adaptation.manager.AdaptationManager adaptation) {
-        this.students=students;this.store=store;this.policy=policy;this.graph=graph;this.execution=execution;this.levels=levels;this.projection=projection;this.adaptation=adaptation;
+                           GameExecutionService execution,LevelCatalog levels,StudentModelProjectionService projection,com.project.adaptation.manager.AdaptationManager adaptation,com.project.llm.application.FeedbackEvidenceCapture feedbackEvidence) {
+        this.students=students;this.store=store;this.policy=policy;this.graph=graph;this.execution=execution;this.levels=levels;this.projection=projection;this.adaptation=adaptation;this.feedbackEvidence=feedbackEvidence;
     }
     @Transactional
     public StudentDto create(String displayName) {
@@ -52,6 +53,7 @@ public class LearningService {
         unlock(student.id,now);store.flush();
         var model=projection.project(student.id);
         var decision=adaptation.captureAndDecide(model,model.getAttempts().getFirst(),result.evaluation(),change);
+        feedbackEvidence.capture(attempt.id,level,request.program(),result,decision,request.hintCount());
         return new AttemptResponse(attempt.id,result,projection.dto(model),projection.progress(model),change,decision);
     }
     private void unlock(UUID studentId,Instant now) {

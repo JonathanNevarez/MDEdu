@@ -1,0 +1,40 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "message": {
+      "type": "string"
+    },
+    "question": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "focus": {
+      "type": "string"
+    },
+    "hintStage": {
+      "type": "string",
+      "enum": [
+        "SOCRATIC_QUESTION",
+        "CONCEPTUAL_HINT",
+        "ANALOGOUS_EXAMPLE",
+        "PARTIAL_HELP"
+      ]
+    },
+    "language": {
+      "type": "string",
+      "enum": [
+        "es"
+      ]
+    }
+  },
+  "required": [
+    "message",
+    "question",
+    "focus",
+    "hintStage",
+    "language"
+  ]
+}

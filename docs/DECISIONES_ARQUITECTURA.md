@@ -157,3 +157,21 @@ feedback Fase 5. Las acciones son intenciones; no ejecutan navegación ni dificu
 El usuario autorizó explícitamente relajar tres multiplicidades de adaptation.ecore
 para NO_ADAPTATION. Se regeneró EMF sin editar src-gen; grammar/rules y modelos
 programming/learning permanecen intactos. Metadatos extendidos viven en DTO/auditoría.
+
+## ADR-015 — Feedback LLM subordinado y disponible sin red
+
+Aceptada en Fase 9. LLM post-decision: no modifica StudentModel, reglas ni
+AdaptationDecision. Endpoint separado evita latencia/coste en POST attempts.
+Contexto permitido y estructura Program sin texto libre se capturan una sola vez.
+
+LlmProvider separa dominio de OpenAI; HttpClient JDK21 usa Responses API, Structured
+Outputs estrictos y validación servidor. Fake permite pruebas reproducibles sin
+créditos. Prompts/policy/tags versionados; vocabulario complementario cerrado,
+confidence threshold .70; rechazo/error produce fallback Fase 5 o genérico seguro.
+
+No raw prompts/responses en DB/logs ni claves en frontend. Store=false, sin tools.
+Snapshot mínimoV4 permite feedback histórico para nuevos intentos. Idempotencia
+usa configuración/versiones; advisory lock de sesión evita duplicados entre
+instancias sin sostener la transacción educativa. Mantiene una conexión ocupada;
+no promete exactly-once tras crash externo. Persistencia final atómica incluye tags.
+Texto final es recuperable. No se añaden metamodelos, telemetría general ni UI final.

@@ -136,3 +136,24 @@ La gramática sigue la importación de metamodelos documentada por
 [integración EMF](https://eclipse.dev/Xtext/documentation/308_emf_integration.html).
 La compatibilidad quedó comprobada con generación real, tests headless y build en
 repositorio Maven vacío; no se infiere únicamente de versiones instaladas.
+
+## ADR-014 · Contexto transitorio y decisiones reproducibles (Fase 8)
+
+ContextModel es un snapshot EMF transitorio por decisión. ContextFactory y un único
+adapter alimentan ECA; no se guarda XMI ni StudentModel completo. Se captura evidencia
+pedagógica mínima al procesar el intento, para no recalcularlo desde un futuro estado.
+Los intentos históricos sin evidencia devuelven 409 explícito, sin reejecución.
+
+AdaptationManager orquesta; ECA permanece puro y no resuelve conflictos. Resolver
+separado ordena prioridad/especificidad/severidad/orden fuente; aplicabilidad filtra
+recursos y parámetros antes de bloquear otras acciones. Fingerprint semántico excluye
+identidades y fechas. Un lock por estudiante y UNIQUE por intento/versiones aseguran
+idempotencia; toda auditoría participa de la misma transacción.
+
+Persistencia solo guarda identificadores pseudónimos, evidencia y decisiones, sin
+nombre/email/perfil. No se añaden LLM ni UI adaptativa completa. Frontend sigue usando
+feedback Fase 5. Las acciones son intenciones; no ejecutan navegación ni dificultad.
+
+El usuario autorizó explícitamente relajar tres multiplicidades de adaptation.ecore
+para NO_ADAPTATION. Se regeneró EMF sin editar src-gen; grammar/rules y modelos
+programming/learning permanecen intactos. Metadatos extendidos viven en DTO/auditoría.

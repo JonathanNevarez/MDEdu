@@ -56,12 +56,12 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="feedbackStyle" lowerBound="0" upperBound="1" eType="#//FeedbackStyle" unsettable="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AdaptationDecision">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ruleId" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="actions" lowerBound="1" upperBound="-1" eType="#//Action" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ruleId" lowerBound="0" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actions" lowerBound="0" upperBound="-1" eType="#//Action" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="explanation" lowerBound="0" upperBound="1" eType="#//AdaptationExplanation" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AdaptationExplanation">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ruleId" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ruleId" lowerBound="0" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="reason" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="evidence" lowerBound="0" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>

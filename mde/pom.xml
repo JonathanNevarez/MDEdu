@@ -17,6 +17,7 @@
     <module>com.project.mde.learning.model</module>
     <module>com.project.mde.adaptation.model</module>
     <module>com.project.mde.adaptation.dsl</module>
+    <module>com.project.mde.context.model</module>
   </modules>
   <repositories>
     <repository><id>eclipse-2026-09</id><layout>p2</layout><url>https://download.eclipse.org/releases/2026-09/</url></repository>

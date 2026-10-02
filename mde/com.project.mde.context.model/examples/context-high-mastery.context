@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ASCII"?>
+<context:ContextModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:context="https://mdedu.espoch.edu.ec/model/context/1.0" modelVersion="1">
+  <studentContext studentId="student-fixture" conceptId="LOOPS" activityId="LOOPS" masteryScore="0.80" attemptCount="10" successCount="7" failureCount="3" averageResolutionTime="1000.50" currentResolutionTime="1000" activityPassed="true" functionalPassed="true" requiredConceptUsed="true">
+    <detectedPatterns>REPETITIVE_SEQUENCE_WITHOUT_LOOP</detectedPatterns>
+  </studentContext>
+  <platformContext platform="WEB"/>
+  <environmentContext levelId="LOOPS" conceptId="LOOPS" activityId="LOOPS"/>
+</context:ContextModel>

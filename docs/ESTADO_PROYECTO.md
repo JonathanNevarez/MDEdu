@@ -4,6 +4,38 @@ Actualización documental: 02/10/2026.
 
 ## Estado actual
 
+**FASES 0–7 COMPLETADAS Y VALIDADAS. FASE 8 COMPLETADA Y VALIDADA.
+FASE 9 NO INICIADA.**
+
+Partida: `e976f0fea41ebf348f620077a082e163817f5250`.
+ContextModel EMF independiente con cuatro clases, 14 fuentes generadas y dos XMI.
+AdaptationManager reutiliza ECA, resuelve prioridad/especificidad/severidad,
+compatibilidad y aplicabilidad; crea decisiones/explicaciones EMF, sin aplicarlas.
+Parámetros JSON V1; hashes semánticos, auditoría, idempotencia y concurrencia.
+Flyway V3 añade cuatro tablas; POST attempts integra la decisión sin repetir
+ExecutionEngine ni EvaluationEngine. Tres endpoints de decisión/consulta.
+
+Excepción expresamente autorizada: tres cardinalidades de adaptation.ecore pasan
+a opcionales para representar NO_ADAPTATION; tres fuentes EMF regeneradas.
+Programming/learning, DSL/parser/reglas, Acceleo/goldens, frontend y V1/V2 intactos.
+Cuatro conceptos/actividades, cero refuerzos; sin ui.ecore, LLM ni temas avanzados.
+
+Validación: MDE clean verify PASS (25 Acceleo +22 Xtext); backend 201 unit/MVC
++25 IT (4 Bootstrap,10 Learning,3 Adaptation,8 Manager); frontend 44 tests,
+typecheck/build y cinco E2E PASS. Full-stack: tres fallos reales, dominio .80,
+idempotencia exacta y misma historia entre alumnos con igual fingerprint.
+Pruebas de rollback real, concurrencia, 100 resoluciones deterministas y XMI PASS.
+Warning histórico de bundle >500 kB; timestamps normalizados a microsegundos
+para conservar igualdad tras PostgreSQL. Intentos anteriores a V3 sin snapshot
+responden 409; no se inventa evidencia histórica.
+
+[Diseño](FASE_8_ADAPTATION_MANAGER.md) · [Evidencia](VERIFICACION_FASE_8.md).
+Cierre Git autorizado: `feat: add adaptation manager decisions`, solo main.
+Servicios de prueba detenidos; puertos 8080/4173/5173/5432 sin listeners.
+Volumen PostgreSQL conservado. Fase 9 requiere autorización independiente.
+
+## Histórico: cierre de Fase 7
+
 **FASE 0 COMPLETADA. FASE 1 COMPLETADA. FASE 2 COMPLETADA.
 FASE 3 COMPLETADA. FASE 4 COMPLETADA. FASE 5 COMPLETADA.
 FASE 6 COMPLETADA. FASE 7 COMPLETADA Y VALIDADA. FASE 8 NO INICIADA.**

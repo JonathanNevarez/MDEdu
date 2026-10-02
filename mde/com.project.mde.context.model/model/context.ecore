@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="context" nsURI="https://mdedu.espoch.edu.ec/model/context/1.0" nsPrefix="context">
+<eClassifiers xsi:type="ecore:EClass" name="ContextModel">
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="modelVersion" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+<eStructuralFeatures xsi:type="ecore:EReference" name="studentContext" lowerBound="1" upperBound="1" eType="#//StudentContext" containment="true"/>
+<eStructuralFeatures xsi:type="ecore:EReference" name="platformContext" lowerBound="1" upperBound="1" eType="#//PlatformContext" containment="true"/>
+<eStructuralFeatures xsi:type="ecore:EReference" name="environmentContext" lowerBound="1" upperBound="1" eType="#//EnvironmentContext" containment="true"/>
+</eClassifiers>
+<eClassifiers xsi:type="ecore:EClass" name="StudentContext">
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="studentId" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="conceptId" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="activityId" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="masteryScore" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigDecimal"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="attemptCount" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="successCount" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="failureCount" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="consecutiveFailures" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="hintCount" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="averageResolutionTime" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigDecimal"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="currentResolutionTime" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="activityPassed" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="functionalPassed" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="requiredConceptUsed" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="detectedPatterns" lowerBound="0" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="repeatedErrorPattern" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+</eClassifiers>
+<eClassifiers xsi:type="ecore:EClass" name="PlatformContext">
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="platform" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+</eClassifiers>
+<eClassifiers xsi:type="ecore:EClass" name="EnvironmentContext">
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="levelId" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="conceptId" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+<eStructuralFeatures xsi:type="ecore:EAttribute" name="activityId" lowerBound="1" upperBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+</eClassifiers>
+</ecore:EPackage>

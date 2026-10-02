@@ -99,3 +99,28 @@ Ejemplos inválidos: `masteryScore == "LOOPS"`, `consecutiveFailures == true`,
 `activityPassed > false`, `concept == "ADVANCED"`,
 `action REPEAT_ACTIVITY level DIRECT`, `action SHOW_HINT` sin level.
 Un error impide cargar el archivo completo; no se omiten reglas silenciosamente.
+
+## Resolución Fase 8
+
+Sintaxis, parser, reglas y prioridades V1 intactos. El manager añade después del ECA:
+priority descendente → specificity descendente → severidad de patrones explícitos
+descendente → incorporación compatible/aplicable → desempate por orden fuente/ID.
+AND/OR suman átomos; NOT conserva. Severidad ERROR > WARNING > INFO > NONE.
+
+Primera regla con contribución aceptada es primary; otras pueden contribuir.
+Duplicados consideran parámetros y preservan procedencia en auditoría. Diferentes
+niveles para SHOW_HINT se resuelven por ranking, no se deduplican. También se
+excluyen pares aumentar/disminuir, mostrar/ocultar código y avanzar/repetir.
+Acciones inaplicables no bloquean alternativas compatibles.
+
+Para tres fallos LOOPS manuales: FuncionalSinConcepto priority90 es primary,
+ErrorRepetido priority85 y ReforzarCiclos priority80 contribuyen. SHOW_HINT CONCEPTUAL
++ REPEAT_ACTIVITY son acciones finales; GUIDED pierde frente al nivel de la primaria;
+SELECT_REINFORCEMENT_ACTIVITY se audita como no aplicable. No se fuerza otra regla.
+
+Códigos de descarte: LOWER_PRIORITY_CONFLICT, LESS_SPECIFIC_CONFLICT,
+LOWER_PEDAGOGICAL_SEVERITY, INCOMPATIBLE_ACTION_SOURCE_ORDER, DUPLICATE_ACTION,
+ACTION_DISABLED_BY_PARAMETERS, ACTION_NOT_APPLICABLE,
+NOT_APPLICABLE_NO_REINFORCEMENT_ACTIVITY y NOT_APPLICABLE_NO_NEXT_CONCEPT.
+No coincidencias: NO_RULE_MATCHED. Sin acción aplicable: NO_APPLICABLE_ACTION.
+Detalles y límites de parámetros: [Fase 8](FASE_8_ADAPTATION_MANAGER.md).

@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hintLevel": "CONCEPTUAL",
+  "difficultyAdjustmentEnabled": true,
+  "routeAdaptationEnabled": true,
+  "feedbackDetail": "STANDARD",
+  "failureThreshold": 3,
+  "successThreshold": 1,
+  "masteryThreshold": 0.80,
+  "maxHintsPerActivity": 5,
+  "maxAttemptsBeforeReinforcement": 3
+}

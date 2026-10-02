@@ -32,7 +32,7 @@ public interface AdaptationExplanation extends EObject {
 	 * @return the value of the '<em>Rule Id</em>' attribute.
 	 * @see #setRuleId(String)
 	 * @see com.project.mde.adaptation.AdaptationPackage#getAdaptationExplanation_RuleId()
-	 * @model required="true"
+	 * @model
 	 * @generated
 	 */
 	String getRuleId();

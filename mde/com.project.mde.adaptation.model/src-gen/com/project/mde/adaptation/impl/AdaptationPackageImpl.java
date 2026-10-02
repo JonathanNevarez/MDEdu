@@ -1002,12 +1002,12 @@ public class AdaptationPackageImpl extends EPackageImpl implements AdaptationPac
 		initEAttribute(getAdaptationParameters_FeedbackStyle(), this.getFeedbackStyle(), "feedbackStyle", null, 0, 1, AdaptationParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(adaptationDecisionEClass, AdaptationDecision.class, "AdaptationDecision", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getAdaptationDecision_RuleId(), ecorePackage.getEString(), "ruleId", null, 1, 1, AdaptationDecision.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAdaptationDecision_Actions(), this.getAction(), null, "actions", null, 1, -1, AdaptationDecision.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAdaptationDecision_RuleId(), ecorePackage.getEString(), "ruleId", null, 0, 1, AdaptationDecision.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAdaptationDecision_Actions(), this.getAction(), null, "actions", null, 0, -1, AdaptationDecision.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAdaptationDecision_Explanation(), this.getAdaptationExplanation(), null, "explanation", null, 0, 1, AdaptationDecision.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(adaptationExplanationEClass, AdaptationExplanation.class, "AdaptationExplanation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getAdaptationExplanation_RuleId(), ecorePackage.getEString(), "ruleId", null, 1, 1, AdaptationExplanation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAdaptationExplanation_RuleId(), ecorePackage.getEString(), "ruleId", null, 0, 1, AdaptationExplanation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getAdaptationExplanation_Reason(), ecorePackage.getEString(), "reason", null, 1, 1, AdaptationExplanation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getAdaptationExplanation_Evidence(), ecorePackage.getEString(), "evidence", null, 0, -1, AdaptationExplanation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

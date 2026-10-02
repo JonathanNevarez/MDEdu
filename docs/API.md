@@ -570,3 +570,39 @@ successCount=0, failureCount=1, masteryScore=0 y MISSING_ACTION reciente. Variab
 permaneció bloqueado. El contexto A conservó Variables disponible tras recargar.
 [Política, grafo y límites](FASE_6_MODELO_ESTUDIANTE.md) ·
 [verificación](VERIFICACION_FASE_6.md).
+
+## Fase 8 — decisiones de adaptación
+
+POST /api/attempts conserva status 201 y todos sus campos anteriores; añade
+`adaptation` con DecisionDto después de la actualización del estudiante. El programa
+se ejecuta y evalúa una sola vez. Si falla persistencia de decisión/auditoría,
+revierte la transacción completa. Endpoint stateless game/levels/{id}/execute intacto.
+
+### POST /api/adaptation/decide
+
+Request: `{"studentId":"UUID","attemptId":"UUID"}`. Status 200, tanto para crear
+como para recuperar. Solo los IDs vinculan la petición; contexto, acciones, mastery
+o reglas adicionales enviados por el cliente se ignoran y nunca son fuente de verdad.
+
+Respuesta: decisionId/studentId/attemptId/createdAt UTC, rulesetVersion,
+parametersVersion, rulesEvaluated, rulesMatched, selectedRule, contributingRules,
+discardedRules, actions, explanation, ruleAudit, actionAudit, contextHash, rulesetHash,
+parametersHash, decisionFingerprint, llmUsed=false y llmPurpose=NONE.
+Acción: type, hintLevel/feedbackStyle opcionales, targetConceptId para avance.
+Sin coincidencias: selectedRule=null, actions=[], explicación NO_RULE_MATCHED.
+Sin candidatos aplicables: NO_APPLICABLE_ACTION. Son respuestas válidas 200.
+
+Repetir intento/versiones devuelve el mismo decisionId y contenido persistido,
+incluso después de nuevos intentos. 400 para IDs inválidos/ausentes; 404 para alumno
+inexistente, intento inexistente o perteneciente a otro alumno. 409 para un intento
+histórico sin snapshot (HISTORICAL_ADAPTATION_SNAPSHOT_UNAVAILABLE) o reutilización
+de versión con contenido de reglas/parámetros distinto (VERSION_CONTENT_MISMATCH).
+
+### Consultas
+
+- GET /api/adaptation/decisions/{decisionId}: DecisionDto, 200 o 404.
+- GET /api/attempts/{attemptId}/adaptation: decisión de las versiones activas, 200 o 404.
+
+No se añadió GET /api/adaptation/rules. No endpoints LLM ni edición de reglas.
+Identidades pseudónimas por UUID siguen el prototipo Fase 6: estos GET no incorporan
+un sistema de autenticación nuevo. El contenido auditado no incluye displayName.

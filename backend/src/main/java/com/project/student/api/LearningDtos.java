@@ -17,5 +17,5 @@ public final class LearningDtos {
     public record ModelDto(StudentDto student,int modelVersion,List<MasteryDto> conceptMasteries,List<AttemptDto> recentAttempts,Instant lastUpdated) {}
     public record ProgressEntry(String levelId,String conceptId,boolean completed,boolean unlocked,double masteryScore,int attemptCount) {}
     public record ProgressDto(List<ProgressEntry> levels) {}
-    public record AttemptResponse(UUID attemptId,EvaluatedExecution execution,ModelDto studentModel,ProgressDto progress,MasteryUpdater.Change masteryUpdate) {}
+    public record AttemptResponse(UUID attemptId,EvaluatedExecution execution,ModelDto studentModel,ProgressDto progress,MasteryUpdater.Change masteryUpdate,com.project.adaptation.manager.DecisionTypes.DecisionDto adaptation) {}
 }

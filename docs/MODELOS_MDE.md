@@ -163,3 +163,23 @@ patrones se validan contra los catálogos backend reales.
 Programming y learning Ecore/GenModel/src-gen permanecen intactos. Las secciones
 conceptuales históricas de este documento no amplían el alcance implementado:
 continúan cuatro conceptos, cuatro actividades y cero refuerzos reales.
+
+## Fase 8 — ContextModel y decisión sin adaptación
+
+Nuevo plugin `com.project.mde.context.model`, nsURI
+`https://mdedu.espoch.edu.ec/model/context/1.0`, GenModel Java 21 y 14 Java src-gen.
+Cuatro EClasses: ContextModel contiene StudentContext, PlatformContext y
+EnvironmentContext. Snapshot transitorio de una decisión, sin copiar StudentModel.
+ContextFactory crea los objetos; ContextProjectionService valida y deriva el
+RuleEvaluationContext existente. Sin referencias externas/proxies ni fechas de entrada.
+
+Excepción autorizada por el usuario tras detectar el bloqueo NO_ADAPTATION:
+AdaptationDecision.ruleId 0..1, actions 0..*, AdaptationExplanation.ruleId 0..1.
+Se regeneró EMF: cambian tres fuentes, permanecen 44 en total. GenModel y namespace
+adaptation no cambian; relajación compatible con todos los modelos previos.
+Gramática y reglas Xtext intactas. Metadata de auditoría/contribuciones vive en DTO/JPA;
+la decisión y explicación principales son EObjects adaptation existentes.
+
+[Diseño Fase 8](FASE_8_ADAPTATION_MANAGER.md) y hashes en
+[Verificación Fase 8](VERIFICACION_FASE_8.md). Las restricciones históricas de Fase 7
+sobre decisiones vacías quedan reemplazadas únicamente por esta autorización.

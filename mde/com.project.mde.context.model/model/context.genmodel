@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.project.mde.context.model/src-gen" modelPluginID="com.project.mde.context.model" modelName="Context" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" complianceLevel="21.0" importerID="org.eclipse.emf.importer.ecore" operationReflection="true" importOrganizing="true">
+<foreignModel>context.ecore</foreignModel>
+<genPackages basePackage="com.project.mde" prefix="Context" ecorePackage="context.ecore#/">
+<genClasses ecoreClass="context.ecore#//ContextModel">
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute context.ecore#//ContextModel/modelVersion"/>
+<genFeatures createChild="true" ecoreFeature="ecore:EReference context.ecore#//ContextModel/studentContext"/>
+<genFeatures createChild="true" ecoreFeature="ecore:EReference context.ecore#//ContextModel/platformContext"/>
+<genFeatures createChild="true" ecoreFeature="ecore:EReference context.ecore#//ContextModel/environmentContext"/>
+</genClasses>
+<genClasses ecoreClass="context.ecore#//StudentContext">
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute context.ecore#//StudentContext/studentId"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute context.ecore#//StudentContext/conceptId"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute context.ecore#//StudentContext/activityId"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute context.ecore#//StudentContext/masteryScore"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute context.ecore#//StudentContext/attemptCount"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute context.ecore#//StudentContext/successCount"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute context.ecore#//StudentContext/failureCount"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute context.ecore#//StudentContext/consecutiveFailures"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute context.ecore#//StudentContext/hintCount"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute context.ecore#//StudentContext/averageResolutionTime"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute context.ecore#//StudentContext/currentResolutionTime"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute context.ecore#//StudentContext/activityPassed"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute context.ecore#//StudentContext/functionalPassed"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute context.ecore#//StudentContext/requiredConceptUsed"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute context.ecore#//StudentContext/detectedPatterns"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute context.ecore#//StudentContext/repeatedErrorPattern"/>
+</genClasses>
+<genClasses ecoreClass="context.ecore#//PlatformContext">
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute context.ecore#//PlatformContext/platform"/>
+</genClasses>
+<genClasses ecoreClass="context.ecore#//EnvironmentContext">
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute context.ecore#//EnvironmentContext/levelId"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute context.ecore#//EnvironmentContext/conceptId"/>
+<genFeatures createChild="false" ecoreFeature="ecore:EAttribute context.ecore#//EnvironmentContext/activityId"/>
+</genClasses>
+</genPackages>
+</genmodel:GenModel>

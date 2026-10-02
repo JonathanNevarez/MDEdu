@@ -32,7 +32,7 @@ public interface AdaptationDecision extends EObject {
 	 * @return the value of the '<em>Rule Id</em>' attribute.
 	 * @see #setRuleId(String)
 	 * @see com.project.mde.adaptation.AdaptationPackage#getAdaptationDecision_RuleId()
-	 * @model required="true"
+	 * @model
 	 * @generated
 	 */
 	String getRuleId();
@@ -54,7 +54,7 @@ public interface AdaptationDecision extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Actions</em>' containment reference list.
 	 * @see com.project.mde.adaptation.AdaptationPackage#getAdaptationDecision_Actions()
-	 * @model containment="true" required="true"
+	 * @model containment="true"
 	 * @generated
 	 */
 	EList<Action> getActions();

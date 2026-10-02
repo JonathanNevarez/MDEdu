@@ -228,3 +228,28 @@ aplica acciones; priority no elige ganador. Contexto sin JPA/EObjects y resultad
 inmutables/deterministas. Catálogos pedagógicos existentes, sin migraciones nuevas.
 Los diagramas de arquitectura objetivo anteriores siguen siendo propuestas para
 fases posteriores cuando incluyen LLM, UI adaptativa o decisiones persistentes.
+
+## Fase 8 implementada — decisión y auditoría
+
+```mermaid
+flowchart TD
+  SM[StudentModel EMF + último Attempt] --> CT[ContextModel EMF]
+  EV[EvaluationResult + MasteryUpdater.Change existentes] --> CT
+  CT --> RC[RuleEvaluationContext]
+  DSL[Xtext RuleSet intacto] --> ECA[EcaRuleEngine intacto]
+  RC --> ECA
+  ECA --> CR[AdaptationConflictResolver]
+  CR --> AP[ActionApplicabilityService]
+  AP --> DE[AdaptationDecision + AdaptationExplanation EMF]
+  DE --> DB[Decisión y auditoría: Flyway V3]
+  DB --> API[DTO/API e idempotencia]
+```
+
+AdaptationManager orquesta. POST attempts captura evidencia y decide en la misma
+transacción después de la única ejecución/evaluación y proyección del estudiante.
+POST adaptation/decide carga evidencia del intento, nunca contexto cliente o mastery
+actual para reinterpretar el pasado. Decision/rule audit/action audit atómicos,
+lock por estudiante y constraint única por intento/versiones.
+
+El manager decide intenciones; React, Luma y el feedback Fase 5 no cambian.
+LLM = Fase 9, NO INICIADA. UI adaptativa completa = Fase 10, NO INICIADA.

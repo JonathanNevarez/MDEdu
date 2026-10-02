@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<adaptation:AdaptationRuleSet xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:adaptation="https://mdedu.espoch.edu.ec/model/adaptation/1.0" name="dominio-alto" version="1">
+  <rules id="dominio-alto" name="dominio-alto" version="1" enabled="true" priority="60">
+    <event type="ATTEMPT_EVALUATED"/>
+    <condition xsi:type="adaptation:ComparisonCondition" attribute="masteryScore" operator="GE"><value xsi:type="adaptation:DecimalValue" value="0.80"/></condition>
+    <actions type="ADVANCE_TO_NEXT_CONCEPT"/>
+  </rules>
+</adaptation:AdaptationRuleSet>

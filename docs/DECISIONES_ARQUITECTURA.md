@@ -112,3 +112,27 @@ sin cambiar POM/código. Las 4 pruebas de integración permanecen en Failsafe y 
 ejecutarán cuando exista Docker/PostgreSQL. No se añade H2 ni se desactiva Flyway.
 Un Connection reset al descargar Actuator se resolvió reintentando la misma versión.
 Esta decisión no cierra Fase0 ni autoriza instalar otras herramientas.
+
+## ADR-013 · Fase 7: reglas formales y candidatos sin efectos
+
+1. adaptation.ecore es la única representación canónica; plugin EMF separado,
+   GenModel Java 21 y fuentes generadas. Programming y learning no cambian.
+2. Xtext 2.44.0 es el parser oficial. Su gramática importa el namespace existente
+   y construye directamente AdaptationRuleSet, sin AST intermedio. Maven regenera
+   lexer/parser mediante MWE2 2.27.0 y funciona fuera de Eclipse.
+3. Backend consume los artefactos Maven; no tiene parser manual, regex/split para
+   reinterpretar reglas ni copia de clases generadas.
+4. RuleEvaluationContext es una proyección runtime inmutable de StudentModel,
+   último Attempt y EvaluationResult. Error repetido reutiliza la razón del
+   MasteryUpdater.Change exacto de Fase 6; no se duplica la política.
+5. Fase 7 genera ActionCandidates, no aplica acciones. Reglas semilla validadas al
+   startup, catálogos compartidos, tipos cerrados y decimales BigDecimal. Orden DSL
+   estable; priority solo se informa. No se cambia la API previa ni la base de datos.
+6. Conflictos se detectan para diagnóstico conservando ambos candidatos; resolución,
+   AdaptationManager, aplicación y auditoría persistente se difieren a Fase 8.
+
+La gramática sigue la importación de metamodelos documentada por
+[Xtext](https://eclipse.dev/Xtext/documentation/302_configuration.html) y su
+[integración EMF](https://eclipse.dev/Xtext/documentation/308_emf_integration.html).
+La compatibilidad quedó comprobada con generación real, tests headless y build en
+repositorio Maven vacío; no se infiere únicamente de versiones instaladas.

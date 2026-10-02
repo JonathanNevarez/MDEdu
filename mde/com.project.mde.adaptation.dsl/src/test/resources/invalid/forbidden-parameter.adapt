@@ -1,0 +1,6 @@
+ruleset "Fixture" version 1
+rule ReforzarCiclos
+version 1 enabled true on ATTEMPT_EVALUATED
+when concept == "LOOPS" and consecutiveFailures >= 3
+then action REPEAT_ACTIVITY level CONCEPTUAL
+priority 80

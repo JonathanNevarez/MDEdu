@@ -1,0 +1,2 @@
+src/main/xtext-gen/** text eol=lf -whitespace
+src/main/xtext-gen/**/*.xtextbin -text

@@ -203,3 +203,28 @@ Se conserva la separación en cuatro componentes. ML se considera futuro como
 ordena la solicitud. El texto del núcleo en el dibujo se concreta mediante un
 intérprete seguro y M2T visible. No existe la tabla de propiedades numéricas citada
 en el SVG entre los materiales recibidos.
+
+## Fase 7 implementada — evaluación de candidatos
+
+```mermaid
+flowchart TD
+  DB[PostgreSQL / Fase 6] --> SM[StudentModel EMF y último Attempt]
+  EV[EvaluationResult Fase 5] --> CT[RuleEvaluationContext inmutable]
+  CH[MasteryUpdater.Change Fase 6] --> CT
+  SM --> CT
+  DSL[rules-v1.adapt] --> XT[Parser y validador Xtext 2.44.0]
+  XT --> EMF[AdaptationRuleSet / adaptation.ecore]
+  EMF --> ECA[EcaRuleEngine]
+  CT --> ECA
+  ECA --> RM[RuleMatches en orden DSL]
+  RM --> AC[ActionCandidates y conflictos diagnósticos]
+  AC -. futuro .-> AM[AdaptationManager: FASE 8 NO INICIADA]
+```
+
+AdaptationRuleLoader valida al startup. RuleEvaluationService es un servicio de
+consulta explícita de candidatos; el flujo REST y las transacciones de aprendizaje
+anteriores no se modifican. No hay endpoint nuevo. ECA no guarda decisiones ni
+aplica acciones; priority no elige ganador. Contexto sin JPA/EObjects y resultados
+inmutables/deterministas. Catálogos pedagógicos existentes, sin migraciones nuevas.
+Los diagramas de arquitectura objetivo anteriores siguen siendo propuestas para
+fases posteriores cuando incluyen LLM, UI adaptativa o decisiones persistentes.

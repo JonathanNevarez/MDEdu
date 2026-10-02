@@ -22,6 +22,7 @@
     </properties>
 
     <dependencies>
+        <dependency><groupId>com.project.mde</groupId><artifactId>com.project.mde.adaptation.dsl</artifactId><version>0.1.0-SNAPSHOT</version></dependency>
         <!-- Installed first by mde/ clean install; conventional JVM consumer, not OSGi. -->
         <dependency>
             <groupId>com.project.mde</groupId>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.project.mde.adaptation.model/src-gen" modelPluginID="com.project.mde.adaptation.model" modelName="Adaptation" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" complianceLevel="21.0" importerID="org.eclipse.emf.importer.ecore" operationReflection="true" importOrganizing="true">
+  <foreignModel>adaptation.ecore</foreignModel>
+  <genPackages basePackage="com.project.mde" prefix="Adaptation" ecorePackage="adaptation.ecore#/">
+    <genClasses ecoreClass="adaptation.ecore#//AdaptationRuleSet">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//AdaptationRuleSet/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//AdaptationRuleSet/version"/>
+      <genFeatures createChild="true" ecoreFeature="ecore:EReference adaptation.ecore#//AdaptationRuleSet/rules"/>
+    </genClasses>
+    <genClasses ecoreClass="adaptation.ecore#//AdaptationRule">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//AdaptationRule/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//AdaptationRule/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//AdaptationRule/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//AdaptationRule/enabled"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//AdaptationRule/priority"/>
+      <genFeatures createChild="true" ecoreFeature="ecore:EReference adaptation.ecore#//AdaptationRule/event"/>
+      <genFeatures createChild="true" ecoreFeature="ecore:EReference adaptation.ecore#//AdaptationRule/condition"/>
+      <genFeatures createChild="true" ecoreFeature="ecore:EReference adaptation.ecore#//AdaptationRule/actions"/>
+    </genClasses>
+    <genClasses ecoreClass="adaptation.ecore#//Event">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//Event/type"/>
+    </genClasses>
+    <genClasses ecoreClass="adaptation.ecore#//Condition">
+    </genClasses>
+    <genClasses ecoreClass="adaptation.ecore#//ComparisonCondition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//ComparisonCondition/attribute"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//ComparisonCondition/operator"/>
+      <genFeatures createChild="true" ecoreFeature="ecore:EReference adaptation.ecore#//ComparisonCondition/value"/>
+    </genClasses>
+    <genClasses ecoreClass="adaptation.ecore#//LogicalCondition">
+      <genFeatures createChild="true" ecoreFeature="ecore:EReference adaptation.ecore#//LogicalCondition/left"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//LogicalCondition/operator"/>
+      <genFeatures createChild="true" ecoreFeature="ecore:EReference adaptation.ecore#//LogicalCondition/right"/>
+    </genClasses>
+    <genClasses ecoreClass="adaptation.ecore#//NotCondition">
+      <genFeatures createChild="true" ecoreFeature="ecore:EReference adaptation.ecore#//NotCondition/operand"/>
+    </genClasses>
+    <genClasses ecoreClass="adaptation.ecore#//Value">
+    </genClasses>
+    <genClasses ecoreClass="adaptation.ecore#//StringValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//StringValue/value"/>
+    </genClasses>
+    <genClasses ecoreClass="adaptation.ecore#//IntegerValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//IntegerValue/value"/>
+    </genClasses>
+    <genClasses ecoreClass="adaptation.ecore#//DecimalValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//DecimalValue/value"/>
+    </genClasses>
+    <genClasses ecoreClass="adaptation.ecore#//BooleanValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//BooleanValue/value"/>
+    </genClasses>
+    <genClasses ecoreClass="adaptation.ecore#//Action">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//Action/type"/>
+      <genFeatures createChild="true" ecoreFeature="ecore:EReference adaptation.ecore#//Action/parameters"/>
+    </genClasses>
+    <genClasses ecoreClass="adaptation.ecore#//AdaptationParameters">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//AdaptationParameters/hintLevel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//AdaptationParameters/feedbackStyle"/>
+    </genClasses>
+    <genClasses ecoreClass="adaptation.ecore#//AdaptationDecision">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//AdaptationDecision/ruleId"/>
+      <genFeatures createChild="true" ecoreFeature="ecore:EReference adaptation.ecore#//AdaptationDecision/actions"/>
+      <genFeatures createChild="true" ecoreFeature="ecore:EReference adaptation.ecore#//AdaptationDecision/explanation"/>
+    </genClasses>
+    <genClasses ecoreClass="adaptation.ecore#//AdaptationExplanation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//AdaptationExplanation/ruleId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//AdaptationExplanation/reason"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptation.ecore#//AdaptationExplanation/evidence"/>
+    </genClasses>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="adaptation.ecore#//EventType">
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//EventType/ATTEMPT_EVALUATED"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="adaptation.ecore#//ComparisonOperator">
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//ComparisonOperator/EQ"/>
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//ComparisonOperator/NE"/>
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//ComparisonOperator/GT"/>
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//ComparisonOperator/GE"/>
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//ComparisonOperator/LT"/>
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//ComparisonOperator/LE"/>
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//ComparisonOperator/CONTAINS"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="adaptation.ecore#//LogicalOperator">
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//LogicalOperator/AND"/>
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//LogicalOperator/OR"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="adaptation.ecore#//ActionType">
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//ActionType/SHOW_HINT"/>
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//ActionType/CHANGE_HINT_LEVEL"/>
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//ActionType/REPEAT_ACTIVITY"/>
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//ActionType/SELECT_REINFORCEMENT_ACTIVITY"/>
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//ActionType/ADVANCE_TO_NEXT_CONCEPT"/>
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//ActionType/INCREASE_DIFFICULTY"/>
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//ActionType/DECREASE_DIFFICULTY"/>
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//ActionType/SHOW_CODE_VIEW"/>
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//ActionType/HIDE_CODE_VIEW"/>
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//ActionType/CHANGE_FEEDBACK_STYLE"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="adaptation.ecore#//HintLevel">
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//HintLevel/CONCEPTUAL"/>
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//HintLevel/GUIDED"/>
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//HintLevel/DIRECT"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="adaptation.ecore#//FeedbackStyle">
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//FeedbackStyle/CONCISE"/>
+      <genEnumLiterals ecoreEnumLiteral="adaptation.ecore#//FeedbackStyle/EXPLANATORY"/>
+    </genEnums>
+  </genPackages>
+</genmodel:GenModel>

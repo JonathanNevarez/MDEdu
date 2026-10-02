@@ -1,0 +1,32 @@
+module com.project.mde.adaptation.dsl.GenerateAdaptationRules
+import org.eclipse.xtext.xtext.generator.*
+import org.eclipse.xtext.xtext.generator.model.project.*
+var rootPath = ".."
+Workflow {
+ bean = org.eclipse.emf.mwe.utils.StandaloneSetup {
+  platformUri = rootPath
+  registerGenModelFile = "platform:/resource/com.project.mde.adaptation.model/model/adaptation.genmodel"
+ }
+ component = XtextGenerator {
+  configuration = {
+   project = StandardProjectConfig {
+    baseName = "com.project.mde.adaptation.dsl"
+    rootPath = rootPath
+    mavenLayout = true
+    runtimeTest = { enabled = false }
+    eclipsePlugin = { enabled = false }
+    eclipsePluginTest = { enabled = false }
+    genericIde = { enabled = false }
+    createEclipseMetaData = false
+   }
+   code = { encoding = "UTF-8" lineDelimiter = "\n" preferXtendStubs = false }
+  }
+  language = StandardLanguage {
+   name = "com.project.mde.adaptation.dsl.AdaptationRules"
+   fileExtensions = "adapt"
+   referencedResource = "platform:/resource/com.project.mde.adaptation.model/model/adaptation.genmodel"
+   serializer = { generateStub = false }
+   validator = { composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator" }
+  }
+ }
+}

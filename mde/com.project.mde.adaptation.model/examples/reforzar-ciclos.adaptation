@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<adaptation:AdaptationRuleSet xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:adaptation="https://mdedu.espoch.edu.ec/model/adaptation/1.0" name="reforzar-ciclos" version="1">
+  <rules id="reforzar-ciclos" name="reforzar-ciclos" version="1" enabled="true" priority="80">
+    <event type="ATTEMPT_EVALUATED"/>
+    <condition xsi:type="adaptation:LogicalCondition" operator="AND">
+      <left xsi:type="adaptation:ComparisonCondition" attribute="concept" operator="EQ"><value xsi:type="adaptation:StringValue" value="LOOPS"/></left>
+      <right xsi:type="adaptation:ComparisonCondition" attribute="consecutiveFailures" operator="GE"><value xsi:type="adaptation:IntegerValue" value="3"/></right>
+    </condition>
+    <actions type="SHOW_HINT"><parameters hintLevel="CONCEPTUAL"/></actions>
+  </rules>
+</adaptation:AdaptationRuleSet>

@@ -123,3 +123,43 @@ La gramática Xtext debe importar `adaptation.ecore` o tener una transformación
 explícita hacia ese modelo; una segunda representación incompatible no es válida.
 La generación EMF/Xtext se aislará del dominio escrito a mano. No se declara
 ningún runtime MDE listo hasta pasar la matriz y los ensayos de [PLAN](PLAN_IMPLEMENTACION.md).
+
+## Fase 7 implementada — adaptation.ecore
+
+Namespace `https://mdedu.espoch.edu.ec/model/adaptation/1.0`.
+Plugin separado `com.project.mde.adaptation.model`; GenModel Java 21; 44 Java generados.
+
+| EClass | Estructura |
+| --- | --- |
+| AdaptationRuleSet | name/version; contiene rules[*] |
+| AdaptationRule | id/name/version/enabled/priority; contiene event, condition y actions[*] |
+| Event | EventType cerrado |
+| Condition | Abstracta |
+| ComparisonCondition | attribute, ComparisonOperator y Value contenido |
+| LogicalCondition | left/right Condition contenidos y LogicalOperator |
+| NotCondition | operand Condition contenido |
+| Value | Abstracta |
+| StringValue | EString |
+| IntegerValue | ELong |
+| DecimalValue | EBigDecimal |
+| BooleanValue | EBoolean |
+| Action | ActionType y AdaptationParameters contenido |
+| AdaptationParameters | HintLevel/FeedbackStyle opcionales unsettable |
+| AdaptationDecision | ruleId, actions contenidas y explicación opcional; solo representación formal |
+| AdaptationExplanation | ruleId, reason, evidence[*] |
+
+Enums: EventType (ATTEMPT_EVALUATED), ComparisonOperator (EQ/NE/GT/GE/LT/LE/CONTAINS),
+LogicalOperator (AND/OR), ActionType (diez acciones), HintLevel (CONCEPTUAL/GUIDED/DIRECT),
+FeedbackStyle (CONCISE/EXPLANATORY). Relaciones de composición internas; sin proxies
+externos necesarios. Cada regla exige evento, condición y al menos una acción.
+
+La gramática AdaptationRules.xtext importa este namespace y retorna las EClasses
+existentes. Xtext crea directamente estos EObjects; no existe segundo AST canónico.
+El motor usa el árbol formal de Condition y Value, nunca una condición String sin
+semántica. Atributos String están restringidos por ContextAttribute; conceptos y
+patrones se validan contra los catálogos backend reales.
+
+[DSL y reglas](REGLAS_ADAPTACION.md) · [Implementación](FASE_7_DSL_REGLAS_ADAPTACION.md).
+Programming y learning Ecore/GenModel/src-gen permanecen intactos. Las secciones
+conceptuales históricas de este documento no amplían el alcance implementado:
+continúan cuatro conceptos, cuatro actividades y cero refuerzos reales.

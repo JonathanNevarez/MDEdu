@@ -1,0 +1,44 @@
+grammar com.project.mde.adaptation.dsl.AdaptationRules with org.eclipse.xtext.common.Terminals
+import "https://mdedu.espoch.edu.ec/model/adaptation/1.0" as adaptation
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+AdaptationRuleSet returns adaptation::AdaptationRuleSet:
+ 'ruleset' name=STRING 'version' version=SignedInt rules+=AdaptationRule*;
+AdaptationRule returns adaptation::AdaptationRule:
+ 'rule' id=ID ('name' name=STRING)? 'version' version=SignedInt
+ 'enabled' enabled=Boolean 'on' event=Event 'when' condition=Condition?
+ 'then' actions+=Action* 'priority' priority=SignedInt;
+Event returns adaptation::Event: type=EventType;
+enum EventType returns adaptation::EventType: ATTEMPT_EVALUATED;
+Condition returns adaptation::Condition: OrCondition;
+OrCondition returns adaptation::Condition:
+ AndCondition ({adaptation::LogicalCondition.left=current} operator=Or right=AndCondition)*;
+AndCondition returns adaptation::Condition:
+ UnaryCondition ({adaptation::LogicalCondition.left=current} operator=And right=UnaryCondition)*;
+enum Or returns adaptation::LogicalOperator: OR='or';
+enum And returns adaptation::LogicalOperator: AND='and';
+UnaryCondition returns adaptation::Condition:
+ {adaptation::NotCondition} 'not' operand=UnaryCondition | '(' Condition ')' | ComparisonCondition;
+ComparisonCondition returns adaptation::ComparisonCondition:
+ attribute=ID operator=ComparisonOperator value=Value;
+enum ComparisonOperator returns adaptation::ComparisonOperator:
+ EQ='==' | NE='!=' | GT='>' | GE='>=' | LT='<' | LE='<=' | CONTAINS='contains';
+Value returns adaptation::Value: StringValue | DecimalValue | IntegerValue | BooleanValue;
+StringValue returns adaptation::StringValue: value=STRING;
+DecimalValue returns adaptation::DecimalValue: value=Decimal;
+IntegerValue returns adaptation::IntegerValue: value=Long;
+BooleanValue returns adaptation::BooleanValue: value=Boolean;
+SignedInt returns ecore::EInt: '-'? INT;
+Long returns ecore::ELong: '-'? INT;
+Decimal returns ecore::EBigDecimal: '-'? INT '.' INT;
+Boolean returns ecore::EBoolean: 'true' | 'false';
+Action returns adaptation::Action: 'action' type=ActionType parameters=AdaptationParameters?;
+AdaptationParameters returns adaptation::AdaptationParameters:
+ 'level' hintLevel=HintLevel ('style' feedbackStyle=FeedbackStyle)? |
+ 'style' feedbackStyle=FeedbackStyle ('level' hintLevel=HintLevel)?;
+enum ActionType returns adaptation::ActionType:
+ SHOW_HINT | CHANGE_HINT_LEVEL | REPEAT_ACTIVITY | SELECT_REINFORCEMENT_ACTIVITY |
+ ADVANCE_TO_NEXT_CONCEPT | INCREASE_DIFFICULTY | DECREASE_DIFFICULTY |
+ SHOW_CODE_VIEW | HIDE_CODE_VIEW | CHANGE_FEEDBACK_STYLE;
+enum HintLevel returns adaptation::HintLevel: CONCEPTUAL | GUIDED | DIRECT;
+enum FeedbackStyle returns adaptation::FeedbackStyle: CONCISE | EXPLANATORY;

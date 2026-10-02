@@ -1,0 +1,43 @@
+ruleset "MDEdu Base Rules" version 1
+
+rule ReforzarCiclos name "Tres fallos en ciclos"
+version 1 enabled true on ATTEMPT_EVALUATED
+when concept == "LOOPS" and consecutiveFailures >= 3
+then
+    action SHOW_HINT level CONCEPTUAL
+    action REPEAT_ACTIVITY
+    action SELECT_REINFORCEMENT_ACTIVITY
+priority 80
+
+rule ErrorRepetido
+version 1 enabled true on ATTEMPT_EVALUATED
+when repeatedErrorPattern == true
+then action SHOW_HINT level GUIDED
+     action REPEAT_ACTIVITY
+priority 85
+
+rule DominioAlto
+version 1 enabled true on ATTEMPT_EVALUATED
+when masteryScore >= 0.80
+then action ADVANCE_TO_NEXT_CONCEPT
+priority 60
+
+rule PistasExcesivas
+version 1 enabled true on ATTEMPT_EVALUATED
+when hintCount >= 5
+then action CHANGE_HINT_LEVEL level GUIDED
+     action CHANGE_FEEDBACK_STYLE style EXPLANATORY
+priority 50
+
+rule TiempoAlto
+version 1 enabled true on ATTEMPT_EVALUATED
+when currentResolutionTime > 300000
+then action SHOW_HINT level CONCEPTUAL
+priority 40
+
+rule FuncionalSinConcepto
+version 1 enabled true on ATTEMPT_EVALUATED
+when functionalPassed == true and requiredConceptUsed == false
+then action SHOW_HINT level CONCEPTUAL
+     action REPEAT_ACTIVITY
+priority 90

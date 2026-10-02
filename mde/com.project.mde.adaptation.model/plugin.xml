@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated adaptation -->
+      <package
+            uri="https://mdedu.espoch.edu.ec/model/adaptation/1.0"
+            class="com.project.mde.adaptation.AdaptationPackage"
+            genModel="model/adaptation.genmodel"/>
+   </extension>
+
+</plugin>

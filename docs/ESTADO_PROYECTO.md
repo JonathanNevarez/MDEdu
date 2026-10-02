@@ -6,6 +6,38 @@ Actualización documental: 02/10/2026.
 
 **FASE 0 COMPLETADA. FASE 1 COMPLETADA. FASE 2 COMPLETADA.
 FASE 3 COMPLETADA. FASE 4 COMPLETADA. FASE 5 COMPLETADA.
+FASE 6 COMPLETADA. FASE 7 COMPLETADA Y VALIDADA. FASE 8 NO INICIADA.**
+
+Partida: `877e4aa477948dd43c72e60940d28bf6aeb143bb`.
+adaptation.ecore canónico, plugin EMF Java 21 con 44 fuentes generadas,
+Xtext 2.44.0/MWE2 2.27.0, parser headless que crea directamente EObjects.
+DSL versionado con seis reglas semilla, catálogo tipado y diez acciones cerradas.
+RuleEvaluationContext inmutable desde StudentModel/Attempt/EvaluationResult reales;
+error repetido reutiliza MasteryUpdater.Change. Motor ECA determinista en orden DSL:
+solo reglas coincidentes y candidatos, sin aplicar acciones ni elegir conflictos.
+
+Validación: MDE clean verify +build externo con Maven vacío; 22 tests Xtext/EMF y
+25 Acceleo. Backend: 185 unit/MVC +17 IT (4 Bootstrap,10 Learning,3 Adaptation).
+Frontend: typecheck,44 tests,build,5 E2E PASS. A mastery .80 → DominioAlto;
+B tres fallos → ReforzarCiclos/ErrorRepetido/FuncionalSinConcepto, sin efectos.
+100 evaluaciones JSON idénticas; conflicto aumento/disminución conservado sin ganador.
+
+Programming Ecore/GenModel/44 src-gen, learning Ecore/GenModel/26 src-gen,
+Acceleo/goldens, ProgramDto, frontend y V1/V2 intactos. Sin V3, endpoint nuevo,
+context.ecore, ui.ecore, LLM, temas avanzados ni AdaptationManager.
+Cuatro conceptos/actividades, cero refuerzos reales. Warning de bundle histórico.
+Servicios de prueba detenidos; volumen PostgreSQL conservado.
+
+[Diseño](FASE_7_DSL_REGLAS_ADAPTACION.md) · [Reglas](REGLAS_ADAPTACION.md) ·
+[Evidencia](VERIFICACION_FASE_7.md).
+Cierre Git autorizado: `feat: add xtext adaptation rule engine`, solo main.
+Siguiente: **FASE 8 — Adaptation Manager y resolución de decisiones**.
+No iniciada; requiere nueva autorización.
+
+## Histórico: cierre de Fase 6
+
+**FASE 0 COMPLETADA. FASE 1 COMPLETADA. FASE 2 COMPLETADA.
+FASE 3 COMPLETADA. FASE 4 COMPLETADA. FASE 5 COMPLETADA.
 FASE 6 COMPLETADA Y VALIDADA. FASE 7 NO INICIADA.**
 
 Partida: `693e40a2153d66ce5711a6ebe97a22c78498f84b`.

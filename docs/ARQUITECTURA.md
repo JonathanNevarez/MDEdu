@@ -3,7 +3,7 @@
 Estado: los diagramas generales describen el diseño objetivo. Ya existen el
 arranque de Fase 0, el metamodelo de Fase 1 y el flujo estructural de Fase 2
 descrito a continuación, el M2T aislado de Fase 3 y el juego determinista de Fase 4.
-La evaluación pedagógica y el ciclo adaptativo completo aún no están implementados.
+La evaluación determinista de Fase 5 está implementada. El ciclo adaptativo completo sigue siendo diseño futuro.
 
 ## Flujo implementado en Fase 2
 
@@ -22,7 +22,7 @@ El último tramo es un launcher headless separado; no hay conexión automática 
 al generador. `com.project.mde.programming.generator` consume el plugin formal y
 nsURI existente. Las plantillas Acceleo generan llamadas a una API runtime cerrada,
 sin ejecutar el programa. Modelo, DTO y adaptadores Fase 2 permanecen intactos.
-GridWorld corresponde a Fase 4, **no iniciada**.
+GridWorld se incorporó en Fase 4; no utiliza el JavaScript generado.
 [Mapping, contrato y comandos](FASE_3_M2T_ACCELEO.md).
 
 ## Juego implementado en Fase 4
@@ -44,8 +44,35 @@ con cuatro niveles; desbloqueo por prerequisites declarativas. Progreso local pr
 sin persistencia DB. API en execution/api; motor de dominio Java independiente de Spring.
 El replay consume snapshots del servidor. `/aventura` y `/aventura/:levelId` conviven
 con `/laboratorio`. [Semántica y límites](FASE_4_GRIDWORLD_JUEGO.md).
-Evaluator pedagógico, StudentModel, reglas y LLM en los diagramas generales siguientes
-siguen siendo diseño futuro, no componentes implementados. Fase 5 no iniciada.
+StudentModel, reglas y LLM en los diagramas generales siguientes siguen siendo diseño futuro.
+
+## Evaluación implementada en Fase 5
+
+```mermaid
+flowchart LR
+  B[Blockly] --> D[ProgramDto V1]
+  D --> P[Mapper existente / Program EMF]
+  P --> G[GridWorld Execution]
+  G --> T[ExecutionResult y Trace]
+  T --> E[SolutionEvaluator]
+  P --> E
+  C[Catálogo y configuración V1] --> E
+  E --> PD[Pattern Detectors]
+  PD --> ER[EvaluationResult]
+  ER --> F[Frontend: feedback y progreso]
+  P --> A[Acceleo M2T]
+  A --> J[JavaScript como texto]
+```
+
+`evaluation/domain`, `application`, `catalog`, `detectors` y `api` separan análisis,
+orquestación y contrato. No hay segundo motor ni mapper. Un POST reutiliza una
+sola ejecución para obtener las cuatro dimensiones y activityPassed.
+Exactamente 15 patrones y cuatro configuraciones JSON versionadas; paths,
+fingerprints y evidencia deterministas sobre EMF/traza. El frontend acredita
+completion solo con activityPassed; el progreso local es monotónico.
+No añade DB, StudentModel, adaptación, ECA ni LLM. Los diagramas generales siguientes
+son **objetivos futuros**, salvo los componentes expresamente implementados arriba.
+[Diseño y límites](FASE_5_EVALUACION_PEDAGOGICA.md).
 
 ## Responsabilidades y límites
 

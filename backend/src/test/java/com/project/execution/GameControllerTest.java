@@ -3,6 +3,8 @@ package com.project.execution;
 import com.project.execution.api.GameController;
 import com.project.execution.application.*;
 import com.project.programming.application.ProgrammingModelMapper;
+import com.project.evaluation.application.SolutionEvaluationService;
+import com.project.evaluation.catalog.PatternCatalog;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -16,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.junit.jupiter.api.Assertions.*;
 
 @WebMvcTest(controllers=GameController.class,properties="spring.config.import=")
-@Import({LevelCatalog.class,GameExecutionService.class,ProgrammingModelMapper.class})
+@Import({LevelCatalog.class,GameExecutionService.class,ProgrammingModelMapper.class,SolutionEvaluationService.class,PatternCatalog.class})
 class GameControllerTest {
     @Autowired MockMvc mvc;
     String path="/api/game/levels/SEQUENCES/execute";

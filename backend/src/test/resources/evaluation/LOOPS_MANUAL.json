@@ -1,0 +1,27 @@
+{
+  "contractVersion": 1,
+  "name": "LOOPS_MANUAL",
+  "statements": [
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    }
+  ]
+}

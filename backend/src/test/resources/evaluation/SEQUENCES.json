@@ -1,0 +1,21 @@
+{
+  "contractVersion": 1,
+  "name": "SEQUENCES",
+  "statements": [
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "turnRight"
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    }
+  ]
+}

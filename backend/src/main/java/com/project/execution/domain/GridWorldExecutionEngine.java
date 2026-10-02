@@ -13,6 +13,7 @@ public final class GridWorldExecutionEngine {
     private record Value(ValueType type, Object raw) {}
     private static final class Halt extends RuntimeException {
         final String code;
+        String statementPath;
         Halt(String code, String message) { super(message, null, false, false); this.code = code; }
     }
     private static Halt error(String code, String message) { return new Halt(code, message); }
@@ -21,6 +22,7 @@ public final class GridWorldExecutionEngine {
         final GridWorld world;
         final int limit;
         int steps;
+        String currentPath;
         final IdentityHashMap<VariableDeclaration, Value> values = new IdentityHashMap<>();
         final List<VariableDeclaration> declarations = new ArrayList<>();
         final List<Event> trace = new ArrayList<>();
@@ -36,7 +38,7 @@ public final class GridWorldExecutionEngine {
             }
             return world.snapshot(variables);
         }
-        void event(String type, String detail) { trace.add(new Event(trace.size(), type, detail, state())); }
+        void event(String type, String detail) { trace.add(new Event(trace.size(), type, detail, state(), currentPath)); }
         void tick() { if (steps == limit) throw error("STEP_LIMIT_EXCEEDED", "Se alcanzó el límite de operaciones."); steps++; }
         Result run() {
             event("PROGRAM_STARTED", "Inicio");
@@ -45,6 +47,7 @@ public final class GridWorldExecutionEngine {
                 event("PROGRAM_FINISHED", "Programa terminado");
                 return new Result(world.atGoal(), "COMPLETED", steps, state(), List.copyOf(trace), List.of());
             } catch (Halt failure) {
+                currentPath = failure.statementPath;
                 var status = failure.code.equals("STEP_LIMIT_EXCEEDED") ? failure.code : "RUNTIME_ERROR";
                 event(status, failure.getMessage());
                 return new Result(false, status, steps, state(), List.copyOf(trace),
@@ -53,6 +56,12 @@ public final class GridWorldExecutionEngine {
         }
         void statements(List<Statement> statements) { for (var s : statements) statement(s); }
         void statement(Statement s) {
+            String previous = currentPath; currentPath = StatementPaths.of(s);
+            try { executeStatement(s); }
+            catch (Halt failure) { if (failure.statementPath == null) failure.statementPath = currentPath; throw failure; }
+            finally { currentPath = previous; }
+        }
+        void executeStatement(Statement s) {
             tick();
             if (s instanceof Move) move();
             else if (s instanceof TurnLeft) { world.direction = world.direction.left(); event("TURN_LEFT", "Giro a la izquierda"); }
@@ -65,11 +74,14 @@ public final class GridWorldExecutionEngine {
                 values.put(a.getTarget(), v); event("VARIABLE_ASSIGNED", a.getTarget().getName());
             } else if (s instanceof Repeat r) {
                 int count = integer(expression(r.getCount()));
+                event("LOOP_COUNT_EVALUATED", Integer.toString(count));
                 if (count < 0) throw error("NEGATIVE_REPEAT", "Repetir requiere un entero no negativo.");
                 for (int i = 0; i < count; i++) { tick(); event("LOOP_ITERATION", Integer.toString(i + 1)); statements(r.getBody()); }
+                event("LOOP_FINISHED", Integer.toString(count));
             } else if (s instanceof While w) {
                 int iteration = 0;
                 while (condition(w.getCondition())) { tick(); event("LOOP_ITERATION", Integer.toString(++iteration)); statements(w.getBody()); }
+                event("LOOP_FINISHED", Integer.toString(iteration));
             } else if (s instanceof IfElse i) {
                 statements(condition(i.getCondition()) ? i.getThenBranch() : i.getElseBranch());
             } else if (s instanceof If i) { if (condition(i.getCondition())) statements(i.getThenBranch()); }

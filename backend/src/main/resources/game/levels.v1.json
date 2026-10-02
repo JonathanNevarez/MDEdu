@@ -37,7 +37,7 @@
       "id": "VARIABLES",
       "concept": "Variables",
       "title": "Guarda y cambia",
-      "description": "Guarda un valor en contador, cámbialo y acompaña al explorador hasta la meta.",
+      "description": "Declara tu primera variable entera con valor 0, cámbiala a 1 y llega a la meta. Elige su nombre.",
       "order": 2,
       "prerequisiteLevelIds": [
         "SEQUENCES"
@@ -77,7 +77,7 @@
       "id": "CONDITIONALS",
       "concept": "Condicionales",
       "title": "La puerta y la llave",
-      "description": "Recoge la llave. Observa el camino y decide cómo llegar a la puerta y a la meta.",
+      "description": "Recoge la llave y usa Si / Si no con una condición del mundo y dos alternativas distintas para llegar a la meta.",
       "order": 3,
       "prerequisiteLevelIds": [
         "VARIABLES"
@@ -129,7 +129,7 @@
       "id": "LOOPS",
       "concept": "Ciclos",
       "title": "Repite el camino",
-      "description": "El camino repite la misma acción. Usa un ciclo para alcanzar la bandera.",
+      "description": "Avanza las siete casillas usando un ciclo. Representa la repetición de Avanzar dentro de su cuerpo.",
       "order": 4,
       "prerequisiteLevelIds": [
         "CONDITIONALS"

@@ -4,6 +4,36 @@ Actualización documental: 01/10/2026.
 
 ## Estado actual
 
+**FASE 0 COMPLETADA. FASE 1 COMPLETADA. FASE 2 COMPLETADA.
+FASE 3 COMPLETADA. FASE 4 COMPLETADA.
+FASE 5 COMPLETADA Y VALIDADA. FASE 6 NO INICIADA.**
+
+Partida Fase 5: `e0d28ba6eeadffce0cea27467c991d42f3daf9a0`.
+Evaluador separado del motor sobre Program EMF y la misma ejecución/traza;
+cuatro dimensiones, activityPassed, 15 patrones y cuatro configuraciones V1.
+Feedback determinista de catálogo; el mapa completa solo por activityPassed
+sin retirar niveles ya completados. Laboratorio y diseño del mapa conservados.
+
+Validación: 139 tests backend, verify con 4 BackendBootstrapIT; 34 tests frontend,
+typecheck/build y 4 E2E Chromium PASS. MDE clean verify (25 tests), Acceleo CLI y
+node --check PASS. Full-stack posterior en Chromium visible: Secuencias completa,
+Ciclos manual llega sin completar y Repetir(7) con Avanzar completa.
+Respuestas HTTP repetidas idénticas para cinco fixtures.
+Ecore/GenModel/44 src-gen y los 79 archivos MDE verificados permanecen intactos.
+Sin DB/Flyway nuevos, StudentModel, LLM, reglas ECA ni materia avanzada.
+Se conserva warning histórico de bundle >500 kB.
+
+Backend, preview y PostgreSQL de prueba detenidos; volumen existente conservado.
+Docker Desktop, arrancado para esta validación, detenido al cierre. Puertos
+8080/4173/5173/5432 sin listeners al finalizar las pruebas.
+
+[Diseño](FASE_5_EVALUACION_PEDAGOGICA.md) · [Evidencia](VERIFICACION_FASE_5.md).
+Cierre Git autorizado: `feat: add deterministic pedagogical evaluation`, solo main.
+Siguiente: **FASE 6 — learning.ecore + StudentModel + progreso pedagógico**,
+pendiente de autorización independiente. No iniciada.
+
+## Histórico: cierre de Fase 4
+
 **FASES 0, 1, 2 y 3: COMPLETADAS.
 FASE 4: COMPLETADA Y VALIDADA. FASE 5: NO INICIADA.**
 

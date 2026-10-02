@@ -1,0 +1,155 @@
+{
+  "version": 1,
+  "patterns": [
+    {
+      "id": "WRONG_ORDER",
+      "version": 1,
+      "concept": "SEQUENCES",
+      "severity": "ERROR",
+      "detector": "WRONG_ORDER",
+      "pedagogicalMeaning": "Las acciones están presentes, pero su orden cambia el recorrido.",
+      "recommendedAction": "Observa el camino y ordena los avances y el giro.",
+      "defaultHintLevel": 1
+    },
+    {
+      "id": "UNNECESSARY_INSTRUCTION",
+      "version": 1,
+      "concept": "SEQUENCES",
+      "severity": "WARNING",
+      "detector": "UNNECESSARY_INSTRUCTION",
+      "pedagogicalMeaning": "Tu secuencia incluye acciones adicionales al recorrido de referencia.",
+      "recommendedAction": "Prueba a simplificar el recorrido conservando las acciones necesarias.",
+      "defaultHintLevel": 1
+    },
+    {
+      "id": "MISSING_ACTION",
+      "version": 1,
+      "concept": "SEQUENCES",
+      "severity": "ERROR",
+      "detector": "MISSING_ACTION",
+      "pedagogicalMeaning": "Tu secuencia conserva el orden, pero aún faltan acciones del recorrido.",
+      "recommendedAction": "Revisa cada tramo hasta la bandera y añade las acciones que faltan.",
+      "defaultHintLevel": 1
+    },
+    {
+      "id": "UNUSED_VARIABLE",
+      "version": 1,
+      "concept": "VARIABLES",
+      "severity": "WARNING",
+      "detector": "UNUSED_VARIABLE",
+      "pedagogicalMeaning": "Declaraste una variable sin leerla ni asignarle otro valor después.",
+      "recommendedAction": "Prueba a cambiar su valor o a usarlo en otra instrucción.",
+      "defaultHintLevel": 1
+    },
+    {
+      "id": "REDUNDANT_REASSIGNMENT",
+      "version": 1,
+      "concept": "VARIABLES",
+      "severity": "WARNING",
+      "detector": "REDUNDANT_REASSIGNMENT",
+      "pedagogicalMeaning": "Una asignación queda sobrescrita antes de que se lea su valor.",
+      "recommendedAction": "Revisa si necesitas ambas asignaciones o si puedes usar el primer valor.",
+      "defaultHintLevel": 1
+    },
+    {
+      "id": "INCORRECT_UPDATE",
+      "version": 1,
+      "concept": "VARIABLES",
+      "severity": "ERROR",
+      "detector": "INCORRECT_UPDATE",
+      "pedagogicalMeaning": "El cambio observado todavía no cumple el objetivo de pasar de 0 a 1.",
+      "recommendedAction": "Inicializa tu primera variable entera en 0 y asígnale 1. Puedes elegir su nombre.",
+      "defaultHintLevel": 1
+    },
+    {
+      "id": "MISSING_CONDITION",
+      "version": 1,
+      "concept": "CONDITIONALS",
+      "severity": "ERROR",
+      "detector": "MISSING_CONDITION",
+      "pedagogicalMeaning": "Falta el condicional que representa la decisión de esta actividad.",
+      "recommendedAction": "Usa Si / Si no para expresar las dos alternativas.",
+      "defaultHintLevel": 1
+    },
+    {
+      "id": "IDENTICAL_BRANCHES",
+      "version": 1,
+      "concept": "CONDITIONALS",
+      "severity": "ERROR",
+      "detector": "IDENTICAL_BRANCHES",
+      "pedagogicalMeaning": "Las dos alternativas contienen las mismas instrucciones.",
+      "recommendedAction": "Piensa qué debe hacer el personaje en cada situación y diferencia las ramas.",
+      "defaultHintLevel": 1
+    },
+    {
+      "id": "CONSTANT_CONDITION",
+      "version": 1,
+      "concept": "CONDITIONALS",
+      "severity": "ERROR",
+      "detector": "CONSTANT_CONDITION",
+      "pedagogicalMeaning": "La condición se puede resolver sin observar el mundo ni una variable.",
+      "recommendedAction": "Prueba una condición que dependa del estado del camino o de la llave.",
+      "defaultHintLevel": 1
+    },
+    {
+      "id": "MISSING_REQUIRED_BRANCH",
+      "version": 1,
+      "concept": "CONDITIONALS",
+      "severity": "ERROR",
+      "detector": "MISSING_REQUIRED_BRANCH",
+      "pedagogicalMeaning": "Falta una alternativa o una de las ramas está vacía.",
+      "recommendedAction": "Completa las instrucciones de Entonces y Si no.",
+      "defaultHintLevel": 1
+    },
+    {
+      "id": "REPETITIVE_SEQUENCE_WITHOUT_LOOP",
+      "version": 1,
+      "concept": "LOOPS",
+      "severity": "ERROR",
+      "detector": "REPETITIVE_SEQUENCE_WITHOUT_LOOP",
+      "pedagogicalMeaning": "Tu programa repite manualmente varias veces las mismas instrucciones.",
+      "recommendedAction": "Prueba a representar esa repetición con un ciclo.",
+      "defaultHintLevel": 1
+    },
+    {
+      "id": "LOOP_NEVER_EXECUTES",
+      "version": 1,
+      "concept": "LOOPS",
+      "severity": "ERROR",
+      "detector": "LOOP_NEVER_EXECUTES",
+      "pedagogicalMeaning": "Este ciclo no llega a ejecutar su cuerpo al comenzar.",
+      "recommendedAction": "Observa su cantidad de repeticiones o su condición inicial.",
+      "defaultHintLevel": 1
+    },
+    {
+      "id": "INCORRECT_REPETITION_COUNT",
+      "version": 1,
+      "concept": "LOOPS",
+      "severity": "ERROR",
+      "detector": "INCORRECT_REPETITION_COUNT",
+      "pedagogicalMeaning": "El ciclo seleccionado no coincide con las iteraciones esperadas para el camino.",
+      "recommendedAction": "Cuenta las siete casillas por avanzar y revisa cuántas veces se repite el cuerpo.",
+      "defaultHintLevel": 1
+    },
+    {
+      "id": "UNNECESSARY_LOOP",
+      "version": 1,
+      "concept": "LOOPS",
+      "severity": "WARNING",
+      "detector": "UNNECESSARY_LOOP",
+      "pedagogicalMeaning": "Este Repetir ejecuta su cuerpo una sola vez.",
+      "recommendedAction": "Usa el ciclo para representar una repetición real de acciones.",
+      "defaultHintLevel": 1
+    },
+    {
+      "id": "POSSIBLE_INFINITE_LOOP",
+      "version": 1,
+      "concept": "LOOPS",
+      "severity": "ERROR",
+      "detector": "POSSIBLE_INFINITE_LOOP",
+      "pedagogicalMeaning": "La condición permanece constante en verdadero o el control Mientras agotó el presupuesto.",
+      "recommendedAction": "Revisa qué puede hacer que la condición cambie y el ciclo termine.",
+      "defaultHintLevel": 1
+    }
+  ]
+}

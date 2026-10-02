@@ -1,0 +1,19 @@
+{
+  "contractVersion": 1,
+  "name": "LOOPS",
+  "statements": [
+    {
+      "kind": "repeat",
+      "count": {
+        "kind": "literal",
+        "valueType": "INTEGER",
+        "value": "7"
+      },
+      "body": [
+        {
+          "kind": "move"
+        }
+      ]
+    }
+  ]
+}

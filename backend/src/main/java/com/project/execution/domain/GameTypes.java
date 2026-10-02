@@ -29,7 +29,9 @@ public final class GameTypes {
     public record Variable(String id, String name, String type, Object value) {}
     public record State(Position playerPosition, Direction playerDirection, boolean hasKey,
         List<Position> keys, List<Door> doors, List<Variable> variables, boolean atGoal) {}
-    public record Event(int index, String type, String detail, State state) {}
+    public record Event(int index, String type, String detail, State state, String statementPath) {
+        public Event(int index, String type, String detail, State state) { this(index, type, detail, state, null); }
+    }
     public record Failure(String code, String message) {}
     public record Result(boolean success, String status, int steps, State finalState,
         List<Event> trace, List<Failure> errors) {}

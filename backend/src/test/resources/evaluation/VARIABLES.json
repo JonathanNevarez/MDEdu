@@ -1,0 +1,38 @@
+{
+  "contractVersion": 1,
+  "name": "VARIABLES",
+  "statements": [
+    {
+      "kind": "variableDeclaration",
+      "declarationId": "chosen",
+      "name": "mi energía",
+      "valueType": "INTEGER",
+      "initialValue": {
+        "kind": "literal",
+        "valueType": "INTEGER",
+        "value": "0"
+      }
+    },
+    {
+      "kind": "assignment",
+      "targetDeclarationId": "chosen",
+      "value": {
+        "kind": "literal",
+        "valueType": "INTEGER",
+        "value": "1"
+      }
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    }
+  ]
+}

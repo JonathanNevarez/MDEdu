@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getCatalog, execute } from './api';
-import { readProgress, levelStatus, completeLevel, saveProgress } from './progress';
+import { readProgress, levelStatus, saveProgress } from './progress';
+import { applyEvaluation, evaluationMessage } from './evaluation';
+import { EvaluationFeedback } from './EvaluationFeedback';
 import { initialState, replayState } from './replay';
 import { GameEditor } from './GameEditor';
 import { WorldBoard } from './WorldBoard';
-import type { Catalog, ExecutionResult, Level } from './types';
+import type { Catalog, ExecutionResult, EvaluationResult, Level } from './types';
 import type { ProgramDto } from '../programming/dto/program';
 import './game.css';
 
@@ -18,8 +20,8 @@ export function AdventurePage() {
   useEffect(() => { const request = new AbortController(); void getCatalog(request.signal).then(setCatalog).catch(e => {
     if (!request.signal.aborted) setMessage(e instanceof Error ? e.message : 'No se pudo cargar la aventura.');
   }); return () => request.abort(); }, []);
-  const complete = useCallback((id: string) => {
-    const next = completeLevel(progressRef.current, id); progressRef.current = next; setProgress(next);
+  const complete = useCallback((id: string, evaluation: EvaluationResult) => {
+    const next = applyEvaluation(progressRef.current, id, evaluation); progressRef.current = next; setProgress(next);
     if (!saveProgress(next)) setMessage('El progreso se conserva en esta sesión; el navegador no permite guardarlo.');
   }, []);
   if (!catalog) return <section className="adventure"><h1>Mi primera programación</h1><p role="status">{message || 'Preparando tu aventura…'}</p>
@@ -51,7 +53,7 @@ export function AdventurePage() {
     <p className="local-progress-note">Tu avance se guarda en este navegador. <Link to="/laboratorio">Explorar el laboratorio libre</Link></p>
   </section>;
 }
-function Activity({ level, onComplete }: { level: Level; onComplete: (id: string) => void }) {
+function Activity({ level, onComplete }: { level: Level; onComplete: (id: string, evaluation: EvaluationResult) => void }) {
   const [result, setResult] = useState<ExecutionResult | null>(null);
   const [index, setIndex] = useState(-1); const [playing, setPlaying] = useState(false);
   const [busy, setBusy] = useState(false); const [message, setMessage] = useState('Construye tu camino con bloques.');
@@ -61,8 +63,8 @@ function Activity({ level, onComplete }: { level: Level; onComplete: (id: string
     if (!playing || !result) return;
     if (index >= result.trace.length - 1) {
       setPlaying(false);
-      if (result.success) { setMessage('¡Nivel completado!'); onComplete(level.id); }
-      else setMessage(result.errors[0]?.message ?? 'El programa terminó. Prueba otro camino hasta la bandera.');
+      setMessage(evaluationMessage(result));
+      if (result.evaluation?.activityPassed) onComplete(level.id, result.evaluation);
       return;
     }
     const timer = window.setTimeout(() => setIndex(i => i + 1), 220);
@@ -88,7 +90,9 @@ function Activity({ level, onComplete }: { level: Level; onComplete: (id: string
       <aside className="game-simulation" aria-label="Simulación del nivel"><h2>Tu recorrido</h2><WorldBoard world={level.worldConfig} state={state} />
         <div className="replay-controls"><button onClick={reset}>Reiniciar</button><button disabled={!result?.trace.length || playing || busy}
           onClick={() => { setIndex(-1); setPlaying(true); setMessage('Reproduciendo el mismo recorrido…'); }}>Reproducir</button></div>
-        <p role="status" className={result?.success && !playing && index >= 0 ? 'game-success' : 'game-status'}>{message}</p>
+        <p role="status" className={result?.evaluation?.activityPassed && !playing && index >= 0 ? 'game-success' : 'game-status'}>{message}</p>
+        {result?.evaluation && !playing && index >= 0 && <EvaluationFeedback evaluation={result.evaluation} />}
+        {result && !playing && result.errors.length > 0 && <p>{result.errors[0]?.message}</p>}
         <section aria-label="Variables actuales" className="game-variables"><h3>Valores guardados</h3>
           {state.variables.length ? <ul>{state.variables.map(v => <li key={v.id}>{v.name} = <strong>{String(v.value)}</strong></li>)}</ul> : <p>Aún no hay variables.</p>}</section>
         {result && <details><summary>Ver recorrido · {result.steps} operaciones</summary><ol className="game-trace">{result.trace.map(event => <li key={event.index} aria-current={event.index === index ? 'step' : undefined}>{event.index + 1}. {event.detail}</li>)}</ol></details>}

@@ -314,3 +314,82 @@ status=STEP_LIMIT_EXCEEDED, steps=200 y 201 eventos; error:
 `{"code":"STEP_LIMIT_EXCEEDED","message":"Se alcanzó el límite de operaciones."}`.
 La última snapshot conserva el estado al detenerse. Sin timestamps en la respuesta.
 Ver [semántica completa](FASE_4_GRIDWORLD_JUEGO.md).
+
+
+## Evaluación pedagógica: ampliación Fase 5
+
+Los ejemplos de ejecución anteriores documentan el contrato histórico de Fase 4.
+Ahora POST `/api/game/levels/{levelId}/execute` agrega `evaluation` a esos mismos
+campos; no requiere una segunda petición ni cambia ProgramDto V1. Los eventos
+incluyen `statementPath` (null si no aplica). Repeat agrega LOOP_COUNT_EVALUATED;
+Repeat/While agregan LOOP_FINISHED sin consumir operaciones adicionales.
+
+HTTP 200 conserva evaluación ante runtime error y STEP_LIMIT_EXCEEDED:
+functionalCorrectness.passed será false. HTTP 400 rechaza request inválido y HTTP
+422 de modelo EMF inválido devuelve evaluation null. No se evalúa un EMF inválido.
+
+Ejemplo real: siete Move manuales en LOOPS. Se muestran campos seleccionados del
+resultado; finalState y trace siguen presentes en la respuesta completa.
+
+```json
+{
+  "success": true,
+  "status": "COMPLETED",
+  "steps": 7,
+  "errors": [],
+  "evaluation": {
+    "evaluationVersion": 1,
+    "levelId": "LOOPS",
+    "activityPassed": false,
+    "functionalCorrectness": {
+      "passed": true,
+      "goalReached": true,
+      "executionStatus": "COMPLETED",
+      "runtimeError": false,
+      "steps": 7
+    },
+    "structuralCorrectness": {
+      "requiredConcept": "LOOPS",
+      "requiredConceptUsed": false,
+      "requiredConstructsSatisfied": false,
+      "constraintsSatisfied": false,
+      "structuralConstraints": {
+        "requiredConstructs": false,
+        "meaningfulUse": false
+      }
+    },
+    "pedagogicalEfficiency": {
+      "status": "NEEDS_RETRY"
+    },
+    "patterns": [
+      {
+        "id": "REPETITIVE_SEQUENCE_WITHOUT_LOOP",
+        "concept": "LOOPS",
+        "severity": "ERROR",
+        "pedagogicalMeaning": "Tu programa repite manualmente varias veces las mismas instrucciones.",
+        "recommendedAction": "Prueba a representar esa repetición con un ciclo.",
+        "defaultHintLevel": 1,
+        "evidence": {
+          "statementPath": "statements[0]",
+          "traceIndex": null,
+          "observed": "unitLength=1, repetitions=7",
+          "expected": "represent repetition with loop"
+        }
+      }
+    ]
+  }
+}
+```
+
+Repeat(7) con Move en su cuerpo produce activityPassed=true, concepto usado=true,
+constraintsSatisfied=true, pedagogicalEfficiency.status=OK y patterns=[].
+La aprobación usa resultado funcional real, restricciones significativas y ausencia
+de patrones bloqueantes configurados. Severity no sustituye blockingPatternIds.
+El frontend usa exclusivamente activityPassed para completar niveles; un intento
+posterior fallido no elimina progreso previo.
+
+Cada patrón incluye id, concept, severity, pedagogicalMeaning, recommendedAction,
+defaultHintLevel y evidence (statementPath, traceIndex opcional, observed, expected).
+Orden estable de catálogo y recorrido estructural; sin timestamps. Catálogo y
+configuración versión 1. [Semántica](FASE_5_EVALUACION_PEDAGOGICA.md) y
+[pruebas/determinismo](VERIFICACION_FASE_5.md).

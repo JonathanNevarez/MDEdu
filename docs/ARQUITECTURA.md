@@ -2,7 +2,8 @@
 
 Estado: los diagramas generales describen el diseño objetivo. Ya existen el
 arranque de Fase 0, el metamodelo de Fase 1 y el flujo estructural de Fase 2
-descrito a continuación, junto al M2T aislado de Fase 3. El ciclo pedagógico completo no está implementado.
+descrito a continuación, el M2T aislado de Fase 3 y el juego determinista de Fase 4.
+La evaluación pedagógica y el ciclo adaptativo completo aún no están implementados.
 
 ## Flujo implementado en Fase 2
 
@@ -23,6 +24,28 @@ nsURI existente. Las plantillas Acceleo generan llamadas a una API runtime cerra
 sin ejecutar el programa. Modelo, DTO y adaptadores Fase 2 permanecen intactos.
 GridWorld corresponde a Fase 4, **no iniciada**.
 [Mapping, contrato y comandos](FASE_3_M2T_ACCELEO.md).
+
+## Juego implementado en Fase 4
+
+```mermaid
+flowchart LR
+  B[Blockly] --> D[ProgramDto V1]
+  D --> M[Mapper existente y validación EMF]
+  M --> P[Program EMF]
+  P --> G[Motor GridWorld Java]
+  G --> T[ExecutionTrace y estado final]
+  T --> R[Replay visual React / SVG]
+  P --> A[Acceleo M2T headless]
+  A --> J[JavaScript como texto]
+```
+
+El motor interpreta EMF; no ejecuta el JavaScript de Acceleo. Catálogo JSON versionado
+con cuatro niveles; desbloqueo por prerequisites declarativas. Progreso local provisional,
+sin persistencia DB. API en execution/api; motor de dominio Java independiente de Spring.
+El replay consume snapshots del servidor. `/aventura` y `/aventura/:levelId` conviven
+con `/laboratorio`. [Semántica y límites](FASE_4_GRIDWORLD_JUEGO.md).
+Evaluator pedagógico, StudentModel, reglas y LLM en los diagramas generales siguientes
+siguen siendo diseño futuro, no componentes implementados. Fase 5 no iniciada.
 
 ## Responsabilidades y límites
 

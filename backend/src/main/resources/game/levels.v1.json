@@ -1,0 +1,228 @@
+{
+  "version": 1,
+  "levels": [
+    {
+      "id": "SEQUENCES",
+      "concept": "Secuencias",
+      "title": "Primeros pasos",
+      "description": "Avanza dos casillas, gira a la derecha y sigue hasta la bandera.",
+      "order": 1,
+      "prerequisiteLevelIds": [],
+      "allowedBlockGroups": [
+        "Movimiento"
+      ],
+      "worldConfig": {
+        "width": 5,
+        "height": 5,
+        "playerPosition": {
+          "x": 1,
+          "y": 1
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 3,
+          "y": 3
+        },
+        "obstacles": [
+          {
+            "x": 2,
+            "y": 2
+          }
+        ],
+        "keys": [],
+        "doors": []
+      }
+    },
+    {
+      "id": "VARIABLES",
+      "concept": "Variables",
+      "title": "Guarda y cambia",
+      "description": "Guarda un valor en contador, cámbialo y acompaña al explorador hasta la meta.",
+      "order": 2,
+      "prerequisiteLevelIds": [
+        "SEQUENCES"
+      ],
+      "allowedBlockGroups": [
+        "Movimiento",
+        "Variables",
+        "Valores"
+      ],
+      "worldConfig": {
+        "width": 5,
+        "height": 3,
+        "playerPosition": {
+          "x": 0,
+          "y": 1
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 4,
+          "y": 1
+        },
+        "obstacles": [
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 2
+          }
+        ],
+        "keys": [],
+        "doors": []
+      }
+    },
+    {
+      "id": "CONDITIONALS",
+      "concept": "Condicionales",
+      "title": "La puerta y la llave",
+      "description": "Recoge la llave. Observa el camino y decide cómo llegar a la puerta y a la meta.",
+      "order": 3,
+      "prerequisiteLevelIds": [
+        "VARIABLES"
+      ],
+      "allowedBlockGroups": [
+        "Movimiento",
+        "Variables",
+        "Condicionales",
+        "Condiciones",
+        "Valores"
+      ],
+      "worldConfig": {
+        "width": 6,
+        "height": 4,
+        "playerPosition": {
+          "x": 0,
+          "y": 2
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 5,
+          "y": 2
+        },
+        "obstacles": [
+          {
+            "x": 2,
+            "y": 1
+          },
+          {
+            "x": 3,
+            "y": 1
+          }
+        ],
+        "keys": [
+          {
+            "x": 1,
+            "y": 2
+          }
+        ],
+        "doors": [
+          {
+            "x": 3,
+            "y": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "LOOPS",
+      "concept": "Ciclos",
+      "title": "Repite el camino",
+      "description": "El camino repite la misma acción. Usa un ciclo para alcanzar la bandera.",
+      "order": 4,
+      "prerequisiteLevelIds": [
+        "CONDITIONALS"
+      ],
+      "allowedBlockGroups": [
+        "Movimiento",
+        "Variables",
+        "Condicionales",
+        "Ciclos",
+        "Condiciones",
+        "Valores"
+      ],
+      "worldConfig": {
+        "width": 8,
+        "height": 3,
+        "playerPosition": {
+          "x": 0,
+          "y": 1
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 7,
+          "y": 1
+        },
+        "obstacles": [
+          {
+            "x": 0,
+            "y": 0
+          },
+          {
+            "x": 0,
+            "y": 2
+          },
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 1,
+            "y": 2
+          },
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 2
+          },
+          {
+            "x": 3,
+            "y": 0
+          },
+          {
+            "x": 3,
+            "y": 2
+          },
+          {
+            "x": 4,
+            "y": 0
+          },
+          {
+            "x": 4,
+            "y": 2
+          },
+          {
+            "x": 5,
+            "y": 0
+          },
+          {
+            "x": 5,
+            "y": 2
+          },
+          {
+            "x": 6,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 2
+          },
+          {
+            "x": 7,
+            "y": 0
+          },
+          {
+            "x": 7,
+            "y": 2
+          }
+        ],
+        "keys": [],
+        "doors": []
+      }
+    }
+  ]
+}

@@ -101,3 +101,216 @@ en F0. Las colecciones, enums, límites exactos y OpenAPI se cerrarán en sus fa
 - LLM en backend exclusivamente; respuestas inválidas o timeout producen fallback.
 
 La API no promete autenticación, rate limiting ni telemetría implementados en F0.
+
+## API de juego — Fase 4 implementada
+
+- `GET /api/game/levels`: HTTP 200, `{version:1, levels:[...]}`. Exactamente cuatro
+  IDs: SEQUENCES, VARIABLES, CONDITIONALS, LOOPS. Cada Level incluye concept, title,
+  description, order, prerequisiteLevelIds, worldConfig y allowedBlockGroups.
+- `GET /api/game/levels/{levelId}`: HTTP 200 con el Level; desconocido 404
+  `{"code":"LEVEL_NOT_FOUND","message":"Nivel no encontrado."}`.
+- `POST /api/game/levels/{levelId}/execute`: ProgramDto V1 directo, mapper existente,
+  validación Diagnostician y ejecución EMF con límite de operaciones.
+
+Sin persistencia ni modificación de modelo. El progreso/desbloqueo es provisional
+local y no autentica peticiones. No hay nuevo contrato DTO de programación.
+
+HTTP: 200 ejecución normal o error runtime; 400 JSON/contrato inválido; 404 nivel
+inexistente; 422 INVALID_MODEL de EMF; 500 solo inesperados, sin stacktrace.
+Result contiene success, status, steps, finalState, trace, errors.
+Errores tienen code/message; los mensajes no exponen texto del literal ni stacktrace.
+COMPLETED no implica success: también se puede terminar sin alcanzar la meta.
+
+Petición real capturada contra `POST /api/game/levels/SEQUENCES/execute`:
+
+```json
+{
+  "contractVersion": 1,
+  "name": "Primeros pasos",
+  "statements": [
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "turnRight"
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    }
+  ]
+}
+```
+
+Respuesta HTTP 200 real (sin campos omitidos; formateada para lectura):
+
+```json
+{
+  "success": true,
+  "status": "COMPLETED",
+  "steps": 5,
+  "finalState": {
+    "playerPosition": {
+      "x": 3,
+      "y": 3
+    },
+    "playerDirection": "SOUTH",
+    "hasKey": false,
+    "keys": [],
+    "doors": [],
+    "variables": [],
+    "atGoal": true
+  },
+  "trace": [
+    {
+      "index": 0,
+      "type": "PROGRAM_STARTED",
+      "detail": "Inicio",
+      "state": {
+        "playerPosition": {
+          "x": 1,
+          "y": 1
+        },
+        "playerDirection": "EAST",
+        "hasKey": false,
+        "keys": [],
+        "doors": [],
+        "variables": [],
+        "atGoal": false
+      }
+    },
+    {
+      "index": 1,
+      "type": "MOVE",
+      "detail": "Avanzar una celda",
+      "state": {
+        "playerPosition": {
+          "x": 2,
+          "y": 1
+        },
+        "playerDirection": "EAST",
+        "hasKey": false,
+        "keys": [],
+        "doors": [],
+        "variables": [],
+        "atGoal": false
+      }
+    },
+    {
+      "index": 2,
+      "type": "MOVE",
+      "detail": "Avanzar una celda",
+      "state": {
+        "playerPosition": {
+          "x": 3,
+          "y": 1
+        },
+        "playerDirection": "EAST",
+        "hasKey": false,
+        "keys": [],
+        "doors": [],
+        "variables": [],
+        "atGoal": false
+      }
+    },
+    {
+      "index": 3,
+      "type": "TURN_RIGHT",
+      "detail": "Giro a la derecha",
+      "state": {
+        "playerPosition": {
+          "x": 3,
+          "y": 1
+        },
+        "playerDirection": "SOUTH",
+        "hasKey": false,
+        "keys": [],
+        "doors": [],
+        "variables": [],
+        "atGoal": false
+      }
+    },
+    {
+      "index": 4,
+      "type": "MOVE",
+      "detail": "Avanzar una celda",
+      "state": {
+        "playerPosition": {
+          "x": 3,
+          "y": 2
+        },
+        "playerDirection": "SOUTH",
+        "hasKey": false,
+        "keys": [],
+        "doors": [],
+        "variables": [],
+        "atGoal": false
+      }
+    },
+    {
+      "index": 5,
+      "type": "MOVE",
+      "detail": "Avanzar una celda",
+      "state": {
+        "playerPosition": {
+          "x": 3,
+          "y": 3
+        },
+        "playerDirection": "SOUTH",
+        "hasKey": false,
+        "keys": [],
+        "doors": [],
+        "variables": [],
+        "atGoal": true
+      }
+    },
+    {
+      "index": 6,
+      "type": "GOAL_REACHED",
+      "detail": "Meta alcanzada",
+      "state": {
+        "playerPosition": {
+          "x": 3,
+          "y": 3
+        },
+        "playerDirection": "SOUTH",
+        "hasKey": false,
+        "keys": [],
+        "doors": [],
+        "variables": [],
+        "atGoal": true
+      }
+    },
+    {
+      "index": 7,
+      "type": "PROGRAM_FINISHED",
+      "detail": "Programa terminado",
+      "state": {
+        "playerPosition": {
+          "x": 3,
+          "y": 3
+        },
+        "playerDirection": "SOUTH",
+        "hasKey": false,
+        "keys": [],
+        "doors": [],
+        "variables": [],
+        "atGoal": true
+      }
+    }
+  ],
+  "errors": []
+}
+```
+
+El mismo request produjo bytes de respuesta idénticos en dos llamadas.
+`while true` con cuerpo vacío devolvió HTTP 200, success=false,
+status=STEP_LIMIT_EXCEEDED, steps=200 y 201 eventos; error:
+`{"code":"STEP_LIMIT_EXCEEDED","message":"Se alcanzó el límite de operaciones."}`.
+La última snapshot conserva el estado al detenerse. Sin timestamps en la respuesta.
+Ver [semántica completa](FASE_4_GRIDWORLD_JUEGO.md).

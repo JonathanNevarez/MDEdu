@@ -5,14 +5,14 @@ import { describe, expect, it } from 'vitest';
 import { App } from '../../src/app/App';
 
 describe('Navegación inicial', () => {
-  it('presenta el inicio e informa que las actividades aún no están disponibles', () => {
+  it('presenta el inicio y permite comenzar la aventura', () => {
     render(<MemoryRouter><App /></MemoryRouter>);
 
     expect(screen.getByRole('heading', {
       level: 1,
       name: 'Un espacio para aprender lógica de programación',
     })).toBeVisible();
-    expect(screen.getByText(/Las actividades todavía no están disponibles/)).toBeVisible();
+    expect(screen.getByRole('link', { name: 'Comenzar mi aventura' })).toHaveAttribute('href', '/aventura');
     expect(screen.getByRole('link', { name: 'Inicio' }))
       .toHaveAttribute('aria-current', 'page');
   });

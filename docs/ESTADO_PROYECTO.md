@@ -4,6 +4,26 @@ Actualización documental: 01/10/2026.
 
 ## Estado actual
 
+**FASES 0, 1, 2 y 3: COMPLETADAS.
+FASE 4: COMPLETADA Y VALIDADA. FASE 5: NO INICIADA.**
+
+Partida: `5b67fd6fa1ca7f791ef7580289228df3cdc39dec`.
+Motor GridWorld Java sobre Program EMF, catálogo declarativo de cuatro niveles,
+API, mapa, toolbox progresiva, trazas deterministas, replay y progreso local provisional.
+77 tests backend + 4 BackendBootstrapIT; 26 tests frontend; typecheck/build PASS;
+3 E2E Chromium PASS, incluyendo recorrido contra API real, replay sin nueva petición,
+reinicio sin borrar bloques, desbloqueo y persistencia tras recarga.
+MDE clean verify: BUILD SUCCESS (25 tests); generación Acceleo conocida + node --check PASS.
+Ecore/GenModel/44 src-gen/Acceleo intactos; no cambios DB/Flyway, StudentModel ni LLM.
+Bundle Blockly conserva warning >500 kB. Servicios de validación detenidos al cierre.
+
+[Diseño](FASE_4_GRIDWORLD_JUEGO.md) · [Evidencia](VERIFICACION_FASE_4.md).
+Cierre Git autorizado: `feat: add gridworld levels and execution`, solo main.
+Siguiente: **FASE 5 — Evaluación de soluciones y patrones pedagógicos**, pendiente
+exclusivamente de nueva autorización.
+
+## Histórico: cierre de Fase 3
+
 **FASE 0: COMPLETADA. FASE 1: COMPLETADA. FASE 2: COMPLETADA.
 FASE 3: COMPLETADA Y VALIDADA. FASE 4: NO INICIADA.**
 

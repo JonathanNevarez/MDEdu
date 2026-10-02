@@ -3,6 +3,7 @@ import { HomePage } from '../pages/HomePage';
 import { NotFoundPage } from '../pages/NotFoundPage';
 import { lazy, Suspense } from 'react';
 const LaboratoryPage = lazy(() => import('../features/programming/pages/LaboratoryPage').then(m => ({ default: m.LaboratoryPage })));
+const AdventurePage = lazy(() => import('../features/game/AdventurePage').then(m => ({ default: m.AdventurePage })));
 
 function AppLayout() {
   return (
@@ -12,6 +13,7 @@ function AppLayout() {
         <span className="site-name">Lógica de programación</span>
         <nav aria-label="Navegación principal">
           <NavLink to="/" end>Inicio</NavLink>
+          <NavLink to="/aventura">Aventura</NavLink>
           <NavLink to="/laboratorio">Laboratorio libre</NavLink>
         </nav>
       </header>
@@ -29,6 +31,8 @@ export function App() {
       <Route element={<AppLayout />}>
         <Route index element={<HomePage />} />
         <Route path="laboratorio" element={<Suspense fallback={<p>Cargando editor…</p>}><LaboratoryPage /></Suspense>} />
+        <Route path="aventura" element={<Suspense fallback={<p>Cargando aventura…</p>}><AdventurePage /></Suspense>} />
+        <Route path="aventura/:levelId" element={<Suspense fallback={<p>Cargando nivel…</p>}><AdventurePage /></Suspense>} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

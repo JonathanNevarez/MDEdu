@@ -10,7 +10,7 @@ describe('Navegación inicial', () => {
 
     expect(screen.getByRole('heading', {
       level: 1,
-      name: 'Un espacio para aprender lógica de programación',
+      name: 'Las grandes ideas empiezan con un bloque.',
     })).toBeVisible();
     expect(screen.getByRole('link', { name: 'Comenzar mi aventura' })).toHaveAttribute('href', '/aventura');
     expect(screen.getByRole('link', { name: 'Inicio' }))
@@ -25,7 +25,7 @@ describe('Navegación inicial', () => {
     await user.click(screen.getByRole('link', { name: 'Volver al inicio' }));
 
     expect(screen.getByRole('heading', {
-      name: 'Un espacio para aprender lógica de programación',
+      name: 'Las grandes ideas empiezan con un bloque.',
     })).toBeVisible();
     expect(screen.queryByRole('heading', { name: 'No encontramos esta página' }))
       .not.toBeInTheDocument();

@@ -1,0 +1,82 @@
+[
+  {
+    "name": "inicio",
+    "violations": [],
+    "passes": 30,
+    "incomplete": 1
+  },
+  {
+    "name": "feedback-pedagogico",
+    "violations": [
+      {
+        "id": "region",
+        "impact": "moderate",
+        "nodes": [
+          [
+            "canvas"
+          ]
+        ]
+      }
+    ],
+    "passes": 46,
+    "incomplete": 2
+  },
+  {
+    "name": "progreso",
+    "violations": [
+      {
+        "id": "region",
+        "impact": "moderate",
+        "nodes": [
+          [
+            "canvas"
+          ]
+        ]
+      }
+    ],
+    "passes": 39,
+    "incomplete": 2
+  },
+  {
+    "name": "docente-modelo",
+    "violations": [],
+    "passes": 41,
+    "incomplete": 1
+  },
+  {
+    "name": "timeline",
+    "violations": [],
+    "passes": 44,
+    "incomplete": 1
+  },
+  {
+    "name": "Adaptaciones",
+    "violations": [],
+    "passes": 36,
+    "incomplete": 1
+  },
+  {
+    "name": "Reglas",
+    "violations": [],
+    "passes": 38,
+    "incomplete": 1
+  },
+  {
+    "name": "Parámetros",
+    "violations": [],
+    "passes": 38,
+    "incomplete": 1
+  },
+  {
+    "name": "404",
+    "violations": [],
+    "passes": 30,
+    "incomplete": 1
+  },
+  {
+    "name": "error",
+    "violations": [],
+    "passes": 35,
+    "incomplete": 1
+  }
+]

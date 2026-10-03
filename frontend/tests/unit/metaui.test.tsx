@@ -20,6 +20,7 @@ it('shows parsed runtime rules and every active parameter without write controls
  render(<MetaUiPage/>);fireEvent.click(screen.getByRole('button',{name:'Reglas'}));
  expect(await screen.findByText('Regla real')).toBeVisible();expect(screen.getByText(/Prioridad 99/)).toBeVisible();expect(screen.getByText('consecutiveFailures >= 3')).toBeVisible();expect(screen.getByText('REPEAT_ACTIVITY')).toBeVisible();
  fireEvent.click(screen.getByRole('button',{name:'Parámetros'}));await screen.findByText('Parámetros activos');
+ fireEvent.click(screen.getByText('Detalles técnicos · parametersHash'));
  for(const field of ['version','hintLevel','difficultyAdjustmentEnabled','routeAdaptationEnabled','feedbackDetail','failureThreshold','successThreshold','masteryThreshold','maxHintsPerActivity','maxAttemptsBeforeReinforcement']) expect(screen.getByText(field)).toBeVisible();
  expect(screen.getByText('0.73')).toBeVisible();expect(screen.queryByRole('switch')).toBeNull();expect(screen.queryByRole('button',{name:/guardar/i})).toBeNull();
 });

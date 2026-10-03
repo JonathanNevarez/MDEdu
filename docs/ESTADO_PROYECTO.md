@@ -1,10 +1,12 @@
 # Estado del proyecto
 
-Actualización documental: 02/10/2026.
+Actualización documental: 03/10/2026.
 
 ## Estado actual
 
 **FASES 0–13 COMPLETADAS Y VALIDADAS. Integración Gemini COMPLETADA Y VALIDADA. PROTOTIPO FUNCIONAL COMPLETADO.**
+
+**REDISEÑO VISUAL/UX COMPLETADO Y VALIDADO**, posterior al checkpoint `67bebe07f02ed71ddfe808e66ca5341e41225d6d`. Sistema visual común, inicio y mapa de aventura, actividad/Blockly/GridWorld, Luma, progreso, laboratorio y consulta docente renovados. Presentación solamente: 558 archivos protegidos y 19 hashes explícitos intactos, V1–V7 sin cambios, cuatro actividades y cero refuerzos. Validación: 76 pruebas frontend, typecheck/build, 16 E2E DISABLED + 2 Gemini mock + 4 Docker, 265 backend unit/MVC + 87 IT y 49 MDE. Axe sin critical/serious en los estados revisados; 42 capturas de escritorio. No existe Fase 14. [Diseño](REDISENO_UI_UX.md) · [Evidencia del rediseño](VERIFICACION_REDISENO_UI_UX.md).
 
 Fase 13 parte de `8c95a04adf880c7511b1e66f82c11163da71c191`: autenticación docente real, CSRF/sesiones, límites/errores seguros, cuota LLM, accesibilidad, Docker completo, scripts y documentación final. Pedagogía y activos protegidos intactos; cuatro actividades, cero refuerzos, sin V8. Validación: 265 unit/MVC + 87 IT, 73 frontend, 49 MDE, 14 E2E DISABLED + 2 Gemini + 4 Docker/Nginx. Axe cero serious/critical; residual moderate de Blockly documentado. Sin APIs reales. [Evidencia final](VERIFICACION_FASE_13.md). No existe Fase 14.
 

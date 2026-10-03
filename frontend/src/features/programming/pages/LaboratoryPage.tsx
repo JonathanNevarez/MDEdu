@@ -48,8 +48,8 @@ export function LaboratoryPage() {
     finally { if (request.current === current) setBusy(false); }
   }
   return <section className="laboratory" aria-labelledby="lab-title">
-    <h1 id="lab-title">Laboratorio libre</h1>
-    <p>Construye un programa y comprueba su estructura. En esta fase el programa no se ejecuta.</p>
+    <p className="eyebrow">Experimenta libremente</p><h1 id="lab-title">Laboratorio libre</h1>
+    <p>Construye un programa y comprueba su estructura. El programa no se ejecuta en este espacio.</p>
     <div className="lab-controls">
       <label>Nombre del programa <input value={name} onChange={e => { setName(e.target.value); invalidate(); }} /></label>
       <label>Ejemplo <select value={example} onChange={e => setExample(e.target.value)}>
@@ -59,8 +59,8 @@ export function LaboratoryPage() {
       <button onClick={() => action(ws => { const dto = examples[example]!; invalidate(); loadExample(ws, dto); setName(dto.name); setMessage('Ejemplo cargado.'); })}>Cargar ejemplo</button>
       <button onClick={() => action(ws => { saveWorkspace(ws, name); setMessage('Workspace guardado.'); })}>Guardar workspace</button>
       <button onClick={() => action(ws => { invalidate(); setName(restoreWorkspace(ws)); setMessage('Workspace restaurado.'); })}>Restaurar workspace</button>
-      <button onClick={() => action(ws => { invalidate(); ws.clear(); setMessage('Workspace limpio. Añade Inicio o carga un ejemplo.'); })}>Limpiar</button>
-      <button disabled={busy} onClick={() => void generate()}>Generar modelo EMF</button>
+      <button className="danger" onClick={() => action(ws => { invalidate(); ws.clear(); setMessage('Workspace limpio. Añade Inicio o carga un ejemplo.'); })}>Limpiar</button>
+      <button className="primary" disabled={busy} onClick={() => void generate()}>Generar modelo EMF</button>
     </div>
     <div ref={container} className="blockly-host" aria-label="Editor Blockly" data-testid="blockly-editor" />
     <p role="status">{message}</p>

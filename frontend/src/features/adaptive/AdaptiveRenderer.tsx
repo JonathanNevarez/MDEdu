@@ -2,10 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Feedback, HintStage, UiConfiguration, UiResponse } from './types';
 import './adaptive.css';
+import { Icon, LumaPortrait } from '../../shared/Visuals';
 const stageLabels: Record<HintStage, string> = {NONE: 'Ayuda', SOCRATIC_QUESTION: 'Una pregunta para pensar',
   CONCEPTUAL_HINT: 'Pista conceptual', ANALOGOUS_EXAMPLE: 'Ejemplo parecido', PARTIAL_HELP: 'Ayuda parcial'};
 export function HintPanel({hintStage, message, question, focus}: Feedback) {
-  return <section className="hint-panel" aria-label="Pista"><h3>{stageLabels[hintStage]}</h3><p>{message}</p>
+  return <section className="hint-panel" aria-label="Pista"><h3><Icon name="spark"/>{stageLabels[hintStage]}</h3><p>{message}</p>
     {question && <p>{question}</p>}{focus && <p><strong>Observa: </strong>{focus}</p>}</section>;
 }
 export function CodePanel({text}: {text: string | null}) {
@@ -16,7 +17,7 @@ export function LumaTutor({mode, success, message}: {mode: UiConfiguration['tuto
   if (mode === 'HIDDEN') return null;
   const state = success ? 'SUCCESS' : mode === 'GUIDE' ? 'GUIDE' : mode === 'HINT' ? 'HINT' : mode === 'FEEDBACK' ? 'FEEDBACK' : 'IDLE';
   return <section className="luma-tutor" aria-label="Luma" data-state={state}>
-    <span className="luma-avatar" aria-hidden="true">✦</span><div><h2>Luma</h2>
+    <LumaPortrait state={state}/><div><h2>Luma <span className="luma-state">{{SUCCESS:'¡Lo lograste!', GUIDE:'Vamos paso a paso', HINT:'Una pista para ti', FEEDBACK:'Miremos tu intento', IDLE:'A tu lado'}[state]}</span></h2>
       <p>{success ? '¡Buen trabajo! Has completado este reto.' : message ?? 'Puedes explorar tus bloques y probar tu programa.'}</p></div></section>;
 }
 export function Transitioner({configuration}: {configuration: UiConfiguration}) {

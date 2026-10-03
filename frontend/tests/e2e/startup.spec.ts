@@ -7,7 +7,7 @@ test('el frontend compilado abre y permite recuperar una ruta inexistente', asyn
   await page.goto('/');
   await expect(page).toHaveTitle('Lógica de programación');
   await expect(page.getByRole('heading', {
-    name: 'Un espacio para aprender lógica de programación',
+    name: 'Las grandes ideas empiezan con un bloque.',
   })).toBeVisible();
 
   await page.goto('/pagina-inexistente');
@@ -15,7 +15,7 @@ test('el frontend compilado abre y permite recuperar una ruta inexistente', asyn
   await page.getByRole('link', { name: 'Volver al inicio' }).click();
   await expect(page).toHaveURL('http://127.0.0.1:4173/');
   await expect(page.getByRole('heading', {
-    name: 'Un espacio para aprender lógica de programación',
+    name: 'Las grandes ideas empiezan con un bloque.',
   })).toBeVisible();
   expect(browserErrors).toEqual([]);
 });

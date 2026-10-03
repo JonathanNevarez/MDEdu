@@ -30,6 +30,7 @@ test('teacher reads two isolated students, persisted LOOPS, rules and active par
  await expect(timeline.getByRole('heading',{name:'FuncionalSinConcepto',exact:true})).toBeVisible();
  await expect(timeline.getByRole('heading',{name:'DISABLED / FALLBACK',exact:true})).toBeVisible();
  await expect(timeline).toContainText('REPETITIVE_SEQUENCE_WITHOUT_LOOP');
+ await timeline.getByRole('region',{name:'Configuraciones UI auditadas'}).getByText('Detalles técnicos · configuración UI 1',{exact:true}).click();
  await expect(timeline.getByRole('region',{name:'Configuraciones UI auditadas'}).getByText(before.uiConfigurations[0].configurationFingerprint,{exact:true})).toBeVisible();
  await page.screenshot({path:info.outputPath('teacher-timeline.png'),fullPage:true});
  await page.getByRole('button',{name:'Adaptaciones',exact:true}).click();await expect(page.getByRole('heading',{name:'FuncionalSinConcepto',exact:true})).toBeVisible();

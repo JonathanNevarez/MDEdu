@@ -3,6 +3,7 @@ import { HomePage } from '../pages/HomePage';
 import { NotFoundPage } from '../pages/NotFoundPage';
 import { lazy, Suspense } from 'react';
 import { TeacherAccess, TeacherLoginPage } from '../features/teacher/TeacherAccess';
+import { Icon, LoadingState } from '../shared/Visuals';
 const LaboratoryPage = lazy(() => import('../features/programming/pages/LaboratoryPage').then(m => ({ default: m.LaboratoryPage })));
 const AdventurePage = lazy(() => import('../features/game/AdventurePage').then(m => ({ default: m.AdventurePage })));
 
@@ -13,18 +14,18 @@ function AppLayout() {
     <>
       <a className="skip-link" href="#contenido">Saltar al contenido</a>
       <header className="site-header">
-        <span className="site-name">Lógica de programación</span>
+        <NavLink className="site-name" to="/" aria-label="MDEdu · Inicio"><span className="brand-symbol"><Icon name="route"/></span><span className="brand-copy"><strong>MDEdu</strong><small>Mi primera programación</small></span></NavLink>
         <nav aria-label="Navegación principal">
           <NavLink to="/" end>Inicio</NavLink>
-          <NavLink to="/aventura">Aventura</NavLink>
-          <NavLink to="/laboratorio">Laboratorio libre</NavLink>
-          <NavLink to="/docente">Vista docente</NavLink>
+          <NavLink to="/aventura"><Icon name="route"/>Aventura</NavLink>
+          <NavLink to="/laboratorio"><Icon name="flask"/>Laboratorio libre</NavLink>
+          <NavLink to="/docente"><Icon name="book"/>Vista docente</NavLink>
         </nav>
       </header>
       <main id="contenido" tabIndex={-1} className="page-content">
         <Outlet />
       </main>
-      <footer className="site-footer">Proyecto académico · Educación universitaria</footer>
+      <footer className="site-footer"><span>MDEdu · Mi primera programación</span><span>Proyecto académico · Educación universitaria</span></footer>
     </>
   );
 }
@@ -34,11 +35,11 @@ export function App() {
     <Routes>
       <Route element={<AppLayout />}>
         <Route index element={<HomePage />} />
-        <Route path="laboratorio" element={<Suspense fallback={<p>Cargando editor…</p>}><LaboratoryPage /></Suspense>} />
-        <Route path="aventura" element={<Suspense fallback={<p>Cargando aventura…</p>}><AdventurePage /></Suspense>} />
-        <Route path="aventura/:levelId" element={<Suspense fallback={<p>Cargando nivel…</p>}><AdventurePage /></Suspense>} />
+        <Route path="laboratorio" element={<Suspense fallback={<LoadingState text="Preparando el laboratorio…"/>}><LaboratoryPage /></Suspense>} />
+        <Route path="aventura" element={<Suspense fallback={<LoadingState/>}><AdventurePage /></Suspense>} />
+        <Route path="aventura/:levelId" element={<Suspense fallback={<LoadingState text="Preparando tu reto…"/>}><AdventurePage /></Suspense>} />
         <Route path="docente/login" element={<TeacherLoginPage />} />
-        <Route path="docente" element={<Suspense fallback={<p>Cargando vista docente…</p>}><TeacherAccess><MetaUiPage /></TeacherAccess></Suspense>} />
+        <Route path="docente" element={<Suspense fallback={<LoadingState text="Preparando la vista docente…"/>}><TeacherAccess><MetaUiPage /></TeacherAccess></Suspense>} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

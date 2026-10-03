@@ -1,0 +1,15 @@
+:root {
+  --font-body: Tahoma, "Segoe UI", sans-serif; --font-code: Consolas, "Courier New", monospace;
+  --text: #173b47; --muted: #526b73; --primary: #176480; --primary-hover: #104f69; --secondary: #236a53;
+  --success: #216747; --success-soft: #e2f3e5; --warning: #765411; --warning-soft: #fff3cd;
+  --danger: #a43636; --danger-soft: #fff0ee; --info: #176480; --info-soft: #e6f3fa;
+  --surface: #f9fcfe; --surface-elevated: #fff; --background: #eff7f8; --border: #c7dbdf; --border-strong: #7798a3;
+  --sky: #d0edf7; --grass: #c6dfb0; --grass-deep: #4c7957; --water: #a9d9e8; --sun: #f4d883; --path: #f6eccf;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 24px; --space-6: 32px; --space-7: 48px; --space-8: 64px;
+  --radius-sm: 8px; --radius-md: 16px; --radius-lg: 24px; --radius-pill: 999px;
+  --shadow-sm: 0 3px 10px #234d5a09; --shadow-md: 0 12px 32px #234d5a10; --shadow-raised: 0 6px 0 #123f5217, 0 12px 24px #234d5a15;
+  --stroke: 1px solid var(--border); --focus: 3px solid #946111; --duration: 160ms; --ease: ease-out;
+  --z-decoration: 0; --z-content: 1; --z-header: 5; --z-skip: 20;
+  --width-page: 1280px; --width-workspace: 1400px; --width-text: 760px;
+  --text-display: clamp(2.5rem, 4vw, 3.75rem); --text-h1: 2.25rem; --text-h2: 1.35rem; --text-h3: 1rem; --text-small: .8125rem;
+}

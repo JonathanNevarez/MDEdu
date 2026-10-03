@@ -7,10 +7,12 @@ import java.util.*;
 /** Immutable, provider-neutral contracts. No entities or executable student text. */
 public final class LlmTypes {
     private LlmTypes() {}
-    public enum Provider { DISABLED, FAKE, OPENAI }
+    public enum Provider { DISABLED, FAKE, OPENAI, GEMINI }
     public enum Purpose { FEEDBACK_GENERATION, UNKNOWN_CASE_CLASSIFICATION }
     public enum Status { SUCCESS, TIMEOUT, RATE_LIMITED, PROVIDER_ERROR, INVALID_RESPONSE, REFUSED, DISABLED }
-    public enum Source { OPENAI, FAKE, FALLBACK }
+    public enum Source { OPENAI, GEMINI, FAKE, FALLBACK;
+        public boolean isRemote(){return this==OPENAI || this==GEMINI;}
+    }
     public enum HintStage { SOCRATIC_QUESTION, CONCEPTUAL_HINT, ANALOGOUS_EXAMPLE, PARTIAL_HELP }
     public record ExecutionSummary(boolean goalReached, int steps, String executionStatus,
         Map<String,Integer> statementCounts, List<String> sensors, int nestingDepth) {

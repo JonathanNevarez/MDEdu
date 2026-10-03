@@ -7,6 +7,20 @@ Actualización documental: 02/10/2026.
 **FASES 0–9 COMPLETADAS Y VALIDADAS. FASE 10 COMPLETADA Y VALIDADA.
 FASE 11 NO INICIADA.**
 
+**Integración adicional GeminiLlmProvider completada** (ajuste post-Fase-10, sin nueva fase).
+Checkpoint inicial de este ajuste: `e549f1482e342c73bc42892704dbd2740614b969`.
+Cuatro proveedores intercambiables; OpenAI, Fake y Disabled conservados. Interactions v1,
+store=false, configuración independiente Gemini y fallback sin clave/modelo. V6 amplía
+solo CHECKs de metadata; V1–V5 intactas. Cambio autorizado del orquestador solo en metadata.
+Validación: 255 unit/MVC y 63 IT distintos (62 en verify completo más caso adicional
+validado dentro de los 16 GeminiFeedbackIT finales); frontend 53 tests, typecheck/build,
+8 E2E sin clave y 1 E2E Gemini HTTP local PASS. MDE/CLI/node --check PASS.
+335 archivos protegidos sin diferencias. Sin API real ni secretos; recursos de pruebas
+cerrados y volumen PostgreSQL conservado. [Evidencia](INTEGRACION_GEMINI_TEMPORAL.md).
+
+El resto de este apartado conserva la evidencia histórica del checkpoint Fase 10.
+
+
 Partida: `3b54a0ee540343f77e2b88cfd8a127f6ca66273d`.
 UI MDE formal independiente: seis EClasses, diez enums, 28 fuentes EMF y 14 XMI.
 Cadena ATL Task→Abstract→Concrete real en build headless; configuración final EMF

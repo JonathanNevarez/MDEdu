@@ -68,9 +68,9 @@ public class FeedbackOrchestrator {
         boolean usedFallback=feedback==null;
         if(usedFallback)feedback=fallback.generate(context);
         // Fallback uses the trusted catalog; all patterns/stages are contract-tested.
-        Source source=usedFallback?Source.FALLBACK:settings.provider()==Provider.OPENAI?Source.OPENAI:Source.FAKE;
+        Source source=usedFallback?Source.FALLBACK:settings.successSource();
         var dto=new FeedbackDto(UUID.randomUUID(),attempt,decision.decisionId(),Purpose.FEEDBACK_GENERATION,feedback.message(),feedback.question(),feedback.focus(),feedback.hintStage(),feedback.language(),
-            source,settings.provider(),settings.model(),source==Source.OPENAI,reason,classification,1,policy.values().version(),prompt.promptHash(),prompt.sanitizedContextHash(),Instant.now().truncatedTo(ChronoUnit.MICROS));
+            source,settings.provider(),settings.model(),source.isRemote(),reason,classification,1,policy.values().version(),prompt.promptHash(),prompt.sanitizedContextHash(),Instant.now().truncatedTo(ChronoUnit.MICROS));
         return store.save(student,config,dto,calls);
     }
     private ProviderResult safeCall(Prompt prompt) {

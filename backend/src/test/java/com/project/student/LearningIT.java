@@ -54,7 +54,7 @@ class LearningIT {
         assertTrue(unlocked(id,"SEQUENCES"));assertFalse(unlocked(id,"VARIABLES"));
         mvc.perform(get("/api/students/"+id+"/model")).andExpect(status().isOk()).andExpect(jsonPath("$.modelVersion").value(1));
         mvc.perform(get("/api/students/"+id+"/progress")).andExpect(status().isOk()).andExpect(jsonPath("$.levels.length()").value(4));
-        assertEquals(5,jdbc.queryForObject("select count(*) from flyway_schema_history where success",Integer.class));
+        assertEquals(6,jdbc.queryForObject("select count(*) from flyway_schema_history where success",Integer.class));
         assertEquals(0,jdbc.queryForObject("select count(*) from hint_usages",Integer.class));
     }
     @Test void twoStudentsAreIndependentAndSnapshotsRoundTrip()throws Exception {

@@ -110,7 +110,7 @@ class FeedbackIT {
         mvc.perform(post("/api/feedback/generate").contentType("application/json").content(json.writeValueAsString(Map.of("studentId",id,"attemptId",missing.attemptId())))).andExpect(status().isNotFound());
     }
     @Test void versionFourAndAuditContainNoRawPayloads() throws Exception {
-        assertEquals(5,jdbc.queryForObject("select count(*) from flyway_schema_history where success",Integer.class));
+        assertEquals(6,jdbc.queryForObject("select count(*) from flyway_schema_history where success",Integer.class));
         var id=learning.create("Secret Name").id();var attempt=submit(id,"SEQUENCES","SEQUENCES");var result=feedback.generate(id,attempt.attemptId());
         String row=jdbc.queryForObject("select response_json from feedback_records where id=?",String.class,result.feedbackId());
         assertFalse(row.contains("Secret Name"));assertFalse(row.contains("instructions"));assertEquals(64,result.promptHash().length());assertEquals(64,result.sanitizedContextHash().length());

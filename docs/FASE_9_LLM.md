@@ -199,3 +199,13 @@ Sin panel tutor, Transitioner, ui.ecore, Luma completa, telemetría general ni n
 Cuatro conceptos/actividades, cero refuerzos. Fase 10 no iniciada.
 
 [Verificación](VERIFICACION_FASE_9.md) · [API](API.md).
+
+## Proveedor adicional posterior: Gemini
+
+Ajuste independiente posterior a Fase 10, desde e549f14, en commit separado
+`feat: add gemini llm provider`. La evidencia histórica anterior se conserva.
+GeminiLlmProvider implementa el mismo contrato mediante Interactions v1, stateless,
+con schemas, sanitizer, vocabulario y fallback existentes. OpenAI permanece soportado.
+V6 amplía solo CHECKs de provider/source; V1–V5 no cambian. El orquestador únicamente
+ajusta metadata genérica, con autorización expresa; no cambia pedagogía.
+[Configuración y validación](INTEGRACION_GEMINI_TEMPORAL.md). Fase 11 no iniciada.

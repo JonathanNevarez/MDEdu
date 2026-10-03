@@ -185,3 +185,13 @@ Feedback y código son texto escapado. DISABLED y FAKE permiten validar sin API 
 Se autorizó V5 exclusivamente porque los intentos no conservaban ProgramDto: snapshot
 atómico con hash, sin backfill ni cambios en V1–V4. La configuración UI permanece derivada.
 La dificultad modifica presentación, no objetivos ni evaluación.
+
+## Post-Fase-10: proveedor Gemini temporal
+
+Se incorpora Gemini como adaptador intercambiable de LlmProvider usando Interactions v1.
+OpenAI permanece soportado y se selecciona por configuración. La cuota gratuita no es
+una dependencia del núcleo: indisponibilidad, 429 o salida rechazada usan el fallback
+existente. Sin sesiones remotas ni tools; store=false y contexto sanitizado.
+V6 solo amplía CHECKs que bloqueaban GEMINI. La autorización posterior permite sustituir
+dos expresiones de metadata del orquestador; la lógica pedagógica no cambia.
+[Detalles y evidencia](INTEGRACION_GEMINI_TEMPORAL.md). No inicia Fase 11.

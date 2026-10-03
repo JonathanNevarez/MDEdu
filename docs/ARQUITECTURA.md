@@ -281,6 +281,12 @@ transacción educativa ni lock de estudiante. Advisory lock de sesión serializa
 misma generación; guardado final de feedback/tags/auditoría es atómico.
 Fase 9 no modifica StudentModel ni acciones/fingerprint. API Responses por HttpClient,
 Fake determinista y fallback local disponibles. Sin key la aplicación funciona.
+
+Abstracción ampliada después de Fase 10: `LlmProvider` → `OpenAILlmProvider`,
+`GeminiLlmProvider`, `FakeLlmProvider`, `DisabledLlmProvider`.
+La factory selecciona por configuración; Gemini usa Interactions v1 con los mismos
+contratos y validadores. [Integración temporal](INTEGRACION_GEMINI_TEMPORAL.md).
+
 UI adaptativa completa, Luma y Transitioner siguen siendo Fase 10 NO INICIADA.
 [Diseño y límites](FASE_9_LLM.md).
 

@@ -207,3 +207,17 @@ Legacy produce PARTIAL y referencias separadas, sin backfill falso. Logs best ef
 audit crítico comparte transacción para rollback coherente. La timeline no recalcula.
 SessionStorage separa sesión de identidad; el cliente recupera sesiones obsoletas una vez.
 No se introduce Meta-UI ni analytics. [Detalle](FASE_11_TELEMETRIA.md).
+
+## Fase 12 — inspección sin efectos educativos
+
+La Meta-IU consume datos existentes y la timeline de Fase 11; no recalcula pedagogía,
+mastery, adaptación, feedback ni configuración UI. Los listados leen decisiones históricas
+persistidas; la inspección de reglas usa el snapshot real del loader y la de parámetros
+los valores inmutables del runtime con el mismo algoritmo de hash del manager.
+Sin autenticación administrativa previa, el MVP es read-only: no editar DSL/JSON,
+no endpoints PUT/PATCH, no controles ficticios. Capabilities explicita estas limitaciones.
+RuleGovernanceService, ParameterGovernanceService y ProposalReviewService se reservan
+como responsabilidades futuras con autorización, no como implementaciones simuladas.
+No V8 ni duplicación de StudentModel/decisiones. feedbackDetailLevel histórico ausente
+se informa como no registrado en vez de proyectar/auditar otra UI durante la consulta.
+[Alcance y límites](FASE_12_META_UI.md) · Fase 13 no iniciada.

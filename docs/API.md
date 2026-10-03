@@ -668,3 +668,28 @@ legacy: 200 PARTIAL sin backfill. Feedback puede estar vacío (no solicitado); r
 ser null (NO_ADAPTATION). No reejecuta ni genera feedback/código al consultar.
 El modelo de acceso sigue siendo pseudónimo de prototipo; no se añade autenticación.
 No existen endpoints update/delete de eventos ni UI docente.
+
+## Fase 12 — Meta-IU de solo lectura (implementada)
+
+Las rutas de inspección antes planificadas están ahora implementadas. No hay autenticación
+ni rol docente seguro; control de acceso robusto pendiente de hardening final. UUIDs
+pseudónimos no son credenciales. No se expone displayName en los contratos Meta-IU.
+
+| GET | Resultado |
+|---|---|
+| `/api/meta/capabilities` | Cuatro capacidades de lectura true; canMutateRules/canMutateParameters/canReviewProposals false |
+| `/api/meta/students?page=0&size=20` | Page de studentId, createdAt, lastInteraction, attemptCount, completedConceptCount |
+| `/api/meta/students/{id}` | Overview: modelo/fecha, mastery, progreso y conceptos con umbral/prerrequisitos |
+| `/api/meta/students/{id}/attempts?page=0&size=20` | Page de resúmenes persistidos, patterns y timelineUrl |
+| `/api/meta/students/{id}/adaptations?page=0&size=20` | Page de actividad/concepto y DecisionDto original |
+| `/api/adaptation/rules` | source, rulesetVersion, rulesetHash, reglas cargadas con condiciones legibles y acciones |
+| `/api/adaptation/parameters` | source, parametersVersion, parametersHash y values activos |
+| `/api/students/{studentId}/attempts/{attemptId}/timeline` | Endpoint Fase 11 reutilizado sin modificaciones |
+
+Page contiene items/page/size/total. size 1..50, page 0..100000; fuera de rango 400,
+UUID desconocido 404. studentId ajeno al intento sigue retornando 404 en timeline.
+No endpoints de escritura Meta-IU. PUT/PATCH sobre rules/parameters devuelven 405.
+Los listados no cargan timelines; traceStatus se consulta al abrir el detalle y la UI lo
+conserva en la fila durante esa consulta. No se sustituye un status desconocido por COMPLETE.
+Los servicios no generan feedback/UI ni eventos al leer. No raw prompts ni respuestas
+crudas del proveedor; feedback final validado como texto. [Contrato ampliado](FASE_12_META_UI.md).

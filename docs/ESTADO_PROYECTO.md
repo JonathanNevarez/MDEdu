@@ -5,7 +5,21 @@ Actualización documental: 02/10/2026.
 ## Estado actual
 
 **FASES 0–10 COMPLETADAS Y VALIDADAS. Integración Gemini COMPLETADA Y VALIDADA.
-FASE 11 COMPLETADA Y VALIDADA. FASE 12 NO INICIADA.**
+FASE 11 COMPLETADA Y VALIDADA. FASE 12 COMPLETADA Y VALIDADA. FASE 13 NO INICIADA.**
+
+Fase 12 parte de `c5e892bad6fc72deb45402e5afde837a6d38f6cd`.
+Meta-IU `/docente` de solo lectura: estudiantes pseudónimos, StudentModel/progreso,
+intentos, decisiones persistidas, reglas y parámetros activos y timeline de Fase 11.
+Sin auth/roles administrativos: capacidades de mutación/propuestas deshabilitadas;
+control de acceso robusto pendiente de hardening final. Sin V8 ni cambios pedagógicos.
+Validación: 261 unit/MVC + 80 IT, 67 frontend, typecheck/build, 10 E2E DISABLED y
+1 Gemini HTTP local PASS. MDE: Xtext 22, Acceleo 25, ATL 2; CLI/node --check PASS.
+474 archivos previos MDE/backend producción intactos; reglas/parámetros y hashes
+protegidos idénticos. Cuatro actividades, cero refuerzos, cero temas avanzados.
+Recursos de prueba cerrados, volumen PostgreSQL conservado; no API LLM real.
+[Diseño Fase 12](FASE_12_META_UI.md) · [Verificación Fase 12](VERIFICACION_FASE_12.md).
+
+## Histórico: cierre de Fase 11
 
 Fase 11 parte de `6215bf87c821bc3b446d801e3d28d913eff359cc`. V7 añade sessions y
 attempt_events append-only, correlación request/session/attempt, payloads tipados y
@@ -389,7 +403,7 @@ No queda ningún criterio obligatorio del entorno Fase 0 pendiente.
 No se añadieron dependencias Eclipse/Tycho al backend ni se modificaron frontend/ o mde/.
 La advertencia EGit sobre HOME no definido no impide la validación; no se cambió HOME.
 
-## Siguiente paso
+## Histórico: siguiente paso previsto en checkpoints anteriores
 
 **Fase 1 — metamodelo de programación / EMF-Ecore**, únicamente tras nueva autorización.
 El cierre actual se limita a los tres documentos, commit

@@ -311,3 +311,16 @@ UI se audita después de calcularse. La reconstrucción solo lee evidencia persi
 Sesión/requestId se propagan desde el cliente central; los tipos de evento frontend están
 limitados a apertura y navegación. No hay nuevo metamodelo ni providers modificados.
 [Diseño y límites](FASE_11_TELEMETRIA.md).
+
+## Fase 12 — Meta-IU docente implementada
+
+`/docente → MetaUiService → StudentModelProjectionService / progreso / decisiones persistidas`.
+`/docente → AdaptationInspectionService → AdaptationRuleLoader + AdaptationParametersConfig`.
+`/docente → AttemptTimelineService → evidencia histórica de Fase 11`.
+
+Solo lectura: las consultas no invocan comandos educativos, provider ni proyección UI.
+Listas paginadas, timeline bajo demanda y DTOs pseudónimos. No hay dominio ni BD duplicada,
+ni V8. Reglas/parametrización activos se inspeccionan en sus instancias de runtime.
+No existe auth/roles de producción: control de acceso robusto pendiente de hardening final.
+Capacidades de mutación y revisión de propuestas falsas; futuras capas de governance
+requieren autorización real antes de exponer writes. [Diseño](FASE_12_META_UI.md).

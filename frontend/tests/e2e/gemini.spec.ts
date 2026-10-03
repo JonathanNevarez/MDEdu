@@ -36,4 +36,11 @@ test('Gemini local HTTP adapter delivers validated feedback to the adaptive UI',
   expect(JSON.stringify(trace)).not.toContain('gemini-test-secret-never-log');
   writeFileSync(testInfo.outputPath('gemini-timeline.json'), JSON.stringify(trace, null, 2));
   await page.screenshot({ path: testInfo.outputPath('gemini-luma.png'), fullPage: true });
+  await page.goto('/docente');
+  await page.getByLabel('Estudiante pseudónimo').selectOption(id);
+  await page.getByRole('button', {name:'Intentos',exact:true}).click();
+  await page.getByRole('button', {name:`Abrir timeline ${attempt.attemptId}`,exact:true}).click();
+  await expect(page.getByRole('heading', {name:'GEMINI / GEMINI',exact:true})).toBeVisible();
+  await expect(page.getByText('llmUsed: true · Fallback: No', {exact:true})).toBeVisible();
+  await page.screenshot({path:testInfo.outputPath('gemini-teacher.png'),fullPage:true});
 });

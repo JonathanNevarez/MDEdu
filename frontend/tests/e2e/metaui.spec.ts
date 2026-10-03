@@ -1,0 +1,41 @@
+import { readFileSync, writeFileSync } from 'node:fs';
+import { test, expect } from '@playwright/test';
+const api=process.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8080';
+test('teacher reads two isolated students, persisted LOOPS, rules and active parameters', async ({page,request},info)=>{
+ await page.setViewportSize({width:1440,height:900});
+ const a=(await (await request.post(`${api}/api/students`,{data:{displayName:'META_PRIVATE_SENTINEL'}})).json()).id as string;
+ const b=(await (await request.post(`${api}/api/students`,{data:{}})).json()).id as string;
+ let attemptId='';
+ for(const level of ['SEQUENCES','VARIABLES','CONDITIONALS','LOOPS']) {
+  const program=JSON.parse(readFileSync(`../backend/src/test/resources/evaluation/${level==='LOOPS'?'LOOPS_MANUAL':level}.json`,'utf8'));
+  const response=await request.post(`${api}/api/attempts`,{data:{studentId:a,levelId:level,program,hintCount:0,resolutionTimeMs:1000}});
+  expect(response.status()).toBe(201);attemptId=(await response.json()).attemptId;
+ }
+ expect((await request.post(`${api}/api/feedback/generate`,{data:{studentId:a,attemptId}})).status()).toBe(200);
+ expect((await request.get(`${api}/api/students/${a}/attempts/${attemptId}/ui-configuration`)).status()).toBe(200);
+ const url=`${api}/api/students/${a}/attempts/${attemptId}/timeline`;
+ const before=await (await request.get(url)).json();const modelBefore=await (await request.get(`${api}/api/students/${a}/model`)).json();
+ const mutations:string[]=[];page.on('request',r=>{if(r.url().startsWith(api+'/api/')&&r.method()!=='GET')mutations.push(r.url());});
+ await page.goto('/docente');await page.getByLabel('Estudiante pseudónimo').selectOption(a);
+ await expect(page.getByRole('heading',{name:'LOOPS',exact:true})).toBeVisible();
+ await expect(page.getByText('META_PRIVATE_SENTINEL')).toHaveCount(0);
+ await page.screenshot({path:info.outputPath('teacher-model.png'),fullPage:true});
+ await page.getByRole('button',{name:'Intentos',exact:true}).click();
+ await page.getByRole('button',{name:`Abrir timeline ${attemptId}`,exact:true}).click();
+ const timeline=page.getByRole('region',{name:'Timeline del intento'});
+ await expect(timeline.getByText('COMPLETE',{exact:true})).toBeVisible();
+ await expect(timeline.getByRole('heading',{name:'FuncionalSinConcepto',exact:true})).toBeVisible();
+ await expect(timeline.getByRole('heading',{name:'DISABLED / FALLBACK',exact:true})).toBeVisible();
+ await expect(timeline).toContainText('REPETITIVE_SEQUENCE_WITHOUT_LOOP');
+ await expect(timeline.getByRole('region',{name:'Configuraciones UI auditadas'}).getByText(before.uiConfigurations[0].configurationFingerprint,{exact:true})).toBeVisible();
+ await page.screenshot({path:info.outputPath('teacher-timeline.png'),fullPage:true});
+ await page.getByRole('button',{name:'Adaptaciones',exact:true}).click();await expect(page.getByRole('heading',{name:'FuncionalSinConcepto',exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Reglas',exact:true}).click();await expect(page.getByRole('heading',{name:'Reglas de adaptación',exact:true})).toBeVisible();
+ await expect(page.getByText('FuncionalSinConcepto',{exact:true})).toHaveCount(2);
+ await page.screenshot({path:info.outputPath('teacher-rules.png'),fullPage:true});
+ await page.getByRole('button',{name:'Parámetros',exact:true}).click();await expect(page.getByText('masteryThreshold',{exact:true})).toBeVisible();await page.screenshot({path:info.outputPath('teacher-parameters.png'),fullPage:true});
+ await page.getByLabel('Estudiante pseudónimo').selectOption(b);await page.getByRole('button',{name:'Intentos',exact:true}).click();await expect(page.getByText('Sin intentos registrados.')).toBeVisible();await expect(page.getByRole('region',{name:'Timeline del intento'})).toHaveCount(0);
+ expect(mutations).toEqual([]);expect(await (await request.get(url)).json()).toEqual(before);expect(await (await request.get(`${api}/api/students/${a}/model`)).json()).toEqual(modelBefore);
+ expect((await request.get(`${api}/api/students/${b}/attempts/${attemptId}/timeline`)).status()).toBe(404);
+ writeFileSync(info.outputPath('teacher-evidence.json'),JSON.stringify({studentA:a,studentB:b,timeline:before,rules:await(await request.get(`${api}/api/adaptation/rules`)).json(),parameters:await(await request.get(`${api}/api/adaptation/parameters`)).json(),mutations},null,2));
+});

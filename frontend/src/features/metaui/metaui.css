@@ -1,0 +1,31 @@
+.page-content:has(.meta-ui) { max-width: 1280px; margin-top: 2rem; }
+.meta-ui { font-family: Tahoma, "Segoe UI", sans-serif; }
+.meta-ui h1 { max-width: none; }
+.meta-ui section, .meta-ui article { margin: 1.25rem 0; }
+.meta-ui article, .meta-ui > section, .meta-timeline { background: white; border: 1px solid #cdd9d6; border-radius: .6rem; padding: 1rem; }
+.meta-ui button, .meta-ui select { font: inherit; border: 1px solid #688780; border-radius: .3rem; padding: .55rem .8rem; background: white; color: #18323c; }
+.meta-ui label { display: block; font-weight: bold; margin-bottom: .5rem; }
+.meta-ui button { cursor: pointer; }
+.meta-ui button:disabled { opacity: .5; cursor: default; }
+.meta-ui button[aria-pressed="true"] { background: #0b5961; color: white; }
+.meta-ui :is(button,select,summary):focus-visible { outline: 3px solid #704500; outline-offset: 3px; }
+.meta-ui nav, .meta-pagination { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: 1rem 0; }
+.meta-ui summary { cursor: pointer; padding: .5rem 0; }
+.meta-ui code, .meta-ui dd { overflow-wrap: anywhere; }
+.meta-ui pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .88rem; }
+.meta-fields { margin: .7rem 0; }
+.meta-fields > div { display: grid; grid-template-columns: minmax(160px, 1fr) 2fr; gap: .6rem; border-bottom: 1px solid #edf1ef; padding: .3rem 0; }
+.meta-fields dt { font-weight: bold; font-size: .85rem; overflow-wrap: anywhere; }
+.meta-fields dd { margin: 0; min-width: 0; }
+.meta-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.meta-score { font-size: 1.6rem; color: #0b5961; }
+.meta-score small { font-size: 1rem; }
+.meta-table { overflow-x: auto; }
+.meta-ui table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+.meta-ui th, .meta-ui td { padding: .7rem; border-bottom: 1px solid #cdd9d6; text-align: left; }
+.meta-ui td { overflow-wrap: anywhere; }
+.meta-notice { border-left: 4px solid #97742c; padding-left: 1rem; }
+.meta-badge { display: inline-block; background: #e5efec; padding: .3rem .8rem; font-weight: bold; }
+.meta-timeline ol { padding-left: 1.7rem; }
+.meta-timeline li { margin-bottom: .7rem; }
+@media(max-width:700px) { .meta-cards { grid-template-columns: 1fr; } .meta-fields > div { grid-template-columns: 1fr; } }

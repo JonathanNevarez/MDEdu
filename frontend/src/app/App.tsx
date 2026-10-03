@@ -5,6 +5,8 @@ import { lazy, Suspense } from 'react';
 const LaboratoryPage = lazy(() => import('../features/programming/pages/LaboratoryPage').then(m => ({ default: m.LaboratoryPage })));
 const AdventurePage = lazy(() => import('../features/game/AdventurePage').then(m => ({ default: m.AdventurePage })));
 
+const MetaUiPage = lazy(() => import('../features/metaui/MetaUiPage').then(m => ({ default: m.MetaUiPage })));
+
 function AppLayout() {
   return (
     <>
@@ -15,6 +17,7 @@ function AppLayout() {
           <NavLink to="/" end>Inicio</NavLink>
           <NavLink to="/aventura">Aventura</NavLink>
           <NavLink to="/laboratorio">Laboratorio libre</NavLink>
+          <NavLink to="/docente">Vista docente</NavLink>
         </nav>
       </header>
       <main id="contenido" tabIndex={-1} className="page-content">
@@ -33,6 +36,7 @@ export function App() {
         <Route path="laboratorio" element={<Suspense fallback={<p>Cargando editor…</p>}><LaboratoryPage /></Suspense>} />
         <Route path="aventura" element={<Suspense fallback={<p>Cargando aventura…</p>}><AdventurePage /></Suspense>} />
         <Route path="aventura/:levelId" element={<Suspense fallback={<p>Cargando nivel…</p>}><AdventurePage /></Suspense>} />
+        <Route path="docente" element={<Suspense fallback={<p>Cargando vista docente…</p>}><MetaUiPage /></Suspense>} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

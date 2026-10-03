@@ -31,6 +31,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 @org.junit.jupiter.api.extension.ExtendWith(org.springframework.boot.test.system.OutputCaptureExtension.class)
+@org.springframework.security.test.context.support.WithMockUser(roles="TEACHER")
 @Testcontainers @SpringBootTest(properties={"spring.config.import=","LLM_PROVIDER=DISABLED","LLM_API_KEY="}) @AutoConfigureMockMvc
 class TelemetryIT {
  @Container static final PostgreSQLContainer<?> DB=new PostgreSQLContainer<>("postgres:17-bookworm");

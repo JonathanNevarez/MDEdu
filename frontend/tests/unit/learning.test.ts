@@ -42,7 +42,7 @@ describe('Identidad y progreso del servidor', () => {
   });
   it('un error de red no sustituye identidad existente', async () => {
     localStorage.setItem('mdedu.student.id.v1', 'A'); const fetch = vi.fn().mockRejectedValue(new Error('offline')); vi.stubGlobal('fetch', fetch);
-    const { ensureStudent } = await import('../../src/features/game/learning'); await expect(ensureStudent()).rejects.toThrow('offline'); expect(fetch).toHaveBeenCalledTimes(1); expect(localStorage.getItem('mdedu.student.id.v1')).toBe('A');
+    const { ensureStudent } = await import('../../src/features/game/learning'); await expect(ensureStudent()).rejects.toThrow('No se pudo conectar con el servidor'); expect(fetch).toHaveBeenCalledTimes(1); expect(localStorage.getItem('mdedu.student.id.v1')).toBe('A');
   });
   it('locked/unlocked/completed se toman exclusivamente del servidor', async () => {
     const { serverLevelStatus } = await import('../../src/features/game/learning'); expect(serverLevelStatus('SEQUENCES', empty)).toBe('UNLOCKED'); expect(serverLevelStatus('VARIABLES', empty)).toBe('LOCKED');

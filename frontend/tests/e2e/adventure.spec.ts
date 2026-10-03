@@ -19,8 +19,8 @@ test('mapa, secuencia real, replay, reinicio y progreso persistido', async ({ pa
   await expect(page.getByTestId('game-blockly').locator('.blocklySvg')).toBeVisible();
   await expect(page.getByRole('img', { name: /GridWorld: personaje en 1, 1/ })).toBeVisible();
   for (const name of ['+ Avanzar', '+ Avanzar', '+ Girar derecha', '+ Avanzar', '+ Avanzar'])
-    await page.getByRole('button', { name, exact: true }).click();
-  await page.getByRole('button', { name: '▶ Ejecutar', exact: true }).click();
+    { await page.getByRole('button', { name, exact: true }).focus(); await page.keyboard.press('Enter'); }
+  await page.getByRole('button', { name: '▶ Ejecutar', exact: true }).focus(); await page.keyboard.press('Enter');
   await expect(page.getByRole('img', { name: /GridWorld: personaje en 3, 3, dirección SOUTH/ })).toBeVisible();
   await expect(page.getByRole('status').filter({ hasText: '¡Nivel completado!' })).toBeVisible();
   expect(executions).toBe(1);

@@ -1,167 +1,71 @@
-# Herramienta educativa adaptativa: MDE + LLM
+# MDEdu — herramienta educativa adaptativa MDE + LLM
 
-Proyecto académico para enseñar lógica de programación a estudiantes universitarios
-de nivelación mediante bloques, modelos formales y adaptación explicable.
+Prototipo de tesis para enseñar lógica de programación a estudiantes universitarios de nivelación. Integra modelos formales, ejecución controlada, adaptación explicable y feedback opcional de lenguaje natural.
 
-**Estado: Fase 0 en curso. JDK21, Maven/Wrapper, Node/npm y Git verificados.** El backend
-compila y sus 3 pruebas MVC pasan. El frontend compila, sus 2 pruebas unitarias
-pasan y Vite respondió HTTP200; el servidor temporal quedó detenido. Siguen
-pendientes E2E, arranque completo del backend, 4 pruebas de integración y
-PostgreSQL. No se avanza a F1.
+El contenido está cerrado: **SEQUENCES, VARIABLES, CONDITIONALS y LOOPS**, cuatro actividades principales, cero refuerzos reales y ningún tema avanzado. **Fases 0–13 completadas y validadas**; la evidencia de calidad final se registra en [Fase 13](docs/VERIFICACION_FASE_13.md).
 
-Repositorio Git local en main, con identidad local autorizada y sin remotos.
-El snapshot inicial incluye [los 98 archivos revisados](docs/PRIMER_COMMIT.md).
-La documentación se prepara antes del commit; el cierre se comprueba mediante
-el historial Git y el informe local .git/FASE_0_SNAPSHOT.txt.
+## Arquitectura
 
-## Alcance actual
+Blockly → Program EMF → validación → Acceleo → GridWorld → evaluación/patrones → StudentModel/ContextModel → Xtext/ECA → AdaptationManager → feedback LLM/fallback → UI MDE/ATL → React/Luma → telemetría → Meta-IU docente.
 
-- `frontend/`: React, TypeScript, Vite y React Router; inicio en español y pruebas
-  Vitest/Testing Library/Playwright preparadas.
-- `backend/`: Java 21, Spring Boot, Maven, PostgreSQL, Flyway, JPA, configuración
-  CORS y health check; pruebas JUnit 5/Testcontainers preparadas.
-- `mde/`: carpetas reservadas y documentadas para EMF/Ecore/XMI, ATL, Acceleo y Xtext.
-- `docker-compose.yml`: PostgreSQL local con persistencia y comprobación de salud.
-- `docs/`: arquitectura, contratos, plan por fases, decisiones y evidencia.
+Java 21, Spring Boot 3.5.16, PostgreSQL 17/Flyway V1–V7; React 19, TypeScript, Vite y Blockly 13. Maven Wrapper 3.9.16; EMF, Xtext, Acceleo y ATL. Docker incorpora Nginx y health checks. No se ejecuta el JavaScript generado: GridWorld interpreta operaciones permitidas.
 
-Todavía no hay editor Blockly, metamodelos ejecutables, actividades, adaptación,
-LLM ni flujo educativo. El código inicial corresponde únicamente a preparación.
+## Inicio en desarrollo (PowerShell)
 
-## Preparar herramientas
-
-Seguir [HERRAMIENTAS](docs/HERRAMIENTAS.md): **JDK 21, Maven Wrapper 3.9.16, Node 24 LTS
-(>=24.15.0, <25) con npm, Docker Desktop con contenedores Linux y Compose v2**.
-Git es recomendado. La matriz Eclipse/MDE se valida desde F1.
-
-Abrir PowerShell en esta carpeta después de instalar:
+Requisitos: Git, JDK 21, Node 24 (>=24.15.0, <25), Docker Desktop operativo con Linux containers. Resolver dependencias necesita red; no se requiere API LLM.
 
 ```powershell
-java -version
-javac -version
-.\backend\mvnw.cmd -version
-node --version
-npm.cmd --version
-docker version
-docker compose version
-```
-
-Las instrucciones siguientes incluyen pasos ya verificados y pasos pendientes;
-consultar el registro de verificación para distinguirlos. Solo ejecutar instalaciones
-adicionales con autorización. Las primeras descargas de dependencias requieren red.
-
-## PostgreSQL y variables locales
-
-Desde la raíz, crear `.env` solo si no existe y editar `DB_PASSWORD` con una
-contraseña local propia, no vacía. El archivo está ignorado por Git. Usar formato
-`CLAVE=valor` sin comillas ni interpolaciones; una contraseña alfanumérica aleatoria
-permite compartirlo entre Compose y la configuración Java.
-
-```powershell
-if (-not (Test-Path -LiteralPath .env)) {
-  Copy-Item -LiteralPath .env.example -Destination .env
-}
-```
-
-Una vez editado `.env`:
-
-```powershell
-docker compose config --quiet
-docker compose up -d --wait postgres
-docker compose ps
-docker compose exec -T postgres psql -U adaptativa -d adaptativa -c "SELECT 1;"
-```
-
-La consulta usa los nombres predeterminados; ajustarlos si cambias DB_USER/DB_NAME.
-El puerto publicado es `127.0.0.1:5432`, configurable por DB_PORT. No imprimir
-configuración resuelta con credenciales en informes. Ver [docker/README](docker/README.md)
-para persistencia, contraseña del volumen y pendiente de fijar digest.
-
-## Backend
-
-Compilación y pruebas sin Docker, desde la raíz (ya verificadas):
-
-```powershell
-Set-Location backend
-.\mvnw.cmd clean compile
-.\mvnw.cmd test
-```
-
-El Wrapper fija Maven3.9.16 y su hash, descargándolo a la caché del usuario;
-las tareas normales no requieren Maven global. JDK21 debe estar disponible.
-
-Cuando Docker/PostgreSQL estén preparados y autorizados, desde backend:
-
-```powershell
-.\mvnw.cmd verify
-.\mvnw.cmd spring-boot:run
-```
-
-`mvnw.cmd verify` compila, ejecuta pruebas MVC y pruebas de integración con PostgreSQL
-aislado mediante Testcontainers. Docker debe estar activo. Las pruebas no usan
-credenciales de `.env`; el arranque local sí importa `../.env`.
-
-Desde otra terminal:
-
-```powershell
-Invoke-RestMethod http://localhost:8080/actuator/health
-```
-
-Resultado esperado: `status: UP`, con conexión a BD comprobada y sin detalles
-internos. El backend puede fallar al iniciar si Flyway no conecta con PostgreSQL.
-Ver [backend/README](backend/README.md) para variables y límites.
-
-## Frontend
-
-En otra terminal desde la raíz:
-
-```powershell
-Set-Location frontend
+git clone https://github.com/JonathanNevarez/MDEdu.git
+cd MDEdu
+Copy-Item .env.example .env
+# Editar .env: DB_PASSWORD, META_UI_USERNAME y META_UI_PASSWORD propios.
+$env:MAVEN_OPTS = '-Xmx384m'
+.\backend\mvnw.cmd -f mde/pom.xml clean install
+.\backend\mvnw.cmd -f backend/pom.xml verify
+cd frontend
 npm.cmd ci
-npm.cmd run build
-npm.cmd test
-npm.cmd run dev
+npx.cmd playwright install chromium
+cd ..
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-dev.ps1
 ```
 
-Abrir `http://127.0.0.1:5173`. La página de preparación funciona sin backend.
-Conservar y versionar `package-lock.json`, generado por la primera instalación
-validada. En PowerShell, `npm.cmd` funciona sin cambiar la política de scripts.
-El smoke E2E queda pendiente de autorización: requiere descargar Chromium y
-auxiliares (~327 MB). Después de autorizarlo, ejecutar desde frontend:
+Abrir `http://127.0.0.1:5173/aventura`. La Meta-IU está en `/docente`, con login real y consulta de solo lectura. La contraseña docente debe tener al menos 12 caracteres; no hay credenciales predeterminadas. Detener con `scripts/stop-dev.ps1`; los datos PostgreSQL se conservan.
+
+## Docker completo
+
+Configurar `.env` como arriba, `LLM_PROVIDER=DISABLED`, `CORS_ALLOWED_ORIGINS=http://127.0.0.1:8088`. Solo en HTTP local: `SESSION_COOKIE_SECURE=false`; en HTTPS productivo debe ser `true`.
 
 ```powershell
-npm.cmd run test:e2e:install
-npm.cmd run test:e2e
+docker compose -f docker-compose.app.yml build backend
+docker compose -f docker-compose.app.yml build frontend
+docker compose -f docker-compose.app.yml up -d --wait
+# http://127.0.0.1:8088
+docker compose -f docker-compose.app.yml down
 ```
 
-El smoke E2E compila y levanta su propio preview en 4173.
+En equipos de 16 GB usar compilaciones secuenciales. `scripts/docker-smoke.ps1` limita el constructor a 1536 MiB y dos CPU, levanta una base nueva y prueba el flujo sin claves externas. Conserva los volúmenes; no modifica el PostgreSQL de desarrollo. Ver [despliegue y recuperación](docs/DESPLIEGUE.md).
 
-Para finalizar los servidores locales, usar Ctrl+C en sus terminales. Detener
-PostgreSQL con `docker compose stop` desde la raíz conserva sus datos.
+## Configuración y proveedores
 
-## Cierre de Fase 0
+`.env.example` enumera DB, credenciales docentes, CORS, puerto, cookie y LLM. Nunca publicar `.env`. `DISABLED` mantiene todo el flujo mediante fallback determinista. `GEMINI` requiere `GEMINI_API_KEY`/`GEMINI_MODEL`; `OPENAI`, `LLM_API_KEY`/`LLM_MODEL`. `FAKE` se reserva para pruebas. Los proveedores no deciden la pedagogía; sus respuestas se validan y se sustituyen por fallback ante fallo, timeout o cuota. Las claves solo llegan al backend.
 
-Faltan E2E del frontend, pruebas backend de integración,
-arranque del backend, consulta PostgreSQL y health. Registrar resultados en
-[VERIFICACION_FASE_0](docs/VERIFICACION_FASE_0.md) y actualizar
-[ESTADO_PROYECTO](docs/ESTADO_PROYECTO.md). Solo entonces cerrar F0 y comenzar F1.
+Cuotas: `LLM_RATE_LIMIT_REQUESTS`, `LLM_RATE_LIMIT_WINDOW_SECONDS`, `LLM_RATE_LIMIT_GLOBAL_REQUESTS`. Timeout/retries: `LLM_TIMEOUT_MS`, `LLM_MAX_RETRIES`. Son límites en memoria por instancia.
 
-Java, TypeScript, pruebas MVC/unitarias y HTTP frontend se validaron con ejecución
-real. Compose, integración con DB, navegador real y compatibilidad MDE siguen
-pendientes. La base usa Spring Boot 3.5.16 para conservar la línea de
-JUnit 5; su soporte debe revisarse antes de desplegar, según el
-[registro de decisiones](docs/DECISIONES_ARQUITECTURA.md).
+## Verificación
 
-## Documentación
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-all.ps1
+```
 
-- [Plan y riesgos](docs/PLAN_IMPLEMENTACION.md)
-- [Arquitectura y diagramas](docs/ARQUITECTURA.md)
-- [Metamodelos y transformaciones previstos](docs/MODELOS_MDE.md)
-- [Reglas de adaptación](docs/REGLAS_ADAPTACION.md)
-- [API configurada y contratos futuros](docs/API.md)
-- [Decisiones de arquitectura](docs/DECISIONES_ARQUITECTURA.md)
-- [Estado y verificaciones pendientes](docs/ESTADO_PROYECTO.md)
-- [Inventario de entrega](docs/INVENTARIO_ARCHIVOS.md)
+Ejecuta secuencialmente MDE clean/install, backend clean/test/verify, frontend fresh install/tests/typecheck/build, Chromium E2E/axe, Gemini HTTP local, comprobación de secretos y smoke Docker. Fallos propagan código distinto de cero. No usa APIs externas reales. Evidencia detallada en [VERIFICACION_FASE_13](docs/VERIFICACION_FASE_13.md).
 
-MDE representa y transforma; el motor determinista ejecuta y evalúa; el modelo
-del estudiante mantiene estado; las reglas deciden; el manager coordina;
-el LLM explica y complementa; la IU presenta; la telemetría aporta evidencia.
+## Alcance y límites
+
+La autenticación docente no reemplaza la identidad/autorización individual del estudiante: los identificadores estudiantiles son pseudónimos de prototipo. No es un sistema multiinstitución ni una plataforma pública lista para datos personales. El despliegue HTTPS, backups y gestión de credenciales corresponden al operador. Accesibilidad apunta a WCAG 2.2 AA con evaluación automatizada y casos principales; no es una certificación y Blockly conserva limitaciones.
+
+- [Seguridad y fronteras](docs/SEGURIDAD.md)
+- [Accesibilidad](docs/ACCESIBILIDAD.md)
+- [API](docs/API.md)
+- [Arquitectura](docs/ARQUITECTURA.md)
+- [Estado e historia](docs/ESTADO_PROYECTO.md)
+- [Plan de implementación](docs/PLAN_IMPLEMENTACION.md)

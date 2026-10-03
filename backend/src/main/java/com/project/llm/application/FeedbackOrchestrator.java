@@ -33,7 +33,7 @@ public class FeedbackOrchestrator {
         return lock.withLock(key,()->{
             var existing=store.existing(attempt,decision.decisionId(),policy.values().version(),config);
             if(existing!=null)return existing;
-            return create(student,attempt,evidence,decision,config);
+            try(var scope=com.project.llm.provider.LlmRateLimiter.forStudent(student)){return create(student,attempt,evidence,decision,config);}
         });
     }
     private FeedbackDto create(UUID student,UUID attempt,AttemptEvidence evidence,DecisionDto decision,String config) {

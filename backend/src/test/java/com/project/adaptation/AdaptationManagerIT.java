@@ -25,6 +25,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@org.springframework.security.test.context.support.WithMockUser(roles="TEACHER")
 @Testcontainers @SpringBootTest(properties="spring.config.import=") @AutoConfigureMockMvc
 class AdaptationManagerIT {
     @Container static final PostgreSQLContainer<?> DB=new PostgreSQLContainer<>("postgres:17-bookworm");
@@ -103,13 +104,13 @@ class AdaptationManagerIT {
     @Test void endpointsAndClientCannotOverridePedagogy() throws Exception {
         var id=learning.create(null).id();var other=learning.create(null).id();var response=submit(id,"SEQUENCES","SEQUENCES");
         String body=json.writeValueAsString(Map.of("studentId",id,"attemptId",response.attemptId(),"masteryScore",1,"selectedRule","FORGED"));
-        mvc.perform(post("/api/adaptation/decide").contentType("application/json").content(body)).andExpect(status().isOk())
+        mvc.perform(post("/api/adaptation/decide").with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf()).contentType("application/json").content(body)).andExpect(status().isOk())
             .andExpect(jsonPath("$.decisionId").value(response.adaptation().decisionId().toString())).andExpect(jsonPath("$.selectedRule").doesNotExist());
         mvc.perform(get("/api/adaptation/decisions/"+response.adaptation().decisionId())).andExpect(status().isOk()).andExpect(jsonPath("$.llmUsed").value(false));
         mvc.perform(get("/api/attempts/"+response.attemptId()+"/adaptation")).andExpect(status().isOk());
         for(var pair:List.of(Map.of("studentId",UUID.randomUUID(),"attemptId",response.attemptId()),Map.of("studentId",id,"attemptId",UUID.randomUUID()),Map.of("studentId",other,"attemptId",response.attemptId())))
-            mvc.perform(post("/api/adaptation/decide").contentType("application/json").content(json.writeValueAsString(pair))).andExpect(status().isNotFound());
-        mvc.perform(post("/api/adaptation/decide").contentType("application/json").content("{}")).andExpect(status().isBadRequest());
+            mvc.perform(post("/api/adaptation/decide").with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf()).contentType("application/json").content(json.writeValueAsString(pair))).andExpect(status().isNotFound());
+        mvc.perform(post("/api/adaptation/decide").with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf()).contentType("application/json").content("{}")).andExpect(status().isBadRequest());
     }
     @Test void postAttemptHasAdaptationAndStatelessDoesNotPersist() throws Exception {
         var id=learning.create(null).id();
@@ -124,7 +125,7 @@ class AdaptationManagerIT {
         var id=learning.create(null).id();var attempt=submit(id,"SEQUENCES","SEQUENCES").attemptId();
         jdbc.update("delete from adaptation_decisions where attempt_id=?",attempt);jdbc.update("delete from adaptation_attempt_inputs where attempt_id=?",attempt);
         clearInvocations(execution,evaluation);
-        mvc.perform(post("/api/adaptation/decide").contentType("application/json").content(json.writeValueAsString(Map.of("studentId",id,"attemptId",attempt)))).andExpect(status().isConflict());
+        mvc.perform(post("/api/adaptation/decide").with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf()).contentType("application/json").content(json.writeValueAsString(Map.of("studentId",id,"attemptId",attempt)))).andExpect(status().isConflict());
         verifyNoInteractions(execution,evaluation);
     }
 }

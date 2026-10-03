@@ -1,9 +1,11 @@
+import { authenticateTeacher, loginTeacherPage } from './teacherAuth';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 
 // Opt-in only with the backend test-classpath launcher. Never calls the live provider.
 test('Gemini local HTTP adapter delivers validated feedback to the adaptive UI', async ({ page, request }, testInfo) => {
   test.skip(process.env.GEMINI_MOCK_E2E !== 'true', 'Requires GeminiMockApplication with loopback HTTP');
+  await authenticateTeacher(request);
   const api = process.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8080';
   const student = await request.post(`${api}/api/students`, { data: { displayName: 'Local browser fixture' } });
   expect(student.status()).toBe(201);
@@ -36,6 +38,7 @@ test('Gemini local HTTP adapter delivers validated feedback to the adaptive UI',
   expect(JSON.stringify(trace)).not.toContain('gemini-test-secret-never-log');
   writeFileSync(testInfo.outputPath('gemini-timeline.json'), JSON.stringify(trace, null, 2));
   await page.screenshot({ path: testInfo.outputPath('gemini-luma.png'), fullPage: true });
+  await loginTeacherPage(page);
   await page.goto('/docente');
   await page.getByLabel('Estudiante pseudónimo').selectOption(id);
   await page.getByRole('button', {name:'Intentos',exact:true}).click();

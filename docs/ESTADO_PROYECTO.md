@@ -4,8 +4,11 @@ Actualización documental: 02/10/2026.
 
 ## Estado actual
 
-**FASES 0–10 COMPLETADAS Y VALIDADAS. Integración Gemini COMPLETADA Y VALIDADA.
-FASE 11 COMPLETADA Y VALIDADA. FASE 12 COMPLETADA Y VALIDADA. FASE 13 NO INICIADA.**
+**FASES 0–13 COMPLETADAS Y VALIDADAS. Integración Gemini COMPLETADA Y VALIDADA. PROTOTIPO FUNCIONAL COMPLETADO.**
+
+Fase 13 parte de `8c95a04adf880c7511b1e66f82c11163da71c191`: autenticación docente real, CSRF/sesiones, límites/errores seguros, cuota LLM, accesibilidad, Docker completo, scripts y documentación final. Pedagogía y activos protegidos intactos; cuatro actividades, cero refuerzos, sin V8. Validación: 265 unit/MVC + 87 IT, 73 frontend, 49 MDE, 14 E2E DISABLED + 2 Gemini + 4 Docker/Nginx. Axe cero serious/critical; residual moderate de Blockly documentado. Sin APIs reales. [Evidencia final](VERIFICACION_FASE_13.md). No existe Fase 14.
+
+## Histórico: cierre de Fase 12
 
 Fase 12 parte de `c5e892bad6fc72deb45402e5afde837a6d38f6cd`.
 Meta-IU `/docente` de solo lectura: estudiantes pseudónimos, StudentModel/progreso,

@@ -15,9 +15,12 @@ import java.util.concurrent.Flow;
 /** Stateless Gemini Interactions v1 adapter. Production endpoint is fixed; loopback constructor supports real HTTP tests. */
 public class GeminiLlmProvider implements LlmProvider {
     private final LlmSettings config;private final URI endpoint;private final ObjectMapper json=new ObjectMapper();
-    private final HttpClient http;
+    private final HttpClient http;private final LlmRateLimiter quota;
     public GeminiLlmProvider(LlmSettings config){this(config,URI.create("https://generativelanguage.googleapis.com/v1/interactions"));}
-    public GeminiLlmProvider(LlmSettings config,URI endpoint) {
+    public GeminiLlmProvider(LlmSettings config,LlmRateLimiter quota){this(config,URI.create("https://generativelanguage.googleapis.com/v1/interactions"),quota);}
+    public GeminiLlmProvider(LlmSettings config,URI endpoint){this(config,endpoint,new LlmRateLimiter());}
+    public GeminiLlmProvider(LlmSettings config,URI endpoint,LlmRateLimiter quota) {
+        this.quota=quota;
         if(!endpoint.toString().equals("https://generativelanguage.googleapis.com/v1/interactions") && !("http".equals(endpoint.getScheme()) && Set.of("127.0.0.1","localhost","[::1]").contains(endpoint.getHost())))throw new IllegalArgumentException("Unsupported provider endpoint");
         this.config=config;this.endpoint=endpoint;http=HttpClient.newBuilder().connectTimeout(Duration.ofMillis(config.timeoutMs())).followRedirects(HttpClient.Redirect.NEVER).build();
     }
@@ -30,6 +33,7 @@ public class GeminiLlmProvider implements LlmProvider {
             new ResponseFormat("text","application/json",json.readTree(p.schemaJson())),new GenerationConfig(1000)));}
         catch(Exception e){return ProviderResult.failure(Status.INVALID_RESPONSE,0);}
         for(int n=1;n<=config.maxRetries()+1;n++) {
+            if(!quota.acquire())return ProviderResult.failure(Status.RATE_LIMITED,n-1);
             Status failure;boolean retry;
             CompletableFuture<HttpResponse<String>> pending=null;
             try {

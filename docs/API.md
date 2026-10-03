@@ -666,14 +666,13 @@ auditado. Actividad bloqueada: 409; tipo no permitido/DTO inválido: 400; refere
 La timeline ordena eventos por sequence; devuelve COMPLETE/PARTIAL/INCONSISTENT. Intentos
 legacy: 200 PARTIAL sin backfill. Feedback puede estar vacío (no solicitado); regla puede
 ser null (NO_ADAPTATION). No reejecuta ni genera feedback/código al consultar.
-El modelo de acceso sigue siendo pseudónimo de prototipo; no se añade autenticación.
-No existen endpoints update/delete de eventos ni UI docente.
+En el checkpoint Fase 11 el acceso era pseudónimo y no había UI docente. Fase 12 añadió la UI y Fase 13 protege la inspección docente mediante sesión. No existen endpoints update/delete de eventos.
 
 ## Fase 12 — Meta-IU de solo lectura (implementada)
 
-Las rutas de inspección antes planificadas están ahora implementadas. No hay autenticación
-ni rol docente seguro; control de acceso robusto pendiente de hardening final. UUIDs
-pseudónimos no son credenciales. No se expone displayName en los contratos Meta-IU.
+Las rutas de inspección están implementadas. Desde Fase 13 requieren sesión docente;
+el checkpoint Fase 12 todavía no tenía autenticación. UUIDs pseudónimos no son
+credenciales. No se expone displayName en los contratos Meta-IU.
 
 | GET | Resultado |
 |---|---|
@@ -688,8 +687,18 @@ pseudónimos no son credenciales. No se expone displayName en los contratos Meta
 
 Page contiene items/page/size/total. size 1..50, page 0..100000; fuera de rango 400,
 UUID desconocido 404. studentId ajeno al intento sigue retornando 404 en timeline.
-No endpoints de escritura Meta-IU. PUT/PATCH sobre rules/parameters devuelven 405.
+No endpoints de escritura Meta-IU. PUT/PATCH autenticados y con CSRF válido sobre rules/parameters devuelven 405.
 Los listados no cargan timelines; traceStatus se consulta al abrir el detalle y la UI lo
 conserva en la fila durante esa consulta. No se sustituye un status desconocido por COMPLETE.
 Los servicios no generan feedback/UI ni eventos al leer. No raw prompts ni respuestas
 crudas del proveedor; feedback final validado como texto. [Contrato ampliado](FASE_12_META_UI.md).
+
+## Fase 13: autenticación y errores
+
+`GET /api/teacher/csrf` devuelve token/headerName y crea sesión si hace falta. Enviar ese header con `POST /api/teacher/login` (form username/password) y `POST /api/teacher/logout`; éxito 204. `GET /api/teacher/session` responde 200 autenticado o 401. Cookie HttpOnly/SameSite Strict, Secure en prod. No persistir credenciales en el cliente.
+
+Requieren docente: `/api/meta/**`, `/api/adaptation/**`, `/api/attempts/{id}/adaptation`, timelines de estudiantes e índices de sesión. Meta-IU no añade mutaciones. Las APIs estudiantiles existentes permanecen anónimas; los UUID no son un sistema de autenticación de estudiantes.
+
+Errores contienen `timestamp`, `status`, `code`, `message`, `requestId`. Los errores de dominio mantienen su diagnóstico anterior; `httpStatus` identifica el estado HTTP cuando `status` contiene el estado histórico del juego. Categorías: VALIDATION_ERROR, UNAUTHORIZED, FORBIDDEN, RESOURCE_NOT_FOUND, CONFLICT, RATE_LIMITED e INTERNAL_ERROR. JSON >256 KiB: 413; UUID/enum/paginación inválidos: 400. Sin SQL ni stack traces en respuestas.
+
+`/actuator/health/liveness` comprueba vida del proceso; `/actuator/health/readiness` también exige DB. Solo se expone estado. CORS enumera orígenes explícitos en `CORS_ALLOWED_ORIGINS`; clientes docentes incluyen cookies y CSRF. Cuota LLM excedida produce feedback normal 200 con `source=FALLBACK`, `fallbackReason=RATE_LIMITED`, sin otra llamada externa.

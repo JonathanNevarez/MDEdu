@@ -324,3 +324,9 @@ ni V8. Reglas/parametrización activos se inspeccionan en sus instancias de runt
 No existe auth/roles de producción: control de acceso robusto pendiente de hardening final.
 Capacidades de mutación y revisión de propuestas falsas; futuras capas de governance
 requieren autorización real antes de exponer writes. [Diseño](FASE_12_META_UI.md).
+
+## Fronteras de calidad de Fase 13
+
+La tubería pedagógica y sus modelos no cambian. Spring Security delimita rutas docentes con sesión/CSRF, mientras la API estudiantil conserva su contrato anónimo. Filtros limitan payload y correlacionan solicitudes; advice normaliza errores. Un limitador sincronizado y acotado cobra cada intento HTTP de proveedores externos. React incorpora ErrorBoundary, cliente HTTP compartido y guard docente, respaldado por enforcement en backend.
+
+El despliegue completo usa Nginx sin root para SPA/proxy `/api`, backend Java 21 sin root y PostgreSQL en volumen independiente. Health coordina el orden DB/backend/frontend. Dockerfiles multietapa construyen artefactos MDE desde fuente. El Compose anterior de DB local permanece intacto. Ver SEGURIDAD.md y DESPLIEGUE.md para límites y operación.

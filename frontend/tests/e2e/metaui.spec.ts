@@ -1,7 +1,9 @@
+import { authenticateTeacher, loginTeacherPage } from './teacherAuth';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 const api=process.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8080';
 test('teacher reads two isolated students, persisted LOOPS, rules and active parameters', async ({page,request},info)=>{
+ await authenticateTeacher(request);
  await page.setViewportSize({width:1440,height:900});
  const a=(await (await request.post(`${api}/api/students`,{data:{displayName:'META_PRIVATE_SENTINEL'}})).json()).id as string;
  const b=(await (await request.post(`${api}/api/students`,{data:{}})).json()).id as string;
@@ -15,6 +17,7 @@ test('teacher reads two isolated students, persisted LOOPS, rules and active par
  expect((await request.get(`${api}/api/students/${a}/attempts/${attemptId}/ui-configuration`)).status()).toBe(200);
  const url=`${api}/api/students/${a}/attempts/${attemptId}/timeline`;
  const before=await (await request.get(url)).json();const modelBefore=await (await request.get(`${api}/api/students/${a}/model`)).json();
+ await loginTeacherPage(page);
  const mutations:string[]=[];page.on('request',r=>{if(r.url().startsWith(api+'/api/')&&r.method()!=='GET')mutations.push(r.url());});
  await page.goto('/docente');await page.getByLabel('Estudiante pseudónimo').selectOption(a);
  await expect(page.getByRole('heading',{name:'LOOPS',exact:true})).toBeVisible();

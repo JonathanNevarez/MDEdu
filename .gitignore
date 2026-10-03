@@ -22,3 +22,4 @@ Thumbs.db
 
 # Artefactos compilados de proyectos Eclipse MDE
 mde/**/bin/
+.quality/

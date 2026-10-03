@@ -57,7 +57,9 @@ class BackendBootstrapIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().path("status").asText()).isEqualTo("UP");
-        assertThat(response.getBody().size()).isEqualTo(1);
+        assertThat(response.getBody().size()).isEqualTo(2);
+        assertThat(response.getBody().path("groups").toString()).isEqualTo("[\"liveness\",\"readiness\"]");
+        assertThat(response.getBody().has("components")).isFalse();
         assertThat(healthContributors.getContributor("db")).isNotNull();
     }
 
@@ -81,7 +83,8 @@ class BackendBootstrapIT {
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().has("trace")).isFalse();
         assertThat(response.getBody().has("exception")).isFalse();
-        assertThat(response.getBody().has("message")).isFalse();
+        assertThat(response.getBody().path("code").asText()).isEqualTo("RESOURCE_NOT_FOUND");
+        assertThat(response.getBody().path("message").asText()).isEqualTo("Recurso no encontrado.");
     }
 
     @Test

@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = ProgrammingModelController.class, properties = "spring.config.import=")
-@Import({ProgrammingModelMapper.class, ProgrammingModelService.class})
+@Import({com.project.shared.security.TeacherSecurityConfiguration.class,ProgrammingModelMapper.class, ProgrammingModelService.class})
 class ProgrammingModelControllerTest {
     @Autowired MockMvc mvc;
     @Test void successIsJsonWithXmi() throws Exception {

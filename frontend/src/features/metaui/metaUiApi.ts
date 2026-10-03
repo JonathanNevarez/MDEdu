@@ -1,9 +1,11 @@
+import {httpFetch, checkResponse} from '../../shared/http';
 import type { Adaptation, Attempt, Capabilities, Overview, Page, Parameters, Rules, StudentSummary, Timeline } from './types';
 const base = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8080';
 // The prototype uses native fetch; teacher reads must not initialize a student/session.
 async function get<T>(path: string, signal: AbortSignal): Promise<T> {
-  const response = await fetch(`${base}/api${path}`, {signal, method: 'GET'});
-  if (!response.ok) throw new Error('No se pudo cargar la información. Intenta nuevamente.');
+  const response = await httpFetch(`${base}/api${path}`, {signal, method: 'GET', credentials: 'include'});
+  if (response.status === 401) window.dispatchEvent(new Event('teacher-session-expired'));
+  checkResponse(response);
   return response.json() as Promise<T>;
 }
 const id = encodeURIComponent;

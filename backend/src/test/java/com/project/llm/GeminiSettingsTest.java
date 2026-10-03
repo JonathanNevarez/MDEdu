@@ -8,7 +8,7 @@ class GeminiSettingsTest {
  @Test void fourProvidersAndUnknownSelectSafely(){
   var factory=new LlmProviderConfiguration();
   var classes=java.util.Map.of("GEMINI",GeminiLlmProvider.class,"OPENAI",OpenAILlmProvider.class,"FAKE",FakeLlmProvider.class,"DISABLED",DisabledLlmProvider.class,"unknown",DisabledLlmProvider.class);
-  classes.forEach((name,type)->assertInstanceOf(type,factory.llmProvider(new LlmSettings(new MockEnvironment().withProperty("LLM_PROVIDER",name)))));
+  classes.forEach((name,type)->assertInstanceOf(type,factory.llmProvider(new LlmSettings(new MockEnvironment().withProperty("LLM_PROVIDER",name)),new LlmRateLimiter())));
  }
  @Test void geminiCredentialsAreIndependentAndSafe(){
   var env=new MockEnvironment().withProperty("LLM_PROVIDER","GEMINI").withProperty("LLM_MODEL","openai-model").withProperty("LLM_API_KEY","openai-dummy");

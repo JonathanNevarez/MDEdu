@@ -1,7 +1,9 @@
+import { authenticateTeacher } from './teacherAuth';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 const api = process.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8080';
 test('real session and manual LOOPS reconstruct a complete isolated audit without replay', async ({page, request}, testInfo) => {
+ await authenticateTeacher(request);
  const student=(await (await request.post(`${api}/api/students`,{data:{displayName:'E2E_PRIVATE_SENTINEL'}})).json()).id as string;
  for(const level of ['SEQUENCES','VARIABLES','CONDITIONALS']) {
   const program=JSON.parse(readFileSync(`../backend/src/test/resources/evaluation/${level}.json`,'utf8'));

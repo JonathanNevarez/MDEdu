@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.junit.jupiter.api.Assertions.*;
 
 @WebMvcTest(controllers=GameController.class,properties="spring.config.import=")
-@Import({LevelCatalog.class,GameExecutionService.class,ProgrammingModelMapper.class,SolutionEvaluationService.class,PatternCatalog.class})
+@Import({com.project.shared.security.TeacherSecurityConfiguration.class,LevelCatalog.class,GameExecutionService.class,ProgrammingModelMapper.class,SolutionEvaluationService.class,PatternCatalog.class})
 class EvaluationPipelineTest {
     @Autowired MockMvc mvc;
     @Autowired ObjectMapper json;

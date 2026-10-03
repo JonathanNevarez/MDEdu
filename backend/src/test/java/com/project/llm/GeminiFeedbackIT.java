@@ -60,7 +60,7 @@ class GeminiFeedbackIT {
         s.start();return s;
     }catch(Exception e){throw new ExceptionInInitializerError(e);}}
     @TestConfiguration static class LocalProvider {
-        @Bean @Primary LlmProvider localLlmProvider(LlmSettings settings){return new GeminiLlmProvider(settings,URI.create("http://127.0.0.1:"+SERVER.getAddress().getPort()+"/v1/interactions"));}
+        @Bean @Primary LlmProvider localLlmProvider(LlmSettings settings,LlmRateLimiter quota){return new GeminiLlmProvider(settings,URI.create("http://127.0.0.1:"+SERVER.getAddress().getPort()+"/v1/interactions"),quota);}
     }
     @Container static final PostgreSQLContainer<?> DB=new PostgreSQLContainer<>("postgres:17-bookworm");
     @DynamicPropertySource static void db(DynamicPropertyRegistry r){r.add("spring.datasource.url",DB::getJdbcUrl);r.add("spring.datasource.username",DB::getUsername);r.add("spring.datasource.password",DB::getPassword);}
@@ -86,6 +86,17 @@ class GeminiFeedbackIT {
         jdbc.update("update feedback_attempt_inputs set evidence_json=? where attempt_id=?",node.toString(),attempt);
     }
     String studentState(UUID id)throws Exception{return json.writeValueAsString(projection.dto(projection.project(id)));}
+    @Test void internalQuotaStopsActualHttpAndUsesPedagogicalFallback()throws Exception {
+        var student=learning.create(null).id();var first=submit(student,"SEQUENCES","SEQUENCES");var second=submit(student,"SEQUENCES","SEQUENCES");
+        var limited=new LlmRateLimiter(1,60,1,10,java.time.Clock.systemUTC());
+        var fixture=new java.util.Properties();
+        try(var input=getClass().getResourceAsStream("/teacher-test.properties")){fixture.load(input);}
+        var settings=new LlmSettings(Provider.GEMINI,fixture.getProperty("GEMINI_MODEL"),fixture.getProperty("GEMINI_API_KEY"),1000,1);
+        var local=orchestrator(settings,new GeminiLlmProvider(settings,URI.create("http://127.0.0.1:"+SERVER.getAddress().getPort()+"/v1/interactions"),limited));
+        assertEquals(Source.GEMINI,local.generate(student,first.attemptId()).source());
+        int before=feedbackCalls.get();var fallback=local.generate(student,second.attemptId());
+        assertEquals(Source.FALLBACK,fallback.source());assertEquals("RATE_LIMITED",fallback.fallbackReason());assertFalse(fallback.llmUsed());assertEquals(before,feedbackCalls.get());assertEquals(1,before);
+    }
     @Test void knownLoopsPrivacyPersistenceIdempotencyAndUiSemantics()throws Exception {
         var id=learning.create("Private Gemini Student private.gemini@example.com").id();
         for(String level:List.of("SEQUENCES","VARIABLES","CONDITIONALS"))submit(id,level,level);

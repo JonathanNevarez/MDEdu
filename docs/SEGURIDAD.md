@@ -1,0 +1,19 @@
+# Seguridad del prototipo
+
+La frontera docente usa Spring Security y sesiones del servidor. No hay registro, JWT, OAuth ni tabla de docentes. `META_UI_USERNAME` y `META_UI_PASSWORD` proceden del entorno; no existe contraseña predeterminada. Una configuración ausente, contraseña menor de 12 caracteres, mayor de 72 bytes UTF-8, igual al usuario o placeholder deja el acceso cerrado. BCrypt compara la contraseña; las credenciales no se escriben en almacenamiento del navegador.
+
+`/api/meta/**`, `/api/adaptation/**`, los timelines de intentos/sesiones y la inspección de adaptaciones requieren docente. `/docente/login` obtiene CSRF y envía un formulario al backend. Logout invalida la sesión. Cookies HttpOnly, SameSite Strict, 30 minutos y Secure en perfil `prod`; este último solo se desactiva explícitamente para HTTP local de prueba. Las mutaciones docentes conservan CSRF. Las APIs anónimas del estudiante no usan la sesión docente y no requieren CSRF. La Meta-IU sigue siendo de lectura.
+
+El estudiante conserva identidad pseudónima local, sin autenticación individual: conocer un identificador no equivale a una autorización fuerte. Este prototipo no es un sistema multiinstitución ni debe exponerse con expedientes reales sin diseñar controles de identidad y permisos adicionales. El límite global de LLM reduce abuso, pero no sustituye protección perimetral ni evita todas las formas de denegación de servicio.
+
+Los orígenes se enumeran en `CORS_ALLOWED_ORIGINS`; se rechaza `*`. API: nosniff, DENY, referrer no-referrer y CSP sin contenidos activos. Nginx sirve React con scripts propios, conexiones al mismo origen y sin objetos/frames; permite estilos inline necesarios para Blockly. Vite solo se usa en desarrollo. Producción exige HTTPS mediante un proxy TLS administrado por el despliegue.
+
+JSON: 256 KiB por petición, profundidad del parser 256, cadenas 4096 y números 100 caracteres. El mapper de Program mantiene 100 niveles y 10000 statements, además de las validaciones semánticas preexistentes. La paginación docente tiene máximo 50; UUID/enum inválidos producen errores controlados. Los formularios tienen límite Tomcat de 16 KiB. La ejecución sigue interpretando operaciones cerradas en GridWorld con límite de pasos: el JavaScript generado se muestra como texto, nunca se evalúa.
+
+Cada intento real de HTTP de Gemini/OpenAI, incluidos retries, consume cuota. Configuración: `LLM_RATE_LIMIT_REQUESTS=60`, `LLM_RATE_LIMIT_WINDOW_SECONDS=60`, `LLM_RATE_LIMIT_GLOBAL_REQUESTS=600`. Ventanas en memoria sincronizadas, máximo 1024 claves, identificadas por estudiante pseudónimo para que abrir otra sesión no reinicie su cuota. Al agotarse se usa fallback `RATE_LIMITED` sin llamada adicional. La cuota es por instancia, se reinicia con el proceso y no coordina réplicas. Timeout y retries mantienen sus límites anteriores.
+
+Las claves LLM solo llegan al backend en tiempo de ejecución. No se añaden a argumentos de build ni a imágenes. `.env` está excluido de Git y del contexto Docker. No se registran contraseñas, tokens, prompts completos ni cuerpos HTTP. Las respuestas incluyen identificador de correlación, mensajes seguros y códigos cerrados; no exponen stack traces. Los contratos de dominio conservan campos existentes; `httpStatus` permite distinguirlos del `status` histórico del juego.
+
+El perfil prod rechaza el proveedor FAKE; los launchers HTTP mock solo existen en el classpath de test. Las pruebas usan credenciales ficticias en recursos de test, nunca en el JAR productivo. `scripts/check-secrets.ps1 -IncludeBundle` busca formatos conocidos y sentinels sin imprimir valores: es una comprobación determinista básica, no un escáner profesional ni una garantía universal de ausencia de secretos.
+
+Referencias: [sesiones Spring Security](https://docs.spring.io/spring-security/reference/6.5/servlet/authentication/session-management.html), [CSRF](https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html).

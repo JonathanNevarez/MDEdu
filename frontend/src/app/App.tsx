@@ -2,6 +2,7 @@ import { NavLink, Outlet, Route, Routes } from 'react-router-dom';
 import { HomePage } from '../pages/HomePage';
 import { NotFoundPage } from '../pages/NotFoundPage';
 import { lazy, Suspense } from 'react';
+import { TeacherAccess, TeacherLoginPage } from '../features/teacher/TeacherAccess';
 const LaboratoryPage = lazy(() => import('../features/programming/pages/LaboratoryPage').then(m => ({ default: m.LaboratoryPage })));
 const AdventurePage = lazy(() => import('../features/game/AdventurePage').then(m => ({ default: m.AdventurePage })));
 
@@ -36,7 +37,8 @@ export function App() {
         <Route path="laboratorio" element={<Suspense fallback={<p>Cargando editor…</p>}><LaboratoryPage /></Suspense>} />
         <Route path="aventura" element={<Suspense fallback={<p>Cargando aventura…</p>}><AdventurePage /></Suspense>} />
         <Route path="aventura/:levelId" element={<Suspense fallback={<p>Cargando nivel…</p>}><AdventurePage /></Suspense>} />
-        <Route path="docente" element={<Suspense fallback={<p>Cargando vista docente…</p>}><MetaUiPage /></Suspense>} />
+        <Route path="docente/login" element={<TeacherLoginPage />} />
+        <Route path="docente" element={<Suspense fallback={<p>Cargando vista docente…</p>}><TeacherAccess><MetaUiPage /></TeacherAccess></Suspense>} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

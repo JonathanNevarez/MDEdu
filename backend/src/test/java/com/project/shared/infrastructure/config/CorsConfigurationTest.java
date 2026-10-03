@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "spring.config.import=",
         "app.cors.allowed-origins=http://localhost:5173,http://127.0.0.1:5173"
 })
-@Import({CorsConfiguration.class, CorsConfigurationTest.ProbeController.class})
+@Import({com.project.shared.security.TeacherSecurityConfiguration.class,CorsConfiguration.class, CorsConfigurationTest.ProbeController.class})
 class CorsConfigurationTest {
 
     @Autowired
@@ -32,7 +32,7 @@ class CorsConfigurationTest {
         mvc.perform(get("/api/test-probe").header(HttpHeaders.ORIGIN, origin))
                 .andExpect(status().isOk())
                 .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, origin))
-                .andExpect(header().doesNotExist(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS));
+                .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true"));
     }
 
     @Test

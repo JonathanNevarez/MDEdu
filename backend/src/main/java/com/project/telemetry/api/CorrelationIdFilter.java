@@ -8,7 +8,7 @@ import org.springframework.core.annotation.Order;
 import org.slf4j.*;
 import java.io.IOException;
 import java.util.UUID;
-@Component @Order(-100)
+@Component @Order(-120)
 public class CorrelationIdFilter extends OncePerRequestFilter {
  @Override protected void doFilterInternal(HttpServletRequest request,HttpServletResponse response,FilterChain chain)throws ServletException,IOException {
   var previous=MDC.getCopyOfContextMap();MDC.clear();

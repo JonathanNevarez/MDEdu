@@ -221,3 +221,11 @@ como responsabilidades futuras con autorización, no como implementaciones simul
 No V8 ni duplicación de StudentModel/decisiones. feedbackDetailLevel histórico ausente
 se informa como no registrado en vez de proyectar/auditar otra UI durante la consulta.
 [Alcance y límites](FASE_12_META_UI.md) · Fase 13 no iniciada.
+
+## Fase 13 — calidad final
+
+- Sesión Spring Security y credenciales de entorno: satisfacen acceso docente mínimo sin tablas, OAuth/JWT ni V8. Login/logout protegidos por CSRF; Meta-IU sigue de lectura.
+- Cuota LLM por estudiante y global, en memoria con claves acotadas: evita que crear sesiones reinicie cuota; apropiada para una instancia, no distribuida. Fallback mantiene el flujo.
+- Compose full-stack separado: conserva volúmenes y flujo de desarrollo previos. Nginx sirve SPA y API del mismo origen; CSP permite estilos inline requeridos por Blockly, no scripts inline.
+- Objetivo WCAG 2.2 AA mediante axe y escenarios de teclado: evidencia limitada al prototipo PC/laptop, sin afirmar certificación.
+- Scripts secuenciales con límites de heap/constructor y limpieza de procesos propios: responde a los 16 GB de RAM disponibles sin alterar configuración global de Windows.

@@ -15,9 +15,12 @@ import java.util.concurrent.Flow;
 /** Responses API adapter. Production endpoint is fixed; loopback constructor supports real HTTP tests. */
 public class OpenAILlmProvider implements LlmProvider {
     private final LlmSettings config;private final URI endpoint;private final ObjectMapper json=new ObjectMapper();
-    private final HttpClient http;
+    private final HttpClient http;private final LlmRateLimiter quota;
     public OpenAILlmProvider(LlmSettings config){this(config,URI.create("https://api.openai.com/v1/responses"));}
-    public OpenAILlmProvider(LlmSettings config,URI endpoint) {
+    public OpenAILlmProvider(LlmSettings config,LlmRateLimiter quota){this(config,URI.create("https://api.openai.com/v1/responses"),quota);}
+    public OpenAILlmProvider(LlmSettings config,URI endpoint){this(config,endpoint,new LlmRateLimiter());}
+    public OpenAILlmProvider(LlmSettings config,URI endpoint,LlmRateLimiter quota) {
+        this.quota=quota;
         if(!endpoint.toString().equals("https://api.openai.com/v1/responses") && !("http".equals(endpoint.getScheme()) && Set.of("127.0.0.1","localhost","[::1]").contains(endpoint.getHost())))throw new IllegalArgumentException("Unsupported provider endpoint");
         this.config=config;this.endpoint=endpoint;http=HttpClient.newBuilder().connectTimeout(Duration.ofMillis(config.timeoutMs())).followRedirects(HttpClient.Redirect.NEVER).build();
     }
@@ -31,6 +34,7 @@ public class OpenAILlmProvider implements LlmProvider {
             "text",Map.of("format",Map.of("type","json_schema","name",p.schemaName(),"strict",true,"schema",json.readTree(p.schemaJson())))));}
         catch(Exception e){return ProviderResult.failure(Status.INVALID_RESPONSE,0);}
         for(int n=1;n<=config.maxRetries()+1;n++) {
+            if(!quota.acquire())return ProviderResult.failure(Status.RATE_LIMITED,n-1);
             Status failure;boolean retry;
             CompletableFuture<HttpResponse<String>> pending=null;
             try {

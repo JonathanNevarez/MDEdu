@@ -1,3 +1,4 @@
+import { httpFetch, ApiError, checkResponse } from '../../shared/http';
 import { ensureSession, studentFetch } from '../telemetry/client';
 import type { ProgramDto } from '../programming/dto/program';
 import type { ExecutionResult } from './types';
@@ -9,12 +10,11 @@ export interface ProgressEntry {
 }
 export interface StudentProgress { levels: ProgressEntry[] }
 export interface AttemptResponse { attemptId: string; execution: ExecutionResult; progress: StudentProgress }
-class HttpError extends Error { constructor(public status: number) { super('No se pudo guardar o cargar tu avance. Comprueba la conexión e inténtalo de nuevo.'); } }
 async function request<T>(path: string, body?: unknown, signal?: AbortSignal): Promise<T> {
-  const response = await fetch(`${base}/api${path}`, { ...(body === undefined ? {} : {
+  const response = await httpFetch(`${base}/api${path}`, { ...(body === undefined ? {} : {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
   }), ...(signal ? { signal } : {}) });
-  if (!response.ok) throw new HttpError(response.status);
+  checkResponse(response);
   return response.json() as Promise<T>;
 }
 let memoryStudentId: string | null = null;
@@ -32,7 +32,7 @@ async function initialize() {
   let progress: StudentProgress;
   try { progress = await request<StudentProgress>(`/students/${encodeURIComponent(id)}/progress`); }
   catch (error) {
-    if (!(error instanceof HttpError) || error.status !== 404) throw error;
+    if (!(error instanceof ApiError) || error.status !== 404) throw error;
     id = await create(); // Exactly one recovery; errors on the replacement propagate.
     progress = await request<StudentProgress>(`/students/${encodeURIComponent(id)}/progress`);
   }
@@ -52,6 +52,6 @@ export function serverLevelStatus(id: string, progress: StudentProgress) {
 }
 export async function submitAttempt(studentId: string, levelId: string, program: ProgramDto, resolutionTimeMs: number, signal: AbortSignal) {
   const response = await studentFetch(studentId, '/attempts', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({studentId, levelId, program, resolutionTimeMs, hintCount: 0}), signal});
-  if (!response.ok) throw new HttpError(response.status);
+  checkResponse(response);
   return response.json() as Promise<AttemptResponse>;
 }

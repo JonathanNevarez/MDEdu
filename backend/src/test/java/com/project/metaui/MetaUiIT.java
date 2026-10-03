@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+@org.springframework.security.test.context.support.WithMockUser(roles="TEACHER")
 @Testcontainers @SpringBootTest(properties={"spring.config.import=","LLM_PROVIDER=DISABLED","LLM_API_KEY="}) @AutoConfigureMockMvc
 class MetaUiIT {
  @Container static final PostgreSQLContainer<?> DB=new PostgreSQLContainer<>("postgres:17-bookworm");
@@ -76,8 +77,8 @@ class MetaUiIT {
   var c=meta.capabilities();assertTrue(c.canViewTrace());assertFalse(c.canMutateRules());assertFalse(c.canMutateParameters());assertFalse(c.canReviewProposals());
   mvc.perform(get("/api/meta/capabilities")).andExpect(status().isOk()).andExpect(jsonPath("$.canMutateRules").value(false));
   for(String path:List.of("/api/adaptation/rules","/api/adaptation/parameters")) {
-   mvc.perform(put(path).contentType("application/json").content("{}")).andExpect(status().isMethodNotAllowed());
-   mvc.perform(patch(path).contentType("application/json").content("{}")).andExpect(status().isMethodNotAllowed());
+   mvc.perform(put(path).with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf()).contentType("application/json").content("{}")).andExpect(status().isMethodNotAllowed());
+   mvc.perform(patch(path).with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf()).contentType("application/json").content("{}")).andExpect(status().isMethodNotAllowed());
   }
  }
  @Test void legacyAndInconsistentRemainVisibleWithoutBackfill()throws Exception {

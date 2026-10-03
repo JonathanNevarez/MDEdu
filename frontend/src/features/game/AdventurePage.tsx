@@ -1,3 +1,4 @@
+import { recordInteraction } from '../telemetry/client';
 import { useAdaptiveUi } from '../adaptive/useAdaptiveUi';
 import { AdaptiveRenderer } from '../adaptive/AdaptiveRenderer';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -57,6 +58,20 @@ export function AdventurePage() {
 }
 function Activity({ level, studentId, onProgress }: { level: Level; studentId: string; onProgress: (next: StudentProgress) => void }) {
   const adaptive = useAdaptiveUi(studentId, level.id);
+  const opening = useRef(crypto.randomUUID());
+  const navigation = useRef(new Map<string, string>());
+  useEffect(() => { void recordInteraction(studentId, level.id, 'ACTIVITY_OPENED', opening.current); }, [studentId, level.id]);
+  useEffect(() => {
+    const value = adaptive.value;
+    if (adaptive.loading || !value.attemptId || !value.fingerprint || value.safeDefault) return;
+    const c = value.configuration;
+    if (!(c.navigationMode === 'REPEAT' && c.repeatCurrentActivity) && !(c.navigationMode === 'ADVANCE' && c.nextActivityId)) return;
+    const identity = `${value.attemptId}:${value.fingerprint}`;
+    let eventId = navigation.current.get(identity);
+    if (!eventId) { eventId = crypto.randomUUID(); navigation.current.set(identity, eventId); }
+    void recordInteraction(studentId, level.id, 'NAVIGATION_PRESENTED', eventId, value.attemptId, value.fingerprint);
+  }, [studentId, level.id, adaptive.value, adaptive.loading]);
+
   const openedAt = useRef(performance.now());
   const [result, setResult] = useState<ExecutionResult | null>(null);
   const [index, setIndex] = useState(-1); const [playing, setPlaying] = useState(false);

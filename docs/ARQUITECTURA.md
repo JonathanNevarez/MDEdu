@@ -299,3 +299,15 @@ con ATL en el build headless. El backend consume las bases XMI verificadas.
 La configuración derivada se solicita después del intento y al refrescar.
 Una proyección fallida no revierte el aprendizaje persistido; devuelve safe default.
 V5 autorizada conserva únicamente el programa original por intento para Acceleo de lectura.
+
+## Fase 11 — observación del flujo
+
+Request → CorrelationContext/MDC → Session → pipeline de intento → TelemetryRecorder
+→ attempt_events → AttemptTimelineService/AttemptReconstruction.
+
+La telemetría no controla pedagogía. Los hitos críticos del intento comparten su
+transacción; los eventos de feedback comparten el guardado de feedback. La configuración
+UI se audita después de calcularse. La reconstrucción solo lee evidencia persistida.
+Sesión/requestId se propagan desde el cliente central; los tipos de evento frontend están
+limitados a apertura y navegación. No hay nuevo metamodelo ni providers modificados.
+[Diseño y límites](FASE_11_TELEMETRIA.md).

@@ -1,3 +1,4 @@
+import { ensureSession, studentFetch } from '../telemetry/client';
 import type { ProgramDto } from '../programming/dto/program';
 import type { ExecutionResult } from './types';
 
@@ -16,14 +17,14 @@ async function request<T>(path: string, body?: unknown, signal?: AbortSignal): P
   if (!response.ok) throw new HttpError(response.status);
   return response.json() as Promise<T>;
 }
-let sessionId: string | null = null;
+let memoryStudentId: string | null = null;
 let initializing: Promise<{ studentId: string; progress: StudentProgress }> | null = null;
 async function initialize() {
-  let id = sessionId;
+  let id = memoryStudentId;
   try { id = localStorage.getItem(studentKey) ?? id; } catch { /* Session identity still works without storage. */ }
   async function create() {
     const student = await request<{ id: string }>('/students', {});
-    sessionId = student.id;
+    memoryStudentId = student.id;
     try { localStorage.setItem(studentKey, student.id); } catch { /* Keep only the identity in memory. */ }
     return student.id;
   }
@@ -35,8 +36,9 @@ async function initialize() {
     id = await create(); // Exactly one recovery; errors on the replacement propagate.
     progress = await request<StudentProgress>(`/students/${encodeURIComponent(id)}/progress`);
   }
-  sessionId = id;
+  memoryStudentId = id;
   try { localStorage.removeItem('mdedu.game.progress.v1'); } catch { /* Legacy progress is never read. */ }
+  await ensureSession(id);
   return { studentId: id, progress };
 }
 export function ensureStudent() {
@@ -48,6 +50,8 @@ export function serverLevelStatus(id: string, progress: StudentProgress) {
   const entry = progress.levels.find(level => level.levelId === id);
   return entry?.completed ? 'COMPLETED' : entry?.unlocked ? 'UNLOCKED' : 'LOCKED';
 }
-export function submitAttempt(studentId: string, levelId: string, program: ProgramDto, resolutionTimeMs: number, signal: AbortSignal) {
-  return request<AttemptResponse>('/attempts', { studentId, levelId, program, resolutionTimeMs, hintCount: 0 }, signal);
+export async function submitAttempt(studentId: string, levelId: string, program: ProgramDto, resolutionTimeMs: number, signal: AbortSignal) {
+  const response = await studentFetch(studentId, '/attempts', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({studentId, levelId, program, resolutionTimeMs, hintCount: 0}), signal});
+  if (!response.ok) throw new HttpError(response.status);
+  return response.json() as Promise<AttemptResponse>;
 }

@@ -11,9 +11,11 @@ import java.sql.Timestamp;
 
 @Repository
 public class FeedbackStore {
+    @org.springframework.beans.factory.annotation.Autowired private com.project.telemetry.application.TelemetryRecorder telemetry;
     private final JdbcTemplate jdbc;private final ObjectMapper json;
     public FeedbackStore(JdbcTemplate jdbc,ObjectMapper json){this.jdbc=jdbc;this.json=json;}
     public AttemptEvidence evidence(UUID student,UUID attempt) {
+        telemetry.validateContext(student);
         var owners=jdbc.query("select student_id from attempts where id=?",(rs,i)->rs.getObject(1,UUID.class),attempt);
         if(owners.isEmpty() || !owners.getFirst().equals(student))throw new ResponseStatusException(NOT_FOUND,"ATTEMPT_NOT_FOUND");
         var inputs=jdbc.query("select evidence_json from feedback_attempt_inputs where attempt_id=?",(rs,i)->rs.getString(1),attempt);
@@ -39,6 +41,7 @@ public class FeedbackStore {
             dto.feedbackId(),student,dto.attemptId(),dto.adaptationDecisionId(),dto.purpose().name(),dto.source().name(),dto.provider().name(),dto.model(),dto.promptTemplateVersion(),dto.policyVersion(),config,dto.promptHash(),dto.sanitizedContextHash(),dto.source()==Source.FALLBACK?"FALLBACK":"SUCCESS",dto.fallbackReason(),dto.llmUsed(),dto.message(),c==null?null:c.recognized(),c==null?null:c.confidence(),Timestamp.from(dto.createdAt()),write(dto));
         if(c!=null)for(int i=0;i<c.errorTags().size();i++)jdbc.update("insert into feedback_record_tags values (?,?,?)",dto.feedbackId(),c.errorTags().get(i),i);
         for(var a:calls)jdbc.update("insert into feedback_provider_calls values (?,?,?,?,?,?,?,?)",dto.feedbackId(),a.purpose().name(),a.status().name(),a.attempts(),a.promptHash(),a.sanitizedContextHash(),a.providerRequestId(),a.validationReason());
+        telemetry.feedback(student,dto,calls);
         return dto;
     }
     private String write(Object o){try{return json.writeValueAsString(o);}catch(Exception e){throw new IllegalStateException("Cannot encode feedback");}}

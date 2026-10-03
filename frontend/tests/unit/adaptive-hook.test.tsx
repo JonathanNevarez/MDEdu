@@ -1,4 +1,8 @@
 import { afterEach, expect, it, vi } from 'vitest';
+vi.mock('../../src/features/telemetry/client', () => ({
+  ensureSession: vi.fn(async () => ({id: 'session-fixture', status: 'ACTIVE'})),
+  studentFetch: (_student: string, path: string, init?: RequestInit) => fetch(`http://127.0.0.1:8080/api${path}`, init),
+}));
 import { renderHook, waitFor } from '@testing-library/react';
 import { useAdaptiveUi } from '../../src/features/adaptive/useAdaptiveUi';
 import { safeConfiguration, type UiResponse } from '../../src/features/adaptive/types';

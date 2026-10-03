@@ -13,6 +13,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @Service
 public class LearningService {
+    @org.springframework.beans.factory.annotation.Autowired private com.project.telemetry.application.TelemetryRecorder telemetry;
     private final StudentRepository students;private final LearningStore store;private final StudentModelPolicy policy;
     private final ConceptGraphService graph;private final GameExecutionService execution;private final LevelCatalog levels;
     private final StudentModelProjectionService projection;
@@ -39,6 +40,8 @@ public class LearningService {
         var activity=store.activities().stream().filter(a->a.id.equals(level.id())).findFirst().orElseThrow(()->new ResponseStatusException(NOT_FOUND,"ACTIVITY_NOT_FOUND"));
         var progress=store.progress(student.id).stream().filter(p->p.activityId.equals(activity.id)).findFirst().orElseThrow();
         if(progress.unlockedAt==null)throw new ResponseStatusException(CONFLICT,"ACTIVITY_LOCKED");
+        var auditedAttemptId=UUID.randomUUID();
+        try(var audit=telemetry.begin(student.id,auditedAttemptId,activity.id,activity.conceptId)) {
         var result=execution.execute(level,request.program());
         if(result.evaluation()==null)throw new ResponseStatusException(UNPROCESSABLE_ENTITY,"INVALID_EMF");
         var m=store.masteries(student.id).stream().filter(a->a.conceptId.equals(activity.conceptId)).findFirst().orElseThrow();
@@ -48,16 +51,23 @@ public class LearningService {
         var now=Instant.now();var next=change.state();m.masteryScore=next.score();m.attemptCount=next.attempts();m.successCount=next.successes();m.failureCount=next.failures();
         m.consecutiveFailures=next.consecutiveFailures();m.averageResolutionTime=next.averageTime();m.hintCount=next.hints();m.lastUpdated=now;
         student.lastUpdated=now;student.attemptSequence=Math.addExact(student.attemptSequence,1);
-        var attempt=new AttemptRow();attempt.id=UUID.randomUUID();attempt.studentId=student.id;attempt.activityId=activity.id;attempt.conceptId=activity.conceptId;
+        var attempt=new AttemptRow();attempt.id=auditedAttemptId;attempt.studentId=student.id;attempt.activityId=activity.id;attempt.conceptId=activity.conceptId;
         attempt.studentOrdinal=student.attemptSequence;attempt.successful=result.evaluation().activityPassed();attempt.functionalPassed=result.success();attempt.resolutionTime=request.resolutionTimeMs();
         attempt.hintCount=request.hintCount();attempt.submittedAt=now;attempt.policyVersion=policy.values().version();attempt.masteryBefore=change.before();attempt.masteryDelta=change.delta();attempt.masteryAfter=change.after();attempt.updateReasons=String.join(",",change.reasons());attempt.patterns.addAll(ids);store.save(attempt);
         if(attempt.successful && progress.completedAt==null)progress.completedAt=now;
         unlock(student.id,now);store.flush();
         attemptPrograms.capture(attempt.id,request.program());
         var model=projection.project(student.id);
+        telemetry.emit(com.project.telemetry.domain.TelemetryTypes.Type.STUDENT_MODEL_UPDATED,
+            new com.project.telemetry.domain.TelemetryTypes.LearningPayload(activity.conceptId,change.before(),change.delta(),change.after(),next.attempts(),next.successes(),next.failures(),next.consecutiveFailures(),policy.values().version()),"");
+        telemetry.emit(com.project.telemetry.domain.TelemetryTypes.Type.ADAPTATION_STARTED,new com.project.telemetry.domain.TelemetryTypes.MarkerPayload("STARTED"),"");
         var decision=adaptation.captureAndDecide(model,model.getAttempts().getFirst(),result.evaluation(),change);
+        telemetry.emit(com.project.telemetry.domain.TelemetryTypes.Type.ADAPTATION_COMPLETED,new com.project.telemetry.domain.TelemetryTypes.AdaptationPayload(decision.decisionId(),decision.decisionFingerprint(),decision.rulesetVersion(),decision.rulesetHash(),decision.parametersVersion(),decision.parametersHash(),decision.selectedRule(),decision.contributingRules().size(),decision.discardedRules().size(),decision.actions().stream().map(a->a.type().name()).toList(),decision.contextHash()),"");
+        if(attempt.successful)telemetry.emit(com.project.telemetry.domain.TelemetryTypes.Type.ACTIVITY_COMPLETED,new com.project.telemetry.domain.TelemetryTypes.ActivityPayload(activity.id,activity.conceptId),"");
         feedbackEvidence.capture(attempt.id,level,request.program(),result,decision,request.hintCount());
+        telemetry.flush();
         return new AttemptResponse(attempt.id,result,projection.dto(model),projection.progress(model),change,decision);
+        }
     }
     private void unlock(UUID studentId,Instant now) {
         var concepts=store.concepts();var activities=store.activities();var rows=store.progress(studentId);

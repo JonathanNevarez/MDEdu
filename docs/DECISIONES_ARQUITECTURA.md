@@ -195,3 +195,15 @@ existente. Sin sesiones remotas ni tools; store=false y contexto sanitizado.
 V6 solo amplía CHECKs que bloqueaban GEMINI. La autorización posterior permite sustituir
 dos expresiones de metadata del orquestador; la lógica pedagógica no cambia.
 [Detalles y evidencia](INTEGRACION_GEMINI_TEMPORAL.md). No inicia Fase 11.
+
+## Fase 11 — auditoría observacional append-only
+
+V7 crea sessions y attempt_events. Trigger de inmutabilidad, secuencia por intento con
+lock transaccional y unique constraints, event keys idempotentes, hora UTC del servidor
+y JSONB tipado/acotado con SHA-256 canónico. No se duplican grandes snapshots ni catálogos.
+Se reutilizan attempt_error_patterns, auditoría de adaptación y feedback, y programa V5.
+Frontend tiene allowlist de apertura/navegación; no puede afirmar evaluación o mastery.
+Legacy produce PARTIAL y referencias separadas, sin backfill falso. Logs best effort;
+audit crítico comparte transacción para rollback coherente. La timeline no recalcula.
+SessionStorage separa sesión de identidad; el cliente recupera sesiones obsoletas una vez.
+No se introduce Meta-UI ni analytics. [Detalle](FASE_11_TELEMETRIA.md).

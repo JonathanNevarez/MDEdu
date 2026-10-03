@@ -35,6 +35,7 @@ class FeedbackIT {
     @DynamicPropertySource static void database(DynamicPropertyRegistry r){r.add("spring.datasource.url",DB::getJdbcUrl);r.add("spring.datasource.username",DB::getUsername);r.add("spring.datasource.password",DB::getPassword);}
     @Autowired LearningService learning;@Autowired StudentModelProjectionService projection;@Autowired AdaptationManager manager;
     @Autowired FeedbackOrchestrator feedback;@Autowired FeedbackStore store;@Autowired ObjectMapper json;@Autowired JdbcTemplate jdbc;@Autowired MockMvc mvc;
+    @Autowired com.project.telemetry.application.AttemptTimelineService timeline;
     @MockitoSpyBean LlmProvider provider;@MockitoSpyBean GameExecutionService execution;
     ProgramDto fixture(String name) throws Exception {try(var in=getClass().getResourceAsStream("/evaluation/"+name+".json")){return json.readValue(in,ProgramDto.class);}}
     AttemptResponse submit(UUID id,String level,String name) throws Exception {return learning.submit(new SubmitAttempt(id,level,1000L,0,fixture(name)));}
@@ -50,6 +51,7 @@ class FeedbackIT {
         String before=json.writeValueAsString(projection.dto(projection.project(student)));clearInvocations(provider,execution);
         var result=feedback.generate(student,attempt.attemptId());
         assertEquals(Source.FAKE,result.source());assertFalse(result.llmUsed());assertEquals("REPETITIVE_SEQUENCE_WITHOUT_LOOP",result.focus());
+        assertTrue(timeline.attempt(student,attempt.attemptId()).events().stream().anyMatch(e->e.payload() instanceof com.project.telemetry.domain.TelemetryTypes.FeedbackPayload p && p.provider().equals("FAKE") && !p.llmUsed()));
         assertEquals(HintStage.CONCEPTUAL_HINT,result.hintStage());assertTrue(result.message().contains("repet"));
         verify(provider,never()).classifyUncoveredCase(any());verify(provider,times(1)).generatePedagogicalFeedback(any());verifyNoInteractions(execution);
         assertEquals(before,json.writeValueAsString(projection.dto(projection.project(student))));assertEquals(attempt.adaptation(),manager.byAttempt(attempt.attemptId()));
@@ -110,7 +112,7 @@ class FeedbackIT {
         mvc.perform(post("/api/feedback/generate").contentType("application/json").content(json.writeValueAsString(Map.of("studentId",id,"attemptId",missing.attemptId())))).andExpect(status().isNotFound());
     }
     @Test void versionFourAndAuditContainNoRawPayloads() throws Exception {
-        assertEquals(6,jdbc.queryForObject("select count(*) from flyway_schema_history where success",Integer.class));
+        assertEquals(7,jdbc.queryForObject("select count(*) from flyway_schema_history where success",Integer.class));
         var id=learning.create("Secret Name").id();var attempt=submit(id,"SEQUENCES","SEQUENCES");var result=feedback.generate(id,attempt.attemptId());
         String row=jdbc.queryForObject("select response_json from feedback_records where id=?",String.class,result.feedbackId());
         assertFalse(row.contains("Secret Name"));assertFalse(row.contains("instructions"));assertEquals(64,result.promptHash().length());assertEquals(64,result.sanitizedContextHash().length());

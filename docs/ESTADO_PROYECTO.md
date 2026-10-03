@@ -4,8 +4,23 @@ Actualización documental: 02/10/2026.
 
 ## Estado actual
 
-**FASES 0–9 COMPLETADAS Y VALIDADAS. FASE 10 COMPLETADA Y VALIDADA.
-FASE 11 NO INICIADA.**
+**FASES 0–10 COMPLETADAS Y VALIDADAS. Integración Gemini COMPLETADA Y VALIDADA.
+FASE 11 COMPLETADA Y VALIDADA. FASE 12 NO INICIADA.**
+
+Fase 11 parte de `6215bf87c821bc3b446d801e3d28d913eff359cc`. V7 añade sessions y
+attempt_events append-only, correlación request/session/attempt, payloads tipados y
+secuencia transaccional. La timeline reconstruye evidencia persistida sin reejecutar
+ni modificar pedagogía. COMPLETE/PARTIAL/INCONSISTENT explícitos; legacy sin backfill.
+Frontend usa sessionStorage y un cliente de sesión central, con recuperación acotada.
+Validación: 258 unit/MVC + 74 IT, 61 tests frontend, typecheck/build, 9 E2E DISABLED +
+1 Gemini local, MDE (Xtext 22, Acceleo 25, ATL 2) y CLI/node --check PASS.
+360 archivos protegidos sin diferencias; 17 hashes explícitos de la solicitud coinciden.
+V1–V6, providers y contenidos educativos intactos. Cuatro actividades, cero refuerzos.
+Recursos de prueba detenidos y volumen PostgreSQL conservado. No API real ni claves reales.
+[Diseño Fase 11](FASE_11_TELEMETRIA.md) · [Evidencia](VERIFICACION_FASE_11.md).
+
+Los apartados siguientes conservan la evidencia histórica de Fase 10 y Gemini.
+
 
 **Integración adicional GeminiLlmProvider completada** (ajuste post-Fase-10, sin nueva fase).
 Checkpoint inicial de este ajuste: `e549f1482e342c73bc42892704dbd2740614b969`.

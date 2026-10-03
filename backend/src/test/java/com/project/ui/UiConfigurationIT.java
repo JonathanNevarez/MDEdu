@@ -24,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UiConfigurationIT {
  @Container static final PostgreSQLContainer<?> DB=new PostgreSQLContainer<>("postgres:17-bookworm");
  @DynamicPropertySource static void database(DynamicPropertyRegistry r){r.add("spring.datasource.url",DB::getJdbcUrl);r.add("spring.datasource.username",DB::getUsername);r.add("spring.datasource.password",DB::getPassword);}
+ @Autowired com.project.telemetry.application.AttemptTimelineService timeline;
  @Autowired LearningService learning;@Autowired ObjectMapper json;@Autowired JdbcTemplate jdbc;@Autowired MockMvc mvc;
  @org.springframework.test.context.bean.override.mockito.MockitoSpyBean UiProjection uiProjection;
  @Autowired UiConfigurationService ui;@Autowired AttemptProgramStore programs;@Autowired AttemptCodeService codes;@Autowired FeedbackOrchestrator feedback;
@@ -59,6 +60,7 @@ class UiConfigurationIT {
   var before=jdbc.queryForList("select * from student_concept_mastery where student_id=? order by concept_id",id);
   org.mockito.Mockito.doThrow(new IllegalArgumentException("test invalid UI")).when(uiProjection).project(org.mockito.ArgumentMatchers.any(),org.mockito.ArgumentMatchers.anyList(),org.mockito.ArgumentMatchers.any(),org.mockito.ArgumentMatchers.anyMap());
   var safe=ui.byAttempt(id,attempt.attemptId());assertTrue(safe.safeDefault());assertFalse(safe.configuration().showCodePanel());assertEquals(NavigationMode.STAY,safe.configuration().navigationMode());assertNull(safe.configuration().nextActivityId());
+  assertTrue(timeline.attempt(id,attempt.attemptId()).uiConfigurations().getFirst().safeDefault());
   assertEquals(before,jdbc.queryForList("select * from student_concept_mastery where student_id=? order by concept_id",id));
   assertEquals(1,jdbc.queryForObject("select count(*) from attempts where student_id=?",Integer.class,id));
  }

@@ -643,3 +643,28 @@ ayudas, dificultad y navegación. `code` opcional contiene `{available,text,reas
 solo se genera si la decisión permite mostrarlo. No existe endpoint que acepte
 configuración suministrada por el cliente. Los errores de proyección retornan safe default.
 El POST existente `/api/feedback/generate` sigue recibiendo solo studentId/attemptId.
+
+## Fase 11 — sesiones y auditoría
+
+Headers opcionales compatibles con clientes anteriores: `X-Session-Id` (UUID de sesión
+activa del estudiante) y `X-Request-Id` (UUID seguro; backend genera uno si falta/es inválido).
+Se devuelve `X-Request-Id`; CORS lo expone. Session header malformado: 400.
+
+| Método/ruta | Contrato |
+|---|---|
+| POST `/api/sessions` | `{studentId}` → 201 `{id,studentId,startedAt,endedAt,status}` |
+| GET `/api/sessions/{id}?studentId=...` | Sesión propia; 404 si inexistente/ajena |
+| POST `/api/sessions/{id}/end` | `{studentId}`; cierre idempotente, 200 |
+| GET `/api/sessions/{id}/timeline?studentId=...` | Hasta 500 eventos de esa sesión propia |
+| POST `/api/telemetry/events` | Header de sesión obligatorio; `{studentId,activityId,type,clientEventId,attemptId?,configurationFingerprint?}` → 204 |
+| GET `/api/students/{studentId}/attempts/{attemptId}/timeline` | AttemptReconstruction con traceStatus, gaps, resumen, events, activityOpenEvents, adaptation, feedback y uiConfigurations |
+
+Cliente solo puede emitir ACTIVITY_OPENED o NAVIGATION_PRESENTED. Apertura no admite
+attemptId/fingerprint; navegación requiere intento propio, actividad y fingerprint UI
+auditado. Actividad bloqueada: 409; tipo no permitido/DTO inválido: 400; referencia ajena
+/inexistente: 404. No se acepta payload educativo arbitrario.
+La timeline ordena eventos por sequence; devuelve COMPLETE/PARTIAL/INCONSISTENT. Intentos
+legacy: 200 PARTIAL sin backfill. Feedback puede estar vacío (no solicitado); regla puede
+ser null (NO_ADAPTATION). No reejecuta ni genera feedback/código al consultar.
+El modelo de acceso sigue siendo pseudónimo de prototipo; no se añade autenticación.
+No existen endpoints update/delete de eventos ni UI docente.

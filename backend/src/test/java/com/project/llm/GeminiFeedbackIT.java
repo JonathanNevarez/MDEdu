@@ -71,6 +71,7 @@ class GeminiFeedbackIT {
     @Autowired UiConfigurationService ui;
     @Autowired JdbcTemplate jdbc;
     @Autowired ObjectMapper json;
+    @Autowired com.project.telemetry.application.AttemptTimelineService timeline;
     @Autowired org.springframework.context.ApplicationContext beans;
     @BeforeEach void reset(){mode="VALID";classifierCalls.set(0);feedbackCalls.set(0);bodies.clear();}
     @AfterAll static void stop(){SERVER.stop(0);EXECUTOR.shutdownNow();}
@@ -105,6 +106,10 @@ class GeminiFeedbackIT {
         assertEquals(result,feedback.generate(id,attempt.attemptId()));
         String captured=String.join("",bodies);for(String forbidden:List.of("Private Gemini Student","private.gemini@example.com",id.toString(),"gemini-test-secret-never-log"))assertFalse(captured.contains(forbidden));
         assertTrue(captured.contains("REPETITIVE_SEQUENCE_WITHOUT_LOOP"));
+        var trace=timeline.attempt(id,attempt.attemptId());
+        assertEquals(com.project.telemetry.domain.TelemetryTypes.TraceStatus.COMPLETE,trace.traceStatus());
+        assertTrue(trace.events().stream().anyMatch(e->e.payload() instanceof com.project.telemetry.domain.TelemetryTypes.FeedbackPayload p && p.provider().equals("GEMINI") && p.llmUsed()));
+        assertFalse(json.writeValueAsString(trace).contains("gemini-test-secret-never-log"));
         String row=jdbc.queryForObject("select response_json from feedback_records where id=?",String.class,result.feedbackId());
         assertFalse(row.contains("gemini-test-secret-never-log"));assertFalse(row.contains("Private Gemini"));
         assertEquals("GEMINI",jdbc.queryForObject("select source from feedback_records where id=?",String.class,result.feedbackId()));

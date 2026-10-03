@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 
 @Service
 public class UiConfigurationService {
+    @org.springframework.beans.factory.annotation.Autowired private com.project.telemetry.application.TelemetryRecorder telemetry;
     public record Configuration(int configurationVersion,String activityId,boolean showCodePanel,
         HintPanelMode hintPanelMode,FeedbackDetailLevel feedbackDetailLevel,ActivityLayout activityLayout,
         boolean enabledAssistance,NavigationMode navigationMode,DifficultyMode difficultyMode,TutorMode tutorMode,
@@ -47,6 +48,7 @@ public class UiConfigurationService {
         var activities=jdbc.query("select activity_id from attempts where student_id=? and id=?",(rs,i)->rs.getString(1),student,attempt);
         if(activities.isEmpty())throw new ResponseStatusException(NOT_FOUND,"ATTEMPT_NOT_FOUND");
         String activity=activities.getFirst();checkAccess(student,activity);
+        Response observed;
         try {
             if(jdbc.queryForObject("select count(*) from adaptation_decisions where attempt_id=?",Integer.class,attempt)==0)throw new IllegalStateException("Decision unavailable");
             var base=base(activity);var decision=adaptation.byAttempt(attempt);
@@ -58,11 +60,13 @@ public class UiConfigurationService {
                 for(var next:learning.activities())if(!next.reinforcement&&next.conceptId.equals(concept.id)&&learning.progress(student).stream().anyMatch(p->p.activityId.equals(next.id)&&p.unlockedAt!=null))allowed.put(concept.id,next.id);
             var config=projection.project(base,decision.actions(),feedback,allowed);
             var code=config.isShowCodePanel()?codes.generate(student,attempt):null;
-            return response(config,attempt,feedback,code,false,null);
+            observed=response(config,attempt,feedback,code,false,null);
         } catch(Exception ex) {
             org.slf4j.LoggerFactory.getLogger(getClass()).warn("UI projection unavailable: {}",ex.getClass().getSimpleName());
-            return response(projection.safe(activity),attempt,null,null,true,"UI_CONFIGURATION_UNAVAILABLE");
+            observed=response(projection.safe(activity),attempt,null,null,true,"UI_CONFIGURATION_UNAVAILABLE");
         }
+        telemetry.ui(student,attempt,observed);
+        return observed;
     }
     private ConcreteUIModel base(String activity) throws Exception {
         if(!Set.of("SEQUENCES","VARIABLES","CONDITIONALS","LOOPS").contains(activity))throw new IllegalArgumentException("Unknown activity");

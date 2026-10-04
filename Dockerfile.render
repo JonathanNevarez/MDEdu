@@ -1,0 +1,30 @@
+FROM node:24-alpine AS frontend-builder
+WORKDIR /workspace/frontend
+ENV NODE_OPTIONS="--max-old-space-size=384"
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci
+COPY frontend/ .
+COPY contracts/ /workspace/contracts/
+COPY backend/src/main/resources/game/ /workspace/backend/src/main/resources/game/
+ENV VITE_API_BASE_URL=""
+RUN npm run build
+
+FROM maven:3.9.16-eclipse-temurin-21 AS backend-builder
+WORKDIR /workspace
+ENV MAVEN_OPTS="-Xmx384m"
+COPY mde/ mde/
+RUN mvn -f mde/pom.xml --batch-mode --no-transfer-progress -Dtarget.os=linux -Dtarget.ws=gtk -DskipTests install
+COPY backend/pom.xml backend/pom.xml
+COPY backend/src/main backend/src/main
+COPY --from=frontend-builder /workspace/frontend/dist/ backend/src/main/resources/static/
+RUN mvn -f backend/pom.xml --batch-mode --no-transfer-progress -DskipTests package
+
+FROM eclipse-temurin:21-jre-jammy AS runtime
+RUN groupadd --gid 10001 mdedu && useradd --uid 10001 --gid mdedu --no-create-home mdedu
+WORKDIR /app
+COPY --from=backend-builder --chown=10001:10001 /workspace/backend/target/adaptativa-backend-0.1.0-SNAPSHOT.jar /app/app.jar
+USER 10001:10001
+ENV SPRING_PROFILES_ACTIVE=prod,render LLM_PROVIDER=DISABLED
+ENV JAVA_TOOL_OPTIONS="-Xmx256m -XX:MaxMetaspaceSize=128m -XX:ReservedCodeCacheSize=48m -XX:MaxDirectMemorySize=32m -XX:+UseSerialGC -XX:ActiveProcessorCount=2 -XX:+ExitOnOutOfMemoryError"
+EXPOSE 10000
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]

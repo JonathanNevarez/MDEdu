@@ -4,6 +4,8 @@ Actualización documental: 03/10/2026.
 
 ## Estado actual
 
+**Preparación Render + Neon validada localmente**, sobre `5f2fe565b9229838e391a1dbc195f8da43bf0e4f`. Imagen de un proceso Java que sirve React y API, perfil aditivo `prod,render`, PostgreSQL externo por JDBC/TLS y Blueprint Free. Smoke HTTPS local con 512 MiB, Flyway V1–V9 desde base vacía, login, progreso tras reinicio y recuperación DB. 389 archivos protegidos intactos; sin nueva fase ni migración. No se han creado recursos cloud ni existe URL pública confirmada. [Guía y credenciales docentes](DESPLIEGUE_RENDER_NEON.md) · [Evidencia](VERIFICACION_DESPLIEGUE_RENDER_NEON.md).
+
 **Rediseño visual final COMPLETADO Y VALIDADO.** Base `6697077`. Navegación, 18 retos, Blockly, GridWorld, Luma SVG, progreso y Meta-IU reales. Laboratorio libre sin evaluación ni persistencia. Backend 295 + 98 IT, frontend 80, Chromium 19 + 2 Gemini mock, Docker 6, MDE 49; 338 hashes intactos. Sin Fase 14. [Diseño](REDISENO_VISUAL_FINAL.md) · [Verificación](VERIFICACION_REDISENO_VISUAL_FINAL.md).
 
 **FASES 0–13 COMPLETADAS Y VALIDADAS. Integración Gemini COMPLETADA Y VALIDADA. PROTOTIPO FUNCIONAL COMPLETADO.**

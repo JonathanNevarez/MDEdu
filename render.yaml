@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: mdedu-demo
+    runtime: docker
+    plan: free
+    branch: main
+    dockerfilePath: ./Dockerfile.render
+    dockerContext: .
+    healthCheckPath: /actuator/health/readiness
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod,render
+      - key: LLM_PROVIDER
+        value: DISABLED
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+      - key: META_UI_USERNAME
+        sync: false
+      - key: META_UI_PASSWORD
+        sync: false

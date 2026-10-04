@@ -8,6 +8,9 @@ export default defineConfig({
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL ?? 'http://127.0.0.1:4173',
     trace: 'retain-on-failure',
+    // Self-signed loopback certificate used only by verify-production.ps1.
+    ignoreHTTPSErrors: process.env.PRODUCTION_SMOKE === 'true',
+    launchOptions: process.env.PRODUCTION_SMOKE === 'true' ? {args:['--ignore-certificate-errors']} : {},
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: process.env.PLAYWRIGHT_BASE_URL ? undefined : {

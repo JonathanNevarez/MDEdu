@@ -4,6 +4,10 @@ Prototipo de tesis para enseñar lógica de programación a estudiantes universi
 
 El contenido está cerrado: **SEQUENCES, VARIABLES, CONDITIONALS y LOOPS**, 18 retos guiados (4 Secuencias, 4 Variables, 5 Condicionales y 5 Ciclos), cero refuerzos reales y ningún tema avanzado. **Fases 0–13 completadas y validadas**; la evidencia de calidad final se registra en [Fase 13](docs/VERIFICACION_FASE_13.md).
 
+## Demo / Deployment
+
+Una sola aplicación Docker sirve React y Spring Boot en Render Free, con PostgreSQL en Neon y Gemini deshabilitado inicialmente. [Guía y acceso docente](docs/DESPLIEGUE_RENDER_NEON.md) · [Verificación](docs/VERIFICACION_DESPLIEGUE_RENDER_NEON.md). Aún no hay URL pública confirmada.
+
 ## Interfaz educativa
 
 Aprender → mapa y retos · Laboratorio → experimentación libre · Progreso → avance persistente. Luma conserva el SVG anterior por preferencia expresa del usuario. [Diseño final](docs/REDISENO_VISUAL_FINAL.md) · [Verificación](docs/VERIFICACION_REDISENO_VISUAL_FINAL.md).
@@ -14,7 +18,7 @@ Aprender → mapa y retos · Laboratorio → experimentación libre · Progreso 
 
 Blockly → Program EMF → validación → Acceleo → GridWorld → evaluación/patrones → StudentModel/ContextModel → Xtext/ECA → AdaptationManager → feedback LLM/fallback → UI MDE/ATL → React/Luma → telemetría → Meta-IU docente.
 
-Java 21, Spring Boot 3.5.16, PostgreSQL 17/Flyway V1–V9; React 19, TypeScript, Vite y Blockly 13. Maven Wrapper 3.9.16; EMF, Xtext, Acceleo y ATL. Docker incorpora Nginx y health checks. No se ejecuta el JavaScript generado: GridWorld interpreta operaciones permitidas.
+Java 21, Spring Boot 3.5.16, PostgreSQL 17/Flyway V1–V9; React 19, TypeScript, Vite y Blockly 13. Maven Wrapper 3.9.16; EMF, Xtext, Acceleo y ATL. Docker local incorpora Nginx; la imagen Render sirve todo desde Java. Ambos conservan health checks. No se ejecuta el JavaScript generado: GridWorld interpreta operaciones permitidas.
 
 ## Inicio en desarrollo (PowerShell)
 

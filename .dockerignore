@@ -16,3 +16,8 @@
 **/*.pem
 **/.metadata
 .codex
+secret.env
+**/secret.env
+**/.idea
+**/.vscode
+docs/evidencia-*/

@@ -12,6 +12,8 @@
 .env
 .env.*
 !.env.example
+!.env.production.example
+secret.env
 # Metadatos locales; los artefactos MDE fuente sí se versionan
 .idea/
 .metadata/

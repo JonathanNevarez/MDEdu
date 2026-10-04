@@ -4,6 +4,8 @@ Actualización documental: 03/10/2026.
 
 ## Estado actual
 
+**Rediseño visual final COMPLETADO Y VALIDADO.** Base `6697077`. Navegación, 18 retos, Blockly, GridWorld, Luma SVG, progreso y Meta-IU reales. Laboratorio libre sin evaluación ni persistencia. Backend 295 + 98 IT, frontend 80, Chromium 19 + 2 Gemini mock, Docker 6, MDE 49; 338 hashes intactos. Sin Fase 14. [Diseño](REDISENO_VISUAL_FINAL.md) · [Verificación](VERIFICACION_REDISENO_VISUAL_FINAL.md).
+
 **FASES 0–13 COMPLETADAS Y VALIDADAS. Integración Gemini COMPLETADA Y VALIDADA. PROTOTIPO FUNCIONAL COMPLETADO.**
 
 **Expansión del contenido guiado COMPLETADA Y VALIDADA.** Partida: `3424f797aa8cb6163536b109ab739ddf55a4cea2`. Exactamente 18 retos: 4 Secuencias, 4 Variables, 5 Condicionales y 5 Ciclos. V9 conserva las cuatro actividades históricas archivadas y añade los nuevos progresos; cuentas, historial y dominio permanecen. Desbloqueo secuencial por reto en backend, con ConceptGraph y política existentes intactos. Jerarquía Aprender → Concepto → Retos sobre el diseño existente; sin Fase 14. Validación: 291 unitarias/MVC + 98 IT, 80 frontend, typecheck/build, 17 E2E DISABLED + 2 Gemini mock + 5 Docker; MDE clean verify 49. 327 hashes protegidos idénticos, V1–V8 intactos. [Catálogo y mundos](CATALOGO_RETOS.md) · [Evidencia](VERIFICACION_EXPANSION_RETOS.md).

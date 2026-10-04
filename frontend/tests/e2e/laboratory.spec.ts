@@ -27,5 +27,10 @@ test('laboratorio conserva variables tras guardar, limpiar y recargar', async ({
   await page.getByRole('button', { name: 'Guardar workspace' }).click();
   const after = await page.evaluate(() => localStorage.getItem('mdedu.blockly.workspace.v1'));
   expect(JSON.parse(after!)).toEqual(JSON.parse(before!));
+  await page.getByRole('button',{name:'Limpiar',exact:true}).click();
+  await page.getByRole('button',{name:'Ver modelo',exact:true}).click();
+  await expect(page.getByRole('dialog')).toContainText('Revisa el modelo');
+  await expect(page.getByRole('dialog')).not.toContainText('Generando representación…');
+  await page.keyboard.press('Escape');await expect(page.getByRole('dialog')).toHaveCount(0);
   expect(errors).toEqual([]);
 });

@@ -7,7 +7,7 @@ import {studentLogin,studentLogout} from '../../src/features/student/studentAuth
 afterEach(()=>{vi.unstubAllGlobals();localStorage.clear();sessionStorage.clear();});
 it('protects student screens without creating an anonymous identity',async()=>{
  const fetcher=vi.fn().mockResolvedValue(new Response(null,{status:401}));vi.stubGlobal('fetch',fetcher);
- render(<MemoryRouter initialEntries={['/aventura']}><Routes><Route path="/aventura" element={<StudentAccess><p>Private content</p></StudentAccess>}/><Route path="/ingresar" element={<h1>Login</h1>}/></Routes></MemoryRouter>);
+ render(<MemoryRouter initialEntries={['/aprender']}><Routes><Route path="/aprender" element={<StudentAccess><p>Private content</p></StudentAccess>}/><Route path="/ingresar" element={<h1>Login</h1>}/></Routes></MemoryRouter>);
  expect(await screen.findByRole('heading',{name:'Login'})).toBeVisible();expect(screen.queryByText('Private content')).not.toBeInTheDocument();expect(fetcher.mock.calls.every(c=>String(c[0]).endsWith('/me'))).toBe(true);
 });
 it('unsafe student requests include session credentials and a fresh csrf token',async()=>{

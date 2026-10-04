@@ -25,7 +25,7 @@ test('accessible home, keyboard skip link and teacher login',async({page})=>{
 test('accessible map, activity and persisted feedback at laptop size',async({page,request})=>{
  const cspErrors:string[]=[];page.on('console',message=>{if(message.text().includes('Content Security Policy'))cspErrors.push(message.text());});
  await page.setViewportSize({width:1280,height:800});await page.emulateMedia({reducedMotion:'reduce'});
- await page.goto('/aventura');await expect(page.getByRole('button',{name:/Secuencias:.*Disponible/})).toBeVisible();await audit(page);
+ await page.goto('/aprender');await expect(page.getByRole('button',{name:/Secuencias:.*Disponible/})).toBeVisible();await audit(page);
  await page.getByRole('button',{name:/Secuencias:.*Disponible/}).click();await page.getByRole('region',{name:'Retos de Secuencias'}).getByRole('link',{name:/Abrir reto/}).click();await expect(page.getByTestId('game-blockly').locator('.blocklySvg')).toBeVisible();await audit(page);
  const id=await page.evaluate(()=>localStorage.getItem('mdedu.student.id.v1'));
  let attemptId='';
@@ -35,7 +35,7 @@ test('accessible map, activity and persisted feedback at laptop size',async({pag
   expect(response.status()).toBe(201);attemptId=(await response.json()).attemptId;
  }
  expect((await request.post(`${api}/api/feedback/generate`,{data:{studentId:id,attemptId}})).status()).toBe(200);
- await page.goto('/aventura/LOOP-01');await expect(page.getByRole('region',{name:'Pista'})).toBeVisible();await audit(page);
+ await page.goto('/aprender/LOOP-01');await expect(page.getByRole('region',{name:'Pista'})).toBeVisible();await audit(page);
  expect(await page.locator('html').evaluate(el=>el.scrollWidth<=el.ownerDocument.defaultView!.innerWidth)).toBe(true);
  expect(cspErrors).toEqual([]);
 });

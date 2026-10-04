@@ -50,14 +50,14 @@ describe('Aventura: compatibilidad histórica y catálogo guiado', () => {
     expect(replayState(trace, -1, initial)).toBe(initial);
   });
   it('la toolbox respeta cada grupo y no anticipa ciclos', () => {
-    expect(gameToolbox(catalog.levels[0]!.allowedBlockGroups).contents.map(c => c.name)).toEqual(['Movimiento']);
+    expect(gameToolbox(catalog.levels[0]!.allowedBlockGroups).contents.map(c => c.name)).toEqual(['Secuencias']);
     expect(gameToolbox(catalog.levels[2]!.allowedBlockGroups).contents.flatMap(c => c.contents).some(b => b.type === 'mdedu_repeat')).toBe(false);
     expect(gameToolbox(catalog.levels[3]!.allowedBlockGroups).contents.flatMap(c => c.contents).some(b => b.type === 'mdedu_repeat')).toBe(true);
   });
   it('un concepto bloqueado permite inspeccionar sus retos sin iniciarlos', async () => {
     const catalog = challengeData as Catalog;
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/api/game/levels') ? catalog : url.endsWith('/api/auth/student/me') ? { studentId: 'student',studentCode:'EST-001',authenticated:true } : { levels: catalog.levels.map((l, i) => ({ levelId: l.id, completed: false, unlocked: i === 0 })) } })));
-    render(<MemoryRouter initialEntries={['/aventura']}><Routes><Route path="/aventura" element={<AdventurePage />} /></Routes></MemoryRouter>);
+    render(<MemoryRouter initialEntries={['/aprender']}><Routes><Route path="/aprender" element={<AdventurePage />} /></Routes></MemoryRouter>);
     const locked = await screen.findByRole('button', { name: /Variables:.*Bloqueado/ });
     await userEvent.click(locked);
     expect(screen.getByRole('region', {name: 'Retos de Variables'})).toHaveTextContent('Bloqueado');
@@ -68,7 +68,7 @@ describe('Aventura: compatibilidad histórica y catálogo guiado', () => {
   it('una URL directa no abre un reto bloqueado', async () => {
     const catalog = challengeData as Catalog;
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/api/game/levels') ? catalog : url.endsWith('/api/auth/student/me') ? { studentId: 'student',studentCode:'EST-001',authenticated:true } : { levels: catalog.levels.map((l, i) => ({ levelId: l.id, completed: false, unlocked: i === 0 })) } })));
-    render(<MemoryRouter initialEntries={['/aventura/LOOP-01']}><Routes><Route path="/aventura/:levelId" element={<AdventurePage />} /></Routes></MemoryRouter>);
+    render(<MemoryRouter initialEntries={['/aprender/LOOP-01']}><Routes><Route path="/aprender/:levelId" element={<AdventurePage />} /></Routes></MemoryRouter>);
     expect(await screen.findByRole('heading', { name: 'Reto bloqueado' })).toBeVisible();
     expect(screen.queryByTestId('game-blockly')).not.toBeInTheDocument();
   });

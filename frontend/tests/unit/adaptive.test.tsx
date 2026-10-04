@@ -13,6 +13,7 @@ it('same renderer interprets configuration A and B without recompilation', () =>
  expect(screen.queryByRole('region', {name: 'Código generado'})).not.toBeInTheDocument();
  expect(screen.queryByRole('region', {name: 'Pista'})).not.toBeInTheDocument();
  rerender(<MemoryRouter><AdaptiveRenderer {...props} value={b}/></MemoryRouter>);
+ fireEvent.click(screen.getByText('Ver código'));
  expect(screen.getByRole('region', {name: 'Código generado'})).toBeVisible();
  expect(screen.getByRole('region', {name: 'Pista'})).toBeVisible();expect(screen.getByRole('region', {name: 'Luma'})).toHaveAttribute('data-state','HINT');
 });
@@ -28,7 +29,7 @@ it('repeat only invokes explicit handler and advance uses backend target', () =>
  expect(repeat).not.toHaveBeenCalled();fireEvent.click(screen.getByRole('button',{name:'Intentar de nuevo'}));expect(repeat).toHaveBeenCalledTimes(1);
  a.configuration={...a.configuration,navigationMode:'ADVANCE',repeatCurrentActivity:false,nextActivityId:'CONDITIONALS'};
  rerender(<MemoryRouter><AdaptiveRenderer value={a} {...props}/></MemoryRouter>);
- expect(screen.getByRole('link',{name:'Continuar'})).toHaveAttribute('href','/aventura/CONDITIONALS');
+ expect(screen.getByRole('link',{name:'Continuar'})).toHaveAttribute('href','/aprender/CONDITIONALS');
 });
 it('transition announces configuration differences with polite live region', () => {
  const a=safeConfiguration('LOOPS');const {rerender}=render(<Transitioner configuration={a}/>);

@@ -13,5 +13,5 @@ test('Gemini owner quota yields safe fallback on the next attempt',async({reques
   if(i===1){expect(feedback.fallbackReason).toBe('RATE_LIMITED');expect(feedback.llmUsed).toBe(false);}
  }
  await page.goto('/');await loginStudentById(page,studentId);await page.evaluate(id=>localStorage.setItem('mdedu.student.id.v1',id),studentId);
- await page.goto('/aventura/SEQ-01');await expect(page.locator('.game-activity')).toBeVisible();
+ await page.goto('/aprender/SEQ-01');await expect(page.locator('.game-activity')).toBeVisible();
 });

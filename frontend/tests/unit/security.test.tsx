@@ -35,5 +35,5 @@ it('renders a safe recovery screen after a render error',()=>{
  render(<ErrorBoundary><Broken/></ErrorBoundary>);
  expect(screen.getByRole('heading').textContent).toContain('No se pudo mostrar');
  expect(screen.queryByText('private-stack-detail')).toBeNull();
- expect(screen.getByRole('link',{name:'Volver al inicio'}).getAttribute('href')).toBe('/');
+ expect(screen.getByRole('link',{name:'Volver a Aprender'}).getAttribute('href')).toBe('/aprender');
 });

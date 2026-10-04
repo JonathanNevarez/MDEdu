@@ -16,7 +16,7 @@ test('master: repeated pedagogical error, fallback, Luma, trace and legacy inspe
  const loops=model.conceptMasteries.find((m:{conceptId:string})=>m.conceptId==='LOOPS');expect(loops.consecutiveFailures).toBe(3);
  const feedback=await(await request.post(`${api}/api/feedback/generate`,{data:{studentId,attemptId}})).json();expect(feedback.source).toBe('FALLBACK');
  await page.goto('/');await loginStudentById(page,studentId);await page.evaluate(id=>localStorage.setItem('mdedu.student.id.v1',id),studentId);
- await page.goto('/aventura/LOOP-01');await expect(page.getByRole('region',{name:'Luma'})).toBeVisible();await expect(page.getByRole('region',{name:'Pista'})).toBeVisible();
+ await page.goto('/aprender/LOOP-01');await expect(page.getByRole('region',{name:'Luma'})).toBeVisible();await expect(page.getByRole('region',{name:'Pista'})).toBeVisible();
  await page.getByRole('button',{name:'Intentar de nuevo'}).focus();await page.keyboard.press('Enter');await expect(page.getByRole('button',{name:'▶ Ejecutar',exact:true})).toBeEnabled();
  const trace=await(await request.get(`${api}/api/students/${studentId}/attempts/${attemptId}/timeline`)).json();expect(trace.traceStatus).toBe('COMPLETE');
  expect(trace.attempt.patterns).toContain('REPETITIVE_SEQUENCE_WITHOUT_LOOP');expect(trace.attempt.masteryDelta).toBeLessThanOrEqual(0);

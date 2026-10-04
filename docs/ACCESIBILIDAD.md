@@ -13,3 +13,12 @@ Blockly conserva una superficie SVG compleja y no se ha reescrito. Las operacion
 ## Resultado observado de cierre
 
 Seis estados auditados: cero critical/serious. Inicio, login, Meta-IU y mapa sin violaciones. En actividad y feedback queda `region` moderate sobre el canvas decorativo interno de medición `blocklyComputeCanvas`, insertado fuera de los landmarks. Se conserva la biblioteca sin parches internos. Axe deja dos comprobaciones incompletas en mapa/actividad/feedback; requieren revisión humana. Estas limitaciones no se ocultan mediante exclusiones del escaneo.
+
+
+## Rediseño visual final (03/10/2026)
+
+La navegación autenticada contiene Aprender, Laboratorio y Progreso, más el menú del código de estudiante. Se conservan foco visible, enlace de salto, etiquetas, controles de teclado, texto de estado y reduced motion. El modelo EMF se muestra bajo demanda en un diálogo nativo con título accesible y cierre por Escape. El PNG inicialmente solicitado para Luma se sustituyó por la conservación del SVG anterior por instrucción posterior del usuario.
+
+`final-interface.spec.ts` recorre diez estados reales en cada viewport **1440×900 y 1366×768**: ingreso, mapa, submapa, COND-03 antes/después, LOOP-01 pedagógico, progreso, laboratorio y las dos vistas docentes. Resultado: **0 serious / 0 critical** en los veinte estados; sin overflow horizontal. Comprueba además Tahoma en los encabezados, montaje de un condicional por drag/drop, modelo real, login desde otro contexto y progreso idéntico.
+
+Se mantiene el hallazgo moderate `region` del canvas interno de Blockly fuera de landmarks, sin exclusiones de axe ni parches a la biblioteca. No se afirma accesibilidad universal de toda la edición avanzada de Blockly. [Auditoría 1440](evidencia-rediseno-final/1440-audits.json) · [Auditoría 1366](evidencia-rediseno-final/1366-audits.json).

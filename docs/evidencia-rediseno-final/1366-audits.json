@@ -1,0 +1,82 @@
+[
+  {
+    "name": "ingresar",
+    "violations": []
+  },
+  {
+    "name": "aprender",
+    "violations": []
+  },
+  {
+    "name": "concept-map",
+    "violations": []
+  },
+  {
+    "name": "cond-03-programa",
+    "violations": [
+      {
+        "id": "region",
+        "impact": "moderate",
+        "targets": [
+          [
+            "canvas"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "name": "cond-03-exito",
+    "violations": [
+      {
+        "id": "region",
+        "impact": "moderate",
+        "targets": [
+          [
+            "canvas"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "name": "loop-01-pedagogia",
+    "violations": [
+      {
+        "id": "region",
+        "impact": "moderate",
+        "targets": [
+          [
+            "canvas"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "name": "progreso",
+    "violations": []
+  },
+  {
+    "name": "laboratorio",
+    "violations": [
+      {
+        "id": "region",
+        "impact": "moderate",
+        "targets": [
+          [
+            "canvas"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "name": "docente-login",
+    "violations": []
+  },
+  {
+    "name": "docente",
+    "violations": []
+  }
+]

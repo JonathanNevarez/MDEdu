@@ -22,7 +22,7 @@ test('two real histories produce distinct UI; hints, Luma, repeat and refresh ne
     const pa=await a.newPage();const pb=await b.newPage();
     for(const [page,id] of [[pa,ids[0]!],[pb,ids[1]!]] as const) {
       await page.goto('/');await loginStudentById(page,id);await page.evaluate(student => localStorage.setItem('mdedu.student.id.v1',student),id);
-      await page.goto('/aventura/LOOP-01');
+      await page.goto('/aprender/LOOP-01');
     }
     await expect(pa.getByRole('region',{name:'Pista'})).toBeVisible();
     await expect(pa.getByRole('region',{name:'Luma'})).toBeVisible();
@@ -50,11 +50,11 @@ test('advance uses a real backend target; local tampering cannot unlock a level'
   const c=await (await request.get(`${api}/api/students/${id}/attempts/${attempt.attemptId}/ui-configuration`)).json();
   expect(c.configuration.navigationMode).toBe('ADVANCE');expect(c.configuration.nextActivityId).toBe('VAR-01');
   await page.goto('/');await loginStudentById(page,id);await page.evaluate(student=>localStorage.setItem('mdedu.student.id.v1',student),id);
-  await page.goto('/aventura/SEQ-01');await page.getByRole('link',{name:'Continuar',exact:true}).click();
-  await expect(page).toHaveURL(/aventura\/VAR-01$/);
+  await page.goto('/aprender/SEQ-01');await page.getByRole('link',{name:'Continuar',exact:true}).click();
+  await expect(page).toHaveURL(/aprender\/VAR-01$/);
   // Controlled client-side tampering: server progress and submission remain authoritative.
   await page.route('**/api/students/*/activities/SEQ-01/ui-configuration',route=>route.fulfill({json:{...c,configuration:{...c.configuration,nextActivityId:'LOOP-01'}}}));
-  await page.goto('/aventura/SEQ-01');await page.getByRole('link',{name:'Continuar',exact:true}).click();
+  await page.goto('/aprender/SEQ-01');await page.getByRole('link',{name:'Continuar',exact:true}).click();
   const lockedProgram=JSON.parse(readFileSync('../backend/src/test/resources/challenges/LOOP-01.json','utf8'));
   expect((await request.post(`${api}/api/attempts`,{data:{studentId:id,levelId:'LOOP-01',program:lockedProgram,hintCount:0,resolutionTimeMs:1000}})).status()).toBe(409);
 await expect(page.getByRole('heading',{name:'Reto bloqueado'})).toBeVisible();
@@ -69,9 +69,9 @@ test('controlled configurations show and hide escaped code in the same bundle, w
       code:{available:true,text:'<script>window.injected=true</script>',reason:null}}});
   });
   await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/');
-  await loginStudentById(page,id);await page.evaluate(student=>localStorage.setItem('mdedu.student.id.v1',student),id);await page.goto('/aventura/SEQ-01');
+  await loginStudentById(page,id);await page.evaluate(student=>localStorage.setItem('mdedu.student.id.v1',student),id);await page.goto('/aprender/SEQ-01');
   await expect(page.locator('.game-activity')).toBeVisible();await expect(page.getByRole('region',{name:'Código generado'})).toHaveCount(0);
-  show=true;await page.reload();await expect(page.getByRole('region',{name:'Código generado'})).toBeVisible();
+  show=true;await page.reload();await page.getByText('Ver código',{exact:true}).click();await expect(page.getByRole('region',{name:'Código generado'})).toBeVisible();
   await expect(page.getByRole('region',{name:'Pista'})).toBeVisible();
   await expect(page.locator('.code-panel code')).toHaveText('<script>window.injected=true</script>');
   expect(await page.locator('.code-panel script').count()).toBe(0);

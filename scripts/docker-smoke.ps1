@@ -55,7 +55,7 @@ try {
         try {
             $env:PLAYWRIGHT_BASE_URL='http://127.0.0.1:8088'; $env:VITE_API_BASE_URL=$env:PLAYWRIGHT_BASE_URL
             Push-Location (Join-Path $ProjectRoot 'frontend')
-            try { Invoke-Checked npx.cmd @('playwright','test','adventure.spec.ts','quality.spec.ts','student-auth.spec.ts','--workers=1') } finally { Pop-Location }
+            try { Invoke-Checked npx.cmd @('playwright','test','adventure.spec.ts','quality.spec.ts','student-auth.spec.ts','laboratory.spec.ts','--workers=1') } finally { Pop-Location }
         } finally { $env:PLAYWRIGHT_BASE_URL=$previousBase; $env:VITE_API_BASE_URL=$previousApi }
     }
     Invoke-Checked docker ($compose+@('stop','database'))

@@ -24,7 +24,7 @@ test('Gemini local HTTP adapter delivers validated feedback to the adaptive UI',
   const feedback = await response.json();
   expect(feedback.provider).toBe('GEMINI'); expect(feedback.source).toBe('GEMINI'); expect(feedback.llmUsed).toBe(true);
   await page.goto('/'); await loginStudentById(page,id);await page.evaluate(({studentId, sessionId}) => {localStorage.setItem('mdedu.student.id.v1', studentId);sessionStorage.setItem('mdedu.session.v1', JSON.stringify({id: sessionId, studentId, status: 'ACTIVE'}));}, {studentId: id, sessionId: session.id});
-  await page.goto('/aventura/LOOP-01');
+  await page.goto('/aprender/LOOP-01');
   await expect(page.getByRole('region', { name: 'Luma' })).toBeVisible();
   await expect(page.getByRole('region', { name: 'Pista' })).toContainText(feedback.message);
   await expect(page.getByRole('button', { name: 'Intentar de nuevo' })).toBeVisible();

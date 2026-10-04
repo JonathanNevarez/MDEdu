@@ -10,14 +10,15 @@ test('teacher provisions once; fresh devices recover identical progress and cann
   const docent=await c.newPage();await loginTeacherPage(docent);await docent.getByRole('button',{name:'Participantes',exact:true}).click();
   await docent.getByRole('button',{name:'Crear participante',exact:true}).click();const issued=docent.getByRole('region',{name:'Clave temporal'});await expect(issued).toBeVisible();
   const code=await issued.getByRole('heading').innerText();const password=await issued.locator('code').innerText();await issued.getByRole('button',{name:'Ocultar clave'}).click();await expect(issued).toHaveCount(0);
-  const pa=await a.newPage();await pa.goto('/aventura');await expect(pa).toHaveURL(/ingresar$/);
+  const pa=await a.newPage();await pa.goto('/aprender');await expect(pa).toHaveURL(/ingresar$/);
   await pa.getByLabel('Código de estudiante').fill(code);await pa.getByLabel('Clave',{exact:true}).fill(password);await pa.getByRole('button',{name:'Ingresar',exact:true}).click();
   await pa.getByRole('button',{name:/Secuencias:.*Disponible/}).click();await pa.getByRole('region',{name:'Retos de Secuencias'}).getByRole('link',{name:/Abrir reto/}).click();
+  await pa.getByText('Añadir con teclado',{exact:true}).click();
   for(const name of ['+ Avanzar','+ Avanzar','+ Girar derecha','+ Avanzar','+ Avanzar'])await pa.getByRole('button',{name,exact:true}).click();
   await pa.getByRole('button',{name:'▶ Ejecutar',exact:true}).click();await expect(pa.getByRole('status').filter({hasText:'¡Reto completado!'})).toBeVisible();
   const identity=await(await a.request.get(`${api}/api/auth/student/me`)).json();const id=identity.studentId;
   const model=await(await a.request.get(`${api}/api/students/${id}/model`)).json();const progress=await(await a.request.get(`${api}/api/students/${id}/progress`)).json();
-  await pa.getByRole('button',{name:'Cerrar sesión',exact:true}).click();await expect(pa).toHaveURL(/ingresar$/);
+  await pa.locator('.student-menu summary').click();await pa.getByRole('button',{name:'Cerrar sesión',exact:true}).click();await expect(pa).toHaveURL(/ingresar$/);
   const pb=await b.newPage();await pb.goto('/ingresar');expect(await pb.evaluate(()=>localStorage.length+sessionStorage.length)).toBe(0);
   await pb.getByLabel('Código de estudiante').fill(code);await pb.getByLabel('Clave',{exact:true}).fill(password);await pb.getByRole('button',{name:'Ingresar',exact:true}).click();await expect(pb.getByRole('button',{name:/Variables:.*Disponible/})).toBeVisible();
   expect(await(await b.request.get(`${api}/api/auth/student/me`)).json()).toEqual(identity);

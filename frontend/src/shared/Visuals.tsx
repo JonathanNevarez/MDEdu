@@ -16,7 +16,7 @@ export function Icon({name, className = ''}: {name: IconName; className?: string
   return <svg className={`ui-icon ${className}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={paths[name]}/></svg>;
 }
 export const conceptIcons: IconName[] = ['sequence', 'variable', 'branch', 'loop'];
-// Original vector placeholder, isolated for replacement by a future approved Luma asset.
+// Existing Luma SVG retained at the user's explicit preference for this redesign.
 export function LumaPortrait({state = 'IDLE'}: {state?: string}) {
   return <svg className="luma-portrait" data-mood={state} viewBox="0 0 160 180" aria-hidden="true">
     <ellipse cx="80" cy="166" rx="49" ry="8" fill="#244e5a" opacity=".12"/>
@@ -33,11 +33,13 @@ export function LumaPortrait({state = 'IDLE'}: {state?: string}) {
 }
 export function Landscape({className = ''}: {className?: string}) {
   return <svg className={`landscape ${className}`} viewBox="0 0 1200 440" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    <rect width="1200" height="440" fill="#d8eff6"/><circle cx="1020" cy="70" r="43" fill="#fff4c9"/>
+    <rect width="1200" height="440" fill="#C6EDFF"/><circle cx="1020" cy="70" r="43" fill="#fff4c9"/>
     <g fill="#fff" opacity=".7"><path d="M95 71q-2-19 22-19 14-35 46-7 30-3 30 26z"/><path d="M742 55q6-17 26-13 19-29 39-6 27-4 30 19z"/></g>
-    <path d="M0 217Q150 90 300 195T620 155T950 176T1200 138V440H0Z" fill="#bedcce"/>
-    <path d="M0 271Q170 146 335 246T660 218T1000 216T1200 246V440H0Z" fill="#b4d6ab"/>
-    <path d="M0 390Q260 350 410 365T746 351Q948 347 1200 306V440H0Z" fill="#97c4a0"/>
+    <path d="M0 230L130 100L210 182L330 44L470 220L580 98L690 203L840 82L1010 225L1130 103L1200 195V440H0Z" fill="#80BEDC"/>
+    <path d="M270 118L330 44L389 119L350 102L330 75L311 110Z M786 139L840 82L902 152L850 114L835 107Z" fill="#E7F9FF"/>
+    <path d="M332 75L389 119L470 220L350 171Z M842 113L902 152L1010 225L866 181Z" fill="#5EA8D0"/>
+    <path d="M0 271Q170 146 335 246T660 218T1000 216T1200 246V440H0Z" fill="#8CCFA1"/>
+    <path d="M0 390Q260 350 410 365T746 351Q948 347 1200 306V440H0Z" fill="#62B98A"/>
     <path d="M790 226q-86 38-28 73t-24 56q-64 35-26 85h219q-182-53-104-89t-4-60q-68-29 9-65" fill="#acdce7"/>
     <path d="M803 296q-52 16-15 35 M748 400l53 12" fill="none" stroke="#e6f6f9" strokeWidth="3"/>
     <g stroke="#729773" strokeWidth="5" fill="#759e78"><path d="M71 299v49 M52 310q-16-36 11-45 24-16 39 19 9 31-26 29z"/><path d="M1124 245v40 M1106 251q-18-31 9-41 30-13 36 22 6 27-31 24z"/></g>
@@ -50,3 +52,5 @@ export function LoadingState({text = 'Preparando tu aventura…'}: {text?: strin
 export function MasteryBar({value, label}: {value: number; label: string}) {
   return <div className="mastery-meter"><span>{label}<strong>{(value * 100).toFixed(1)} %</strong></span><meter min={0} max={1} value={value} aria-label={label} style={{'--mastery': `${Math.max(0, Math.min(1, value)) * 100}%`} as CSSProperties}>{value}</meter></div>;
 }
+
+export function HeaderLandscape(){return <svg className="header-landscape" viewBox="0 0 1440 85" preserveAspectRatio="none" aria-hidden="true"><path d="M0 85L100 40L180 80L260 50L350 82L410 60L520 82L600 35L680 80L760 60L880 84L1020 30L1140 82L1220 54L1330 80L1400 30L1440 80Z" fill="#83CAE9"/><path d="M50 85L80 60L110 85M290 85L320 55L350 85M1050 85L1085 57L1120 85M1320 85L1340 53L1360 85" fill="#6BB788"/><path d="M0 83Q130 72 260 82T600 80T940 82T1440 79V85H0" fill="#93D0A5"/></svg>;}

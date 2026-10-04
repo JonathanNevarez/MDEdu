@@ -25,8 +25,9 @@ test('Ciclos distingue repetición manual y un ciclo correcto', async ({ page, r
   }
   await page.goto('/');
   await loginStudentById(page,studentId);await page.evaluate(id => localStorage.setItem('mdedu.student.id.v1', id), studentId);
-  await page.goto('/aventura');
+  await page.goto('/aprender');
   await page.getByRole('button', { name: /Ciclos:.*Disponible/ }).click();await page.getByRole('region',{name:'Retos de Ciclos'}).getByRole('link',{name:/Abrir reto/}).click();
+  await page.getByText('Añadir con teclado',{exact:true}).click();
   for (let i = 0; i < 7; i++) await page.getByRole('button', { name: '+ Avanzar', exact: true }).click();
   const manualResponse = page.waitForResponse(r => r.url().endsWith('/api/attempts') && r.request().method() === 'POST');
   await page.getByRole('button', { name: '▶ Ejecutar', exact: true }).click();
@@ -53,7 +54,7 @@ test('Ciclos distingue repetición manual y un ciclo correcto', async ({ page, r
   await page.getByRole('button', { name: 'Edit text: 0', exact: true }).click();
   const input = page.locator('input.blocklyHtmlInput');
   await input.fill('7'); await input.press('Enter');
-  await page.getByRole('treeitem', { name: 'Movimiento', exact: true }).click();
+  await page.getByRole('treeitem', { name: 'Secuencias', exact: true }).click();
   const move = page.getByRole('option', { name: /^Avanzar/ });
   const bodyBox = await repeat.boundingBox(); expect(bodyBox).not.toBeNull();
   await dragBlock(page, move, repeat, bodyBox!.width - 8, 31);

@@ -1,33 +1,19 @@
-import { render, screen } from '@testing-library/react';
+import {render,screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
-import { describe, expect, it } from 'vitest';
-import { App } from '../../src/app/App';
-
-describe('Navegación inicial', () => {
-  it('presenta el inicio y permite comenzar la aventura', () => {
-    render(<MemoryRouter><App /></MemoryRouter>);
-
-    expect(screen.getByRole('heading', {
-      level: 1,
-      name: 'Las grandes ideas empiezan con un bloque.',
-    })).toBeVisible();
-    expect(screen.getByRole('link', { name: 'Comenzar mi aventura' })).toHaveAttribute('href', '/aventura');
-    expect(screen.getByRole('link', { name: 'Inicio' }))
-      .toHaveAttribute('aria-current', 'page');
-  });
-
-  it('permite volver al inicio al abrir una ruta inexistente', async () => {
-    const user = userEvent.setup();
-    render(<MemoryRouter initialEntries={['/pagina-inexistente']}><App /></MemoryRouter>);
-
-    expect(screen.getByRole('heading', { name: 'No encontramos esta página' })).toBeVisible();
-    await user.click(screen.getByRole('link', { name: 'Volver al inicio' }));
-
-    expect(screen.getByRole('heading', {
-      name: 'Las grandes ideas empiezan con un bloque.',
-    })).toBeVisible();
-    expect(screen.queryByRole('heading', { name: 'No encontramos esta página' }))
-      .not.toBeInTheDocument();
-  });
+import {MemoryRouter} from 'react-router-dom';
+import {afterEach,expect,it,vi} from 'vitest';
+import {App} from '../../src/app/App';
+afterEach(()=>vi.unstubAllGlobals());
+it('redirects root to the real student login without obsolete navigation',async()=>{
+ vi.stubGlobal('fetch',vi.fn().mockResolvedValue(new Response(null,{status:401})));
+ render(<MemoryRouter><App/></MemoryRouter>);
+ expect(await screen.findByRole('heading',{name:'Bienvenido'})).toBeVisible();
+ expect(screen.queryByRole('link',{name:'Inicio'})).toBeNull();
+ expect(screen.getByLabelText('Código de estudiante')).toBeVisible();
+});
+it('recovers an unknown route through Aprender and session access',async()=>{
+ vi.stubGlobal('fetch',vi.fn().mockResolvedValue(new Response(null,{status:401})));
+ render(<MemoryRouter initialEntries={['/no-existe']}><App/></MemoryRouter>);
+ await userEvent.click(screen.getByRole('link',{name:'Volver a Aprender'}));
+ expect(await screen.findByRole('heading',{name:'Bienvenido'})).toBeVisible();
 });

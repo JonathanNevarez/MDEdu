@@ -80,7 +80,7 @@ function Parameters() {
   const state=useRead('parameters', api.parameters);if (!state.value) return <ReadState error={state.error}/>;
   return <section><h2>Parámetros activos</h2><p>Solo lectura · {state.value.source} · parametersVersion: {state.value.parametersVersion}</p><div className="parameter-grid"><article><h3>Ayuda y feedback</h3><Fields value={{hintLevel:state.value.values.hintLevel,feedbackDetail:state.value.values.feedbackDetail,maxHintsPerActivity:state.value.values.maxHintsPerActivity}}/></article><article><h3>Dificultad y ruta</h3><Fields value={{difficultyAdjustmentEnabled:state.value.values.difficultyAdjustmentEnabled,routeAdaptationEnabled:state.value.values.routeAdaptationEnabled,maxAttemptsBeforeReinforcement:state.value.values.maxAttemptsBeforeReinforcement}}/></article><article><h3>Umbrales</h3><Fields value={{failureThreshold:state.value.values.failureThreshold,successThreshold:state.value.values.successThreshold,masteryThreshold:state.value.values.masteryThreshold}}/></article></div><details><summary>Detalles técnicos · parametersHash</summary><Fields value={{version:state.value.values.version,parametersHash:state.value.parametersHash}}/></details></section>;
 }
-const sections=['Modelo del estudiante','Intentos','Adaptaciones','Reglas','Parámetros','Participantes'] as const;
+const sections=['Participantes','Modelo del estudiante','Intentos','Adaptaciones','Reglas','Parámetros'] as const;
 type Section=typeof sections[number];
 export function MetaUiPage() {
   const [page, setPage]=useState(0);const [student, select]=useState('');const [section, setSection]=useState<Section>('Modelo del estudiante');
@@ -96,7 +96,7 @@ export function MetaUiPage() {
   return <div className="meta-ui"><header className="meta-header"><p className="eyebrow">Mi primera programación · Meta-IU</p><h1>Vista docente</h1><p>Consulta del aprendizaje, las reglas y la trazabilidad.</p><p className="meta-notice">Solo lectura · Sesión docente protegida.</p></header>
     {!caps.value ? <ReadState error={caps.error}/> : <details><summary>Capacidades disponibles</summary><Fields value={caps.value}/></details>}
     <section className="student-selector" aria-label="Selección de estudiante"><label htmlFor="meta-student">Estudiante pseudónimo</label>{!students.value ? <ReadState error={students.error}/> : <><select id="meta-student" value={student} onChange={e => select(e.target.value)}><option value="">Seleccionar estudiante</option>{students.value.items.map(s => <option key={s.studentId} value={s.studentId}>Estudiante …{s.studentId.slice(-8)} · {s.attemptCount} intentos</option>)}</select>{!students.value.items.length && <p>Sin estudiantes registrados.</p>}<Pager value={students.value} change={p => {select('');setPage(p);}}/></>}{student && <p>ID pseudónimo: <code>{student}</code></p>}</section>
-    <div className="meta-workspace"><nav aria-label="Secciones docentes">{sections.map(s => <button key={s} aria-pressed={section === s} onClick={() => setSection(s)}>{s}</button>)}</nav>
+    <div className="meta-workspace"><nav aria-label="Secciones docentes">{sections.map(s => <button key={s} aria-pressed={section === s} onClick={() => setSection(s)}>{s === 'Modelo del estudiante' ? 'Modelo' : s}</button>)}</nav>
     <div className="meta-content" key={`${student}/${section}`}>{content}</div></div>
   </div>;
 }

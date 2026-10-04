@@ -1,3 +1,4 @@
+import {blockStyle} from './theme';
 import * as Blockly from 'blockly/core';
 import * as Es from 'blockly/msg/es';
 import { booleanOperators, comparisonOperators, sensorKinds, valueTypes } from '../dto/program';
@@ -36,7 +37,7 @@ export function registerBlocks() {
   if (Blockly.Blocks['mdedu_start']) return;
   const define = (name: string, init: (block: Blockly.Block) => void, expression = false, start = false) => {
     Blockly.Blocks[name] = { init(this: Blockly.Block) {
-      this.setColour(expression ? 210 : 160);
+      this.setStyle(blockStyle(name));
       if (expression) this.setOutput(true, 'Expression');
       else { if (!start) this.setPreviousStatement(true, 'Statement'); this.setNextStatement(true, 'Statement'); }
       init(this);

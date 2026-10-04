@@ -5,7 +5,7 @@ test('dos identidades conservan estados independientes en PostgreSQL', async ({ 
   const contextA = await browser.newContext(); const contextB = await browser.newContext();
   try {
     const a = await contextA.newPage(); const b = await contextB.newPage();
-    await loginStudentById(a,(await(await createStudent(request)).json()).id);await loginStudentById(b,(await(await createStudent(request)).json()).id);await a.goto('/aventura'); await b.goto('/aventura');
+    await loginStudentById(a,(await(await createStudent(request)).json()).id);await loginStudentById(b,(await(await createStudent(request)).json()).id);await a.goto('/aprender'); await b.goto('/aprender');
     for (const page of [a, b]) {
       await expect(page.getByRole('button', { name: /Secuencias:.*Disponible/ })).toBeVisible();
       await expect(page.getByRole('button', { name: /Variables:.*Bloqueado/ })).toBeVisible();
@@ -14,6 +14,7 @@ test('dos identidades conservan estados independientes en PostgreSQL', async ({ 
     const bId = await b.evaluate(() => localStorage.getItem('mdedu.student.id.v1'));
     expect(aId).not.toBe(bId); expect(aId).toBeTruthy(); expect(bId).toBeTruthy();
     await a.getByRole('button', { name: /Secuencias:.*Disponible/ }).click();await a.getByRole('region',{name:'Retos de Secuencias'}).getByRole('link',{name:/Abrir reto/}).click();
+  await a.getByText('Añadir con teclado',{exact:true}).click();
     for (const name of ['+ Avanzar', '+ Avanzar', '+ Girar derecha', '+ Avanzar', '+ Avanzar']) await a.getByRole('button', { name, exact: true }).click();
     await a.getByRole('button', { name: '▶ Ejecutar', exact: true }).click();
     await expect(a.getByRole('status').filter({ hasText: '¡Reto completado!' })).toBeVisible();
@@ -23,6 +24,7 @@ test('dos identidades conservan estados independientes en PostgreSQL', async ({ 
     expect(await a.evaluate(() => localStorage.getItem('mdedu.game.progress.v1'))).toBeNull();
     await a.screenshot({ path: testInfo.outputPath('student-a-persisted.png'), fullPage: true });
     await b.getByRole('button', { name: /Secuencias:.*Disponible/ }).click();await b.getByRole('region',{name:'Retos de Secuencias'}).getByRole('link',{name:/Abrir reto/}).click();
+  await b.getByText('Añadir con teclado',{exact:true}).click();
     await b.getByRole('button', { name: '+ Avanzar', exact: true }).click();
     await b.getByRole('button', { name: '▶ Ejecutar', exact: true }).click();
     await expect(b.getByRole('status').filter({ hasText: 'No alcanzaste la meta todavía' })).toBeVisible();

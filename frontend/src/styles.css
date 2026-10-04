@@ -1,4 +1,6 @@
+@import './styles/final-theme.css';
 @import './styles/tokens.css';
+@layer legacy {
 :root { font-family:var(--font-body); color:var(--text); background:var(--background); font-synthesis:none; line-height:1.6; text-rendering:optimizeLegibility; }
 * { box-sizing:border-box; } body { margin:0; min-width:320px; background:radial-gradient(ellipse at 15% 0,#e0f3fa,transparent 65%),var(--background); }
 a { color:var(--primary); text-underline-offset:4px; } a:hover { color:var(--primary-hover); }
@@ -35,3 +37,4 @@ p { max-width:72ch; } small { font-size:var(--text-small); } code,pre { font-fam
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }
 
 .student-session {display:flex;align-items:center;justify-content:flex-end;gap:var(--space-4);margin-bottom:var(--space-4)}
+}

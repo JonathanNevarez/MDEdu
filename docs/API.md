@@ -729,3 +729,10 @@ Requieren docente: `/api/meta/**`, `/api/adaptation/**`, `/api/attempts/{id}/ada
 Errores contienen `timestamp`, `status`, `code`, `message`, `requestId`. Los errores de dominio mantienen su diagnóstico anterior; `httpStatus` identifica el estado HTTP cuando `status` contiene el estado histórico del juego. Categorías: VALIDATION_ERROR, UNAUTHORIZED, FORBIDDEN, RESOURCE_NOT_FOUND, CONFLICT, RATE_LIMITED e INTERNAL_ERROR. JSON >256 KiB: 413; UUID/enum/paginación inválidos: 400. Sin SQL ni stack traces en respuestas.
 
 `/actuator/health/liveness` comprueba vida del proceso; `/actuator/health/readiness` también exige DB. Solo se expone estado. CORS enumera orígenes explícitos en `CORS_ALLOWED_ORIGINS`; clientes docentes incluyen cookies y CSRF. Cuota LLM excedida produce feedback normal 200 con `source=FALLBACK`, `fallbackReason=RATE_LIMITED`, sin otra llamada externa.
+
+
+## Laboratorio libre (rediseño visual final)
+
+`GET /api/laboratory/world` devuelve el WorldConfig del entorno fijo de experimentación. `POST /api/laboratory/execute` recibe el ProgramDto v1 existente y devuelve el Result del mismo intérprete EMF (estado, traza, variables y errores). No admite un mundo arbitrario enviado por el cliente. Requiere sesión de estudiante/docente; POST también CSRF. Devuelve 400 para contrato inválido, 422 para modelo EMF inválido y 200 para ejecución terminada o error de runtime controlado. Límite de operaciones existente (200 por defecto).
+
+No genera calificación, intentos, adaptaciones, escrituras de StudentModel ni desbloqueos. La API guiada y sus comprobaciones de ownership/bloqueos permanecen intactas.

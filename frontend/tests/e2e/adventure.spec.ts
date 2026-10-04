@@ -5,7 +5,7 @@ test('mapa, secuencia real, replay, reinicio y progreso persistido', async ({ pa
   const errors: string[] = []; let executions = 0;
   page.on('pageerror', error => errors.push(error.message));
   page.on('request', request => { if (request.url().endsWith('/api/attempts')) executions++; });
-  await page.goto('/aventura');
+  await page.goto('/aprender');
   await expect(page.getByRole('heading', { name: 'Aprender' })).toBeVisible();
   await expect(page.getByRole('button', { name: /: .*\.( Disponible| Bloqueado)/ })).toHaveCount(4);
   await expect(page.getByRole('button', { name: /Secuencias:.*Disponible/ })).toHaveAttribute('aria-pressed', 'true');
@@ -14,11 +14,12 @@ test('mapa, secuencia real, replay, reinicio y progreso persistido', async ({ pa
   await page.screenshot({ path: testInfo.outputPath('map.png'), fullPage: true });
   await locked.focus(); await page.keyboard.press('Enter');
   await expect(page.getByRole('region', { name: 'Retos de Variables' }).getByRole('link')).toHaveCount(0);
-  await expect(page).toHaveURL(/\/aventura$/);
+  await expect(page).toHaveURL(/\/aprender$/);
   await page.getByRole('button', { name: /Secuencias:.*Disponible/ }).click();
   await page.getByRole('region', { name: 'Retos de Secuencias' }).getByRole('link', { name: /Abrir reto/ }).click();
   await expect(page.getByTestId('game-blockly').locator('.blocklySvg')).toBeVisible();
   await expect(page.getByRole('img', { name: /GridWorld: personaje en 1, 1/ })).toBeVisible();
+  await page.getByText('Añadir con teclado',{exact:true}).click();
   for (const name of ['+ Avanzar', '+ Avanzar', '+ Girar derecha', '+ Avanzar', '+ Avanzar'])
     { await page.getByRole('button', { name, exact: true }).focus(); await page.keyboard.press('Enter'); }
   await page.getByRole('button', { name: '▶ Ejecutar', exact: true }).focus(); await page.keyboard.press('Enter');

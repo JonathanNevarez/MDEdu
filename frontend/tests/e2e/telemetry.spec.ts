@@ -9,9 +9,10 @@ test('real session and manual LOOP-01 reconstruct a complete isolated audit with
   const program=JSON.parse(readFileSync(`../backend/src/test/resources/challenges/${level}.json`,'utf8'));
   expect((await request.post(`${api}/api/attempts`,{data:{studentId:student,levelId:level,program,hintCount:0,resolutionTimeMs:1000}})).status()).toBe(201);
  }
- await page.goto('/');await loginStudentById(page,student);await page.evaluate(id=>localStorage.setItem('mdedu.student.id.v1',id),student);await page.goto('/aventura/LOOP-01');
+ await page.goto('/');await loginStudentById(page,student);await page.evaluate(id=>localStorage.setItem('mdedu.student.id.v1',id),student);await page.goto('/aprender/LOOP-01');
  await expect(page.getByTestId('game-blockly').locator('.blocklySvg')).toBeVisible();
  const session=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('mdedu.session.v1')!).id as string);
+  await page.getByText('Añadir con teclado',{exact:true}).click();
  for(let i=0;i<7;i++)await page.getByRole('button',{name:'+ Avanzar',exact:true}).click();
  const pending=page.waitForResponse(r=>r.url().endsWith('/api/attempts')&&r.request().method()==='POST');
  await page.getByRole('button',{name:'▶ Ejecutar',exact:true}).click();const response=await pending;

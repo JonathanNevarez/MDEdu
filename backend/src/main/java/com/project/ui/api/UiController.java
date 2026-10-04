@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.*;
 public class UiController {
     private final UiConfigurationService service;
     public UiController(UiConfigurationService service){this.service=service;}
-    @GetMapping("/attempts/{attemptId}/ui-configuration")
+    @org.springframework.security.access.prepost.PreAuthorize("@studentAccess.owns(#studentId)")
+ @GetMapping("/attempts/{attemptId}/ui-configuration")
     public UiConfigurationService.Response attempt(@PathVariable UUID studentId,@PathVariable UUID attemptId){return service.byAttempt(studentId,attemptId);}
-    @GetMapping("/activities/{activityId}/ui-configuration")
+    @org.springframework.security.access.prepost.PreAuthorize("@studentAccess.owns(#studentId)")
+ @GetMapping("/activities/{activityId}/ui-configuration")
     public UiConfigurationService.Response latest(@PathVariable UUID studentId,@PathVariable String activityId){return service.latest(studentId,activityId);}
 }

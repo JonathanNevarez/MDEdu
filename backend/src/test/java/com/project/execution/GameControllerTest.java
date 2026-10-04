@@ -19,7 +19,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @WebMvcTest(controllers=GameController.class,properties="spring.config.import=")
 @Import({com.project.shared.security.TeacherSecurityConfiguration.class,LevelCatalog.class,GameExecutionService.class,ProgrammingModelMapper.class,SolutionEvaluationService.class,PatternCatalog.class})
+@org.springframework.security.test.context.support.WithMockUser(roles="TEACHER")
 class GameControllerTest {
+    private static org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder post(String path,Object... args){return org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post(path,args).with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf());}
     @Autowired MockMvc mvc;
     String path="/api/game/levels/SEQUENCES/execute";
     @Test void catalogAndLookup() throws Exception {

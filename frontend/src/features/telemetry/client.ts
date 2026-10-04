@@ -60,3 +60,5 @@ export function recordInteraction(studentId: string, activityId: string, type: '
   if (sent.size > 256) sent.delete(sent.keys().next().value!);
   return promise;
 }
+
+export function clearTelemetrySession(){current=null;pending=null;sent.clear();try{sessionStorage.removeItem(sessionKey);}catch{/* Optional cache. */}}

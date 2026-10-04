@@ -93,7 +93,7 @@ class MetaUiIT {
  }
  @Test void emptyStudentAndSchemaRemainUnchanged()throws Exception {
   var student=learning.create(null).id();assertTrue(meta.attempts(student,0,20).items().isEmpty());assertTrue(meta.adaptations(student,0,20).items().isEmpty());assertEquals(4,meta.overview(student).conceptMasteries().size());
-  assertEquals(7,jdbc.queryForObject("select count(*) from flyway_schema_history where success=true",Integer.class));
+  assertEquals(8,jdbc.queryForObject("select count(*) from flyway_schema_history where success=true",Integer.class));
   assertEquals(4,jdbc.queryForObject("select count(*) from learning_activities",Integer.class));assertEquals(0,jdbc.queryForObject("select count(*) from learning_activities where reinforcement",Integer.class));
  }
 }

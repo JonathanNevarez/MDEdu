@@ -1,6 +1,10 @@
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { StrictMode, useEffect, useRef } from 'react';
 import { renderHook, waitFor } from '@testing-library/react';
+vi.mock('../../src/shared/http', async importOriginal => {
+ const original=await importOriginal<typeof import('../../src/shared/http')>();
+ return {...original,httpFetch:(input:RequestInfo|URL,init?:RequestInit)=>fetch(input,init)};
+});
 const student = '11111111-1111-4111-8111-111111111111';
 const session = {id: '22222222-2222-4222-8222-222222222222', studentId: student, status: 'ACTIVE'};
 function response(value: unknown, status = 200, headers?: HeadersInit) {return new Response(JSON.stringify(value), {status, headers});}

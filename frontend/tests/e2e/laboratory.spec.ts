@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import {test,expect} from './studentFixtures';
 
 test('laboratorio conserva variables tras guardar, limpiar y recargar', async ({ page }) => {
   const errors: string[] = []; page.on('pageerror', e => errors.push(e.message));

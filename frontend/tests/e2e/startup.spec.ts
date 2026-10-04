@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import {test,expect} from './studentFixtures';
 
 test('el frontend compilado abre y permite recuperar una ruta inexistente', async ({ page }) => {
   const browserErrors: string[] = [];

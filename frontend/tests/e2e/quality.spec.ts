@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
-import {test,expect,type Page} from '@playwright/test';
+import {test,expect} from './studentFixtures';
+import {type Page} from '@playwright/test';
 import {loginTeacherPage} from './teacherAuth';
 import {readFileSync,writeFileSync} from 'node:fs';
 const api=process.env.VITE_API_BASE_URL??'http://127.0.0.1:8080';

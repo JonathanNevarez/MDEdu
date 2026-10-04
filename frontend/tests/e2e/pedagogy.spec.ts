@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
-import { test, expect, type Locator, type Page } from '@playwright/test';
+import {test,expect,createStudent,loginStudentById} from './studentFixtures';
+import {type Locator, type Page} from '@playwright/test';
 
 async function dragBlock(page: Page, source: Locator, target: Locator, dx: number, dy: number) {
   await expect(source).toBeVisible(); await expect(target).toBeVisible();
@@ -15,7 +16,7 @@ async function dragBlock(page: Page, source: Locator, target: Locator, dx: numbe
 test('Ciclos distingue repetición manual y un ciclo correcto', async ({ page, request }, testInfo) => {
   const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
   const api = process.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8080';
-  const created = await request.post(`${api}/api/students`, { data: {} }); expect(created.status()).toBe(201);
+  const created = await createStudent(request); expect(created.status()).toBe(201);
   const studentId = (await created.json()).id as string;
   for (const levelId of ['SEQUENCES', 'VARIABLES', 'CONDITIONALS']) {
     const program = JSON.parse(readFileSync(`../backend/src/test/resources/evaluation/${levelId}.json`, 'utf8'));
@@ -23,7 +24,7 @@ test('Ciclos distingue repetición manual y un ciclo correcto', async ({ page, r
     expect(result.status()).toBe(201); expect((await result.json()).execution.evaluation.activityPassed).toBe(true);
   }
   await page.goto('/');
-  await page.evaluate(id => localStorage.setItem('mdedu.student.id.v1', id), studentId);
+  await loginStudentById(page,studentId);await page.evaluate(id => localStorage.setItem('mdedu.student.id.v1', id), studentId);
   await page.goto('/aventura');
   await page.getByRole('button', { name: /Ciclos:.*Disponible/ }).click();
   for (let i = 0; i < 7; i++) await page.getByRole('button', { name: '+ Avanzar', exact: true }).click();

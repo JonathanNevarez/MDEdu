@@ -12,6 +12,8 @@ public class FeedbackController {
     public record Request(@NotNull UUID studentId,@NotNull UUID attemptId) {}
     private final FeedbackOrchestrator orchestrator;private final FeedbackStore store;
     public FeedbackController(FeedbackOrchestrator orchestrator,FeedbackStore store){this.orchestrator=orchestrator;this.store=store;}
-    @PostMapping("/generate") public FeedbackDto generate(@Valid @RequestBody Request request){return orchestrator.generate(request.studentId(),request.attemptId());}
-    @GetMapping("/{id}") public FeedbackDto get(@PathVariable UUID id){return store.get(id);}
+    @org.springframework.security.access.prepost.PreAuthorize("@studentAccess.owns(#request.studentId())")
+ @PostMapping("/generate") public FeedbackDto generate(@Valid @RequestBody Request request){return orchestrator.generate(request.studentId(),request.attemptId());}
+    @org.springframework.security.access.prepost.PreAuthorize("@studentAccess.feedback(#id)")
+ @GetMapping("/{id}") public FeedbackDto get(@PathVariable UUID id){return store.get(id);}
 }

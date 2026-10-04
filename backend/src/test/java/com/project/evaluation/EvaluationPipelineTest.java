@@ -19,7 +19,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @WebMvcTest(controllers=GameController.class,properties="spring.config.import=")
 @Import({com.project.shared.security.TeacherSecurityConfiguration.class,LevelCatalog.class,GameExecutionService.class,ProgrammingModelMapper.class,SolutionEvaluationService.class,PatternCatalog.class})
+@org.springframework.security.test.context.support.WithMockUser(roles="TEACHER")
 class EvaluationPipelineTest {
+    private static org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder post(String path,Object... args){return org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post(path,args).with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf());}
     @Autowired MockMvc mvc;
     @Autowired ObjectMapper json;
     String fixture(String id)throws Exception {try(var in=getClass().getResourceAsStream("/evaluation/"+id+".json")){return new String(in.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8);}}

@@ -31,7 +31,7 @@ class SecurityIT {
  @Test void loginCsrfWrongPasswordAndRealLogout()throws Exception{
   mvc.perform(post("/api/teacher/login").param("username",env.getProperty("META_UI_USERNAME")).param("password",env.getProperty("META_UI_PASSWORD"))).andExpect(status().isForbidden());
   var token=csrf(null);
-  mvc.perform(post("/api/teacher/login").session(token.session()).header("X-CSRF-TOKEN",token.token()).param("username",env.getProperty("META_UI_USERNAME")).param("password","wrong")).andExpect(status().isUnauthorized()).andExpect(jsonPath("$.message").value("Se requiere autenticación docente válida."));
+  mvc.perform(post("/api/teacher/login").session(token.session()).header("X-CSRF-TOKEN",token.token()).param("username",env.getProperty("META_UI_USERNAME")).param("password","wrong")).andExpect(status().isUnauthorized()).andExpect(jsonPath("$.message").value("Se requiere una sesión válida."));
   mvc.perform(get("/api/meta/students").session(token.session())).andExpect(status().isUnauthorized());
   var session=login();mvc.perform(get("/api/meta/students").session(session)).andExpect(status().isOk());
   mvc.perform(post("/api/teacher/logout").session(session)).andExpect(status().isForbidden());
@@ -49,13 +49,13 @@ class SecurityIT {
   mvc.perform(get("/api/game/levels")).andExpect(header().string("X-Content-Type-Options","nosniff")).andExpect(header().string("X-Frame-Options","DENY")).andExpect(header().string("Referrer-Policy","no-referrer")).andExpect(header().exists("Content-Security-Policy"));
  }
  @Test void malformedInputsAndPayloadLimitsHaveSafeEnvelopes()throws Exception{
-  mvc.perform(post("/api/students").contentType("application/json").content("{\"displayName\":\""+"x".repeat(262144)+"\"}")).andExpect(status().isPayloadTooLarge()).andExpect(jsonPath("$.code").value("VALIDATION_ERROR"));
-  mvc.perform(get("/api/students/not-a-uuid/model")).andExpect(status().isBadRequest()).andExpect(jsonPath("$.requestId").isString()).andExpect(jsonPath("$.trace").doesNotExist());
-  mvc.perform(post("/api/students").contentType("application/json").content("{\"displayName\":\""+"x".repeat(81)+"\"}")).andExpect(status().isBadRequest());
-  mvc.perform(post("/api/programming/models").contentType("application/json").content("{\"contractVersion\":1,\"name\":\"test\",\"statements\":[{\"kind\":\"unsafe\"}]}")).andExpect(status().isBadRequest()).andExpect(jsonPath("$.httpStatus").value(400));
+  mvc.perform(post("/api/students").with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("teacher").roles("TEACHER")).with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf()).contentType("application/json").content("{\"displayName\":\""+"x".repeat(262144)+"\"}")).andExpect(status().isPayloadTooLarge()).andExpect(jsonPath("$.code").value("VALIDATION_ERROR"));
+  mvc.perform(get("/api/students/not-a-uuid/model").with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("teacher").roles("TEACHER"))).andExpect(status().isBadRequest()).andExpect(jsonPath("$.requestId").isString()).andExpect(jsonPath("$.trace").doesNotExist());
+  mvc.perform(post("/api/students").with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("teacher").roles("TEACHER")).with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf()).contentType("application/json").content("{\"displayName\":\""+"x".repeat(81)+"\"}")).andExpect(status().isBadRequest());
+  mvc.perform(post("/api/programming/models").with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("teacher").roles("TEACHER")).with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf()).contentType("application/json").content("{\"contractVersion\":1,\"name\":\"test\",\"statements\":[{\"kind\":\"unsafe\"}]}")).andExpect(status().isBadRequest()).andExpect(jsonPath("$.httpStatus").value(400));
   var session=login();mvc.perform(get("/api/meta/students?size=999999").session(session)).andExpect(status().isBadRequest());
   mvc.perform(get("/api/meta/students?page=-1").session(session)).andExpect(status().isBadRequest());
-  mvc.perform(post("/api/programming/models").contentType("application/json").content("[".repeat(300)+"0"+"]".repeat(300))).andExpect(status().isBadRequest());
+  mvc.perform(post("/api/programming/models").with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("teacher").roles("TEACHER")).with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf()).contentType("application/json").content("[".repeat(300)+"0"+"]".repeat(300))).andExpect(status().isBadRequest());
  }
  @Test void healthOnlyExposesStatus()throws Exception{
   for(String path:List.of("/actuator/health/liveness","/actuator/health/readiness"))mvc.perform(get(path)).andExpect(status().isOk()).andExpect(jsonPath("$.status").value("UP")).andExpect(jsonPath("$.components").doesNotExist()).andExpect(jsonPath("$.details").doesNotExist());

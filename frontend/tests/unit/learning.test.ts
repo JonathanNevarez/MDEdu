@@ -11,38 +11,31 @@ function response(body: unknown, status = 200) { return new Response(JSON.string
 beforeEach(() => { localStorage.clear(); vi.resetModules(); });
 afterEach(() => vi.unstubAllGlobals());
 describe('Identidad y progreso del servidor', () => {
-  it('crea estudiante y conserva solamente identidad al primer acceso', async () => {
-    const fetch = vi.fn().mockResolvedValueOnce(response({ id: 'A' }, 201)).mockResolvedValueOnce(response(empty)); vi.stubGlobal('fetch', fetch);
-    const { ensureStudent, studentKey } = await import('../../src/features/game/learning');
-    expect(await ensureStudent()).toEqual({ studentId: 'A', progress: empty }); expect(localStorage.getItem(studentKey)).toBe('A');
-    expect(fetch.mock.calls[0]![0]).toMatch(/\/api\/students$/); expect(localStorage.length).toBe(1);
+  it('uses authenticated identity and never trusts a spoofed local UUID', async () => {
+    localStorage.setItem('mdedu.student.id.v1','victim');
+    const fetch=vi.fn().mockResolvedValueOnce(response({studentId:'A',studentCode:'EST-001',authenticated:true})).mockResolvedValueOnce(response(empty));vi.stubGlobal('fetch',fetch);
+    const {ensureStudent}=await import('../../src/features/game/learning');
+    expect(await ensureStudent()).toEqual({studentId:'A',progress:empty});expect(fetch.mock.calls[0]![0]).toMatch(/auth\/student\/me$/);expect(fetch.mock.calls[1]![0]).toMatch(/students\/A\/progress$/);
   });
-  it('reutiliza identidad y recarga progreso backend', async () => {
-    localStorage.setItem('mdedu.student.id.v1', 'A'); const fetch = vi.fn().mockImplementation(async () => response(empty)); vi.stubGlobal('fetch', fetch);
-    const { ensureStudent } = await import('../../src/features/game/learning'); await ensureStudent(); await ensureStudent();
-    expect(fetch).toHaveBeenCalledTimes(2); expect(fetch.mock.calls.every(call => String(call[0]).endsWith('/students/A/progress'))).toBe(true);
+  it('does not create a student when unauthenticated', async () => {
+    const fetch=vi.fn().mockResolvedValue(response({},401));vi.stubGlobal('fetch',fetch);
+    const {ensureStudent}=await import('../../src/features/game/learning');await expect(ensureStudent()).rejects.toThrow();expect(fetch).toHaveBeenCalledTimes(1);
   });
-  it('404 obsoleto crea una identidad nueva y vuelve a consultar', async () => {
-    localStorage.setItem('mdedu.student.id.v1', 'stale'); const fetch = vi.fn().mockResolvedValueOnce(response({}, 404)).mockResolvedValueOnce(response({ id: 'B' }, 201)).mockResolvedValueOnce(response(empty)); vi.stubGlobal('fetch', fetch);
-    const { ensureStudent } = await import('../../src/features/game/learning'); expect((await ensureStudent()).studentId).toBe('B'); expect(fetch).toHaveBeenCalledTimes(3);
-    expect(localStorage.getItem('mdedu.student.id.v1')).toBe('B');
+  it('does not claim historical data or create a replacement on 404', async () => {
+    const fetch=vi.fn().mockResolvedValueOnce(response({studentId:'A',studentCode:'EST-001',authenticated:true})).mockResolvedValueOnce(response({},404));vi.stubGlobal('fetch',fetch);
+    const {ensureStudent}=await import('../../src/features/game/learning');await expect(ensureStudent()).rejects.toThrow();expect(fetch).toHaveBeenCalledTimes(2);
   });
-  it('no repite indefinidamente recuperación si falla la identidad nueva', async () => {
-    localStorage.setItem('mdedu.student.id.v1', 'stale'); const fetch = vi.fn().mockResolvedValueOnce(response({}, 404)).mockResolvedValueOnce(response({ id: 'B' }, 201)).mockResolvedValueOnce(response({}, 404)); vi.stubGlobal('fetch', fetch);
-    const { ensureStudent } = await import('../../src/features/game/learning'); await expect(ensureStudent()).rejects.toThrow(); expect(fetch).toHaveBeenCalledTimes(3);
+  it('concurrent mounts share the authenticated lookup', async () => {
+    const fetch=vi.fn().mockResolvedValueOnce(response({studentId:'A',studentCode:'EST-001',authenticated:true})).mockResolvedValueOnce(response(empty));vi.stubGlobal('fetch',fetch);
+    const {ensureStudent}=await import('../../src/features/game/learning');const [a,b]=await Promise.all([ensureStudent(),ensureStudent()]);expect(a).toEqual(b);expect(fetch).toHaveBeenCalledTimes(2);
   });
-  it('montajes concurrentes comparten creación', async () => {
-    const fetch = vi.fn().mockResolvedValueOnce(response({ id: 'A' }, 201)).mockResolvedValueOnce(response(empty)); vi.stubGlobal('fetch', fetch);
-    const { ensureStudent } = await import('../../src/features/game/learning'); const [a,b] = await Promise.all([ensureStudent(), ensureStudent()]); expect(a).toEqual(b); expect(fetch).toHaveBeenCalledTimes(2);
+  it('removes legacy progress without converting it into mastery', async () => {
+    localStorage.setItem('mdedu.game.progress.v1','forged');vi.stubGlobal('fetch',vi.fn().mockResolvedValueOnce(response({studentId:'A',studentCode:'EST-001',authenticated:true})).mockResolvedValueOnce(response(empty)));
+    const {ensureStudent}=await import('../../src/features/game/learning');expect((await ensureStudent()).progress).toEqual(empty);expect(localStorage.getItem('mdedu.game.progress.v1')).toBeNull();
   });
-  it('ignora y retira progreso provisional sin convertirlo en mastery', async () => {
-    localStorage.setItem('mdedu.game.progress.v1', JSON.stringify({ version: 1, completedLevelIds: ['SEQUENCES', 'VARIABLES', 'CONDITIONALS', 'LOOPS'] }));
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValueOnce(response({ id: 'A' }, 201)).mockResolvedValueOnce(response(empty)));
-    const { ensureStudent } = await import('../../src/features/game/learning'); expect((await ensureStudent()).progress).toEqual(empty); expect(localStorage.getItem('mdedu.game.progress.v1')).toBeNull();
-  });
-  it('un error de red no sustituye identidad existente', async () => {
-    localStorage.setItem('mdedu.student.id.v1', 'A'); const fetch = vi.fn().mockRejectedValue(new Error('offline')); vi.stubGlobal('fetch', fetch);
-    const { ensureStudent } = await import('../../src/features/game/learning'); await expect(ensureStudent()).rejects.toThrow('No se pudo conectar con el servidor'); expect(fetch).toHaveBeenCalledTimes(1); expect(localStorage.getItem('mdedu.student.id.v1')).toBe('A');
+  it('network failure does not create an identity', async () => {
+    const fetch=vi.fn().mockRejectedValue(new Error('offline'));vi.stubGlobal('fetch',fetch);
+    const {ensureStudent}=await import('../../src/features/game/learning');await expect(ensureStudent()).rejects.toThrow('No se pudo conectar');expect(fetch).toHaveBeenCalledTimes(1);
   });
   it('locked/unlocked/completed se toman exclusivamente del servidor', async () => {
     const { serverLevelStatus } = await import('../../src/features/game/learning'); expect(serverLevelStatus('SEQUENCES', empty)).toBe('UNLOCKED'); expect(serverLevelStatus('VARIABLES', empty)).toBe('LOCKED');

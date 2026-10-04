@@ -1,4 +1,5 @@
-import {test, expect, type Page} from '@playwright/test';
+import {test,expect,createStudent,loginStudentById} from './studentFixtures';
+import {type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {mkdirSync, readFileSync, writeFileSync} from 'node:fs';
 import {loginTeacherPage} from './teacherAuth';
@@ -51,11 +52,12 @@ for(const viewport of [{width:1440,height:900},{width:1366,height:768}]) {
   await page.getByRole('button',{name:'Cerrar sesión docente'}).click();await expect(page).toHaveURL(/docente\/login$/);
   await page.goto('/no-existe');await shot('404');await audit('404');
   // Controlled transport states; no persisted evidence or production logic is modified.
+  await loginStudentById(page,(await(await createStudent(request)).json()).id);
   let release:()=>void=()=>{};const held=new Promise<void>(resolve=>{release=resolve;});
   // Hold transport only while capturing the loading state, then release immediately.
-  await page.route('**/api/**',async route=>{await held;await route.continue();});
+  await page.route('**/api/students/**',async route=>{await held;await route.continue();});
   await page.goto('/aventura');await expect(page.getByRole('status')).toContainText('Preparando tu aventura');await shot('carga');release();await page.unrouteAll({behavior:'wait'});
-  await page.route('**/api/**',route=>route.abort('connectionrefused'));await page.goto('/aventura');await expect(page.getByRole('button',{name:'Reintentar'})).toBeVisible();await shot('error');await audit('error');
+  await page.route('**/api/students/**',route=>route.abort('connectionrefused'));await page.goto('/aventura');await expect(page.getByRole('button',{name:'Reintentar'})).toBeVisible();await shot('error');await audit('error');
   expect(errors).toEqual([]);
   writeFileSync(info.outputPath('visual-audits.json'),JSON.stringify(audits,null,2));
   if(evidence)writeFileSync(`${evidence}/${viewport.width}-audits.json`,JSON.stringify(audits.map(a=>({name:a.name,violations:a.violations.map(v=>({id:v.id,impact:v.impact,nodes:v.nodes.map(n=>n.target)})),passes:a.passes,incomplete:a.incomplete})),null,2));

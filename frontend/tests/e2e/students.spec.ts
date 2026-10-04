@@ -1,11 +1,11 @@
 import { writeFileSync } from 'node:fs';
-import { test, expect } from '@playwright/test';
+import {test,expect,createStudent,loginStudentById} from './studentFixtures';
 
 test('dos identidades conservan estados independientes en PostgreSQL', async ({ browser, request }, testInfo) => {
   const contextA = await browser.newContext(); const contextB = await browser.newContext();
   try {
     const a = await contextA.newPage(); const b = await contextB.newPage();
-    await a.goto('/aventura'); await b.goto('/aventura');
+    await loginStudentById(a,(await(await createStudent(request)).json()).id);await loginStudentById(b,(await(await createStudent(request)).json()).id);await a.goto('/aventura'); await b.goto('/aventura');
     for (const page of [a, b]) {
       await expect(page.getByRole('button', { name: /Secuencias:.*Disponible/ })).toBeVisible();
       await expect(page.getByRole('button', { name: /Variables:.*Bloqueado/ })).toBeVisible();

@@ -18,7 +18,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = ProgrammingModelController.class, properties = "spring.config.import=")
 @Import({com.project.shared.security.TeacherSecurityConfiguration.class,ProgrammingModelMapper.class, ProgrammingModelService.class})
+@org.springframework.security.test.context.support.WithMockUser(roles="TEACHER")
 class ProgrammingModelControllerTest {
+    private static org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder post(String path,Object... args){return org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post(path,args).with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf());}
     @Autowired MockMvc mvc;
     @Test void successIsJsonWithXmi() throws Exception {
         mvc.perform(post("/api/programming/models").contentType(MediaType.APPLICATION_JSON)

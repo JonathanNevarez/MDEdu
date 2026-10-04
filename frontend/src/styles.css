@@ -33,3 +33,5 @@ p { max-width:72ch; } small { font-size:var(--text-small); } code,pre { font-fam
 @media(max-width:1000px) { .site-header { flex-wrap:wrap; padding:var(--space-4) var(--space-5); }.home-copy { padding:var(--space-6); }.home-actions { flex-wrap:wrap; }.home-hero { grid-template-columns:1fr 1fr; }.home-copy h1 { font-size:2.6rem; } }
 @media(max-width:700px) { .home-hero,.teacher-login { grid-template-columns:1fr; }.home-world { min-height:320px; }.home-features { grid-template-columns:1fr; }.site-header nav a { padding:var(--space-2); }.site-header nav .ui-icon { display:none; }.page-content { padding:0 var(--space-4); }.site-footer { flex-direction:column; }.welcome-panel { padding:var(--space-5); }.teacher-login { padding:0; }.login-intro,.login-form { padding:var(--space-5); } }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }
+
+.student-session {display:flex;align-items:center;justify-content:flex-end;gap:var(--space-4);margin-bottom:var(--space-4)}

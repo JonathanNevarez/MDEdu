@@ -1,3 +1,4 @@
+import {StudentAccess,StudentLoginPage} from '../features/student/StudentAccess';
 import { NavLink, Outlet, Route, Routes } from 'react-router-dom';
 import { HomePage } from '../pages/HomePage';
 import { NotFoundPage } from '../pages/NotFoundPage';
@@ -35,9 +36,10 @@ export function App() {
     <Routes>
       <Route element={<AppLayout />}>
         <Route index element={<HomePage />} />
-        <Route path="laboratorio" element={<Suspense fallback={<LoadingState text="Preparando el laboratorio…"/>}><LaboratoryPage /></Suspense>} />
-        <Route path="aventura" element={<Suspense fallback={<LoadingState/>}><AdventurePage /></Suspense>} />
-        <Route path="aventura/:levelId" element={<Suspense fallback={<LoadingState text="Preparando tu reto…"/>}><AdventurePage /></Suspense>} />
+        <Route path="ingresar" element={<StudentLoginPage/>}/>
+        <Route path="laboratorio" element={<Suspense fallback={<LoadingState text="Preparando el laboratorio…"/>}><StudentAccess><LaboratoryPage /></StudentAccess></Suspense>} />
+        <Route path="aventura" element={<Suspense fallback={<LoadingState/>}><StudentAccess><AdventurePage /></StudentAccess></Suspense>} />
+        <Route path="aventura/:levelId" element={<Suspense fallback={<LoadingState text="Preparando tu reto…"/>}><StudentAccess><AdventurePage /></StudentAccess></Suspense>} />
         <Route path="docente/login" element={<TeacherLoginPage />} />
         <Route path="docente" element={<Suspense fallback={<LoadingState text="Preparando la vista docente…"/>}><TeacherAccess><MetaUiPage /></TeacherAccess></Suspense>} />
         <Route path="*" element={<NotFoundPage />} />

@@ -1,12 +1,12 @@
 import { authenticateTeacher, loginTeacherPage } from './teacherAuth';
 import { readFileSync, writeFileSync } from 'node:fs';
-import { test, expect } from '@playwright/test';
+import {test,expect,createStudent} from './studentFixtures';
 const api=process.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8080';
 test('teacher reads two isolated students, persisted LOOPS, rules and active parameters', async ({page,request},info)=>{
  await authenticateTeacher(request);
  await page.setViewportSize({width:1440,height:900});
- const a=(await (await request.post(`${api}/api/students`,{data:{displayName:'META_PRIVATE_SENTINEL'}})).json()).id as string;
- const b=(await (await request.post(`${api}/api/students`,{data:{}})).json()).id as string;
+ const a=(await (await createStudent(request)).json()).id as string;
+ const b=(await (await createStudent(request)).json()).id as string;
  let attemptId='';
  for(const level of ['SEQUENCES','VARIABLES','CONDITIONALS','LOOPS']) {
   const program=JSON.parse(readFileSync(`../backend/src/test/resources/evaluation/${level==='LOOPS'?'LOOPS_MANUAL':level}.json`,'utf8'));

@@ -1,13 +1,13 @@
 import { authenticateTeacher, loginTeacherPage } from './teacherAuth';
 import { readFileSync, writeFileSync } from 'node:fs';
-import { test, expect } from '@playwright/test';
+import {test,expect,createStudent,loginStudentById} from './studentFixtures';
 
 // Opt-in only with the backend test-classpath launcher. Never calls the live provider.
 test('Gemini local HTTP adapter delivers validated feedback to the adaptive UI', async ({ page, request }, testInfo) => {
   test.skip(process.env.GEMINI_MOCK_E2E !== 'true', 'Requires GeminiMockApplication with loopback HTTP');
   await authenticateTeacher(request);
   const api = process.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8080';
-  const student = await request.post(`${api}/api/students`, { data: { displayName: 'Local browser fixture' } });
+  const student = await createStudent(request);
   expect(student.status()).toBe(201);
   const id = (await student.json()).id as string;
   const sessionResponse = await request.post(`${api}/api/sessions`, {data: {studentId: id}});
@@ -23,7 +23,7 @@ test('Gemini local HTTP adapter delivers validated feedback to the adaptive UI',
   expect(response.status()).toBe(200);
   const feedback = await response.json();
   expect(feedback.provider).toBe('GEMINI'); expect(feedback.source).toBe('GEMINI'); expect(feedback.llmUsed).toBe(true);
-  await page.goto('/'); await page.evaluate(({studentId, sessionId}) => {localStorage.setItem('mdedu.student.id.v1', studentId);sessionStorage.setItem('mdedu.session.v1', JSON.stringify({id: sessionId, studentId, status: 'ACTIVE'}));}, {studentId: id, sessionId: session.id});
+  await page.goto('/'); await loginStudentById(page,id);await page.evaluate(({studentId, sessionId}) => {localStorage.setItem('mdedu.student.id.v1', studentId);sessionStorage.setItem('mdedu.session.v1', JSON.stringify({id: sessionId, studentId, status: 'ACTIVE'}));}, {studentId: id, sessionId: session.id});
   await page.goto('/aventura/LOOPS');
   await expect(page.getByRole('region', { name: 'Luma' })).toBeVisible();
   await expect(page.getByRole('region', { name: 'Pista' })).toContainText(feedback.message);

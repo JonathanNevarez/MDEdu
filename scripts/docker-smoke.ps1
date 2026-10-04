@@ -26,19 +26,28 @@ try {
     if ($spa.Content -notmatch '<div id="root">') { throw 'SPA fallback failed.' }
     if (-not $spa.Headers['Content-Security-Policy']) { throw 'CSP missing.' }
     $api='http://127.0.0.1:8088/api'
-    $student=Invoke-RestMethod "$api/students" -Method Post -ContentType 'application/json' -Body '{}'
+    $csrf=Invoke-RestMethod "$api/teacher/csrf" -SessionVariable teacherSession
+    $headers=@{};$headers[$csrf.headerName]=$csrf.token
+    $null=Invoke-WebRequest -UseBasicParsing "$api/teacher/login" -Method Post -WebSession $teacherSession -Headers $headers -Body @{username=$settings['META_UI_USERNAME'];password=$settings['META_UI_PASSWORD']}
+    $csrf=Invoke-RestMethod "$api/teacher/csrf" -WebSession $teacherSession
+    $headers=@{};$headers[$csrf.headerName]=$csrf.token
+    $issued=Invoke-RestMethod "$api/teacher/participants" -Method Post -WebSession $teacherSession -Headers $headers
+    $student=@{id=$issued.participant.studentId}
+    $csrf=Invoke-RestMethod "$api/auth/student/csrf" -SessionVariable studentSession
+    $studentHeaders=@{};$studentHeaders[$csrf.headerName]=$csrf.token
+    $null=Invoke-RestMethod "$api/auth/student/login" -Method Post -WebSession $studentSession -Headers $studentHeaders -ContentType 'application/json' -Body (@{studentCode=$issued.participant.studentCode;password=$issued.temporaryPassword}|ConvertTo-Json)
+    $issued=$null
+    $csrf=Invoke-RestMethod "$api/auth/student/csrf" -WebSession $studentSession
+    $studentHeaders=@{};$studentHeaders[$csrf.headerName]=$csrf.token
     foreach ($level in @('SEQUENCES','VARIABLES','CONDITIONALS','LOOPS')) {
         $fixture=if($level -eq 'LOOPS'){'LOOPS_MANUAL'}else{$level}
         $program=Get-Content -Raw (Join-Path $ProjectRoot "backend/src/test/resources/evaluation/$fixture.json") | ConvertFrom-Json
         $body=@{studentId=$student.id;levelId=$level;program=$program;hintCount=0;resolutionTimeMs=1000}|ConvertTo-Json -Depth 100
-        $attempt=Invoke-RestMethod "$api/attempts" -Method Post -ContentType 'application/json' -Body $body
+        $attempt=Invoke-RestMethod "$api/attempts" -Method Post -WebSession $studentSession -Headers $studentHeaders -ContentType 'application/json' -Body $body
     }
-    $feedback=Invoke-RestMethod "$api/feedback/generate" -Method Post -ContentType 'application/json' -Body (@{studentId=$student.id;attemptId=$attempt.attemptId}|ConvertTo-Json)
+    $feedback=Invoke-RestMethod "$api/feedback/generate" -Method Post -WebSession $studentSession -Headers $studentHeaders -ContentType 'application/json' -Body (@{studentId=$student.id;attemptId=$attempt.attemptId}|ConvertTo-Json)
     if($feedback.source -ne 'FALLBACK' -or $feedback.llmUsed){throw 'DISABLED fallback failed.'}
-    $null=Invoke-RestMethod "$api/students/$($student.id)/attempts/$($attempt.attemptId)/ui-configuration"
-    $csrf=Invoke-RestMethod "$api/teacher/csrf" -SessionVariable teacherSession
-    $headers=@{};$headers[$csrf.headerName]=$csrf.token
-    $null=Invoke-WebRequest -UseBasicParsing "$api/teacher/login" -Method Post -WebSession $teacherSession -Headers $headers -Body @{username=$settings['META_UI_USERNAME'];password=$settings['META_UI_PASSWORD']}
+    $null=Invoke-RestMethod "$api/students/$($student.id)/attempts/$($attempt.attemptId)/ui-configuration" -WebSession $studentSession
     $trace=Invoke-RestMethod "$api/students/$($student.id)/attempts/$($attempt.attemptId)/timeline" -WebSession $teacherSession
     if($trace.traceStatus -ne 'COMPLETE'){throw 'Timeline incomplete.'}
     if ($Browser) {
@@ -46,7 +55,7 @@ try {
         try {
             $env:PLAYWRIGHT_BASE_URL='http://127.0.0.1:8088'; $env:VITE_API_BASE_URL=$env:PLAYWRIGHT_BASE_URL
             Push-Location (Join-Path $ProjectRoot 'frontend')
-            try { Invoke-Checked npx.cmd @('playwright','test','adventure.spec.ts','quality.spec.ts','--workers=1') } finally { Pop-Location }
+            try { Invoke-Checked npx.cmd @('playwright','test','adventure.spec.ts','quality.spec.ts','student-auth.spec.ts','--workers=1') } finally { Pop-Location }
         } finally { $env:PLAYWRIGHT_BASE_URL=$previousBase; $env:VITE_API_BASE_URL=$previousApi }
     }
     Invoke-Checked docker ($compose+@('stop','database'))

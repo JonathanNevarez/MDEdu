@@ -29,7 +29,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Testcontainers @SpringBootTest(properties="spring.config.import=") @AutoConfigureMockMvc
+@org.springframework.security.test.context.support.WithMockUser(roles="TEACHER")
 class LearningIT {
+    private static org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder post(String path,Object... args){return org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post(path,args).with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf());}
     @Container static final PostgreSQLContainer<?> DB=new PostgreSQLContainer<>("postgres:17-bookworm");
     @DynamicPropertySource static void database(DynamicPropertyRegistry r) {
         r.add("spring.datasource.url",DB::getJdbcUrl);r.add("spring.datasource.username",DB::getUsername);r.add("spring.datasource.password",DB::getPassword);
@@ -54,7 +56,7 @@ class LearningIT {
         assertTrue(unlocked(id,"SEQUENCES"));assertFalse(unlocked(id,"VARIABLES"));
         mvc.perform(get("/api/students/"+id+"/model")).andExpect(status().isOk()).andExpect(jsonPath("$.modelVersion").value(1));
         mvc.perform(get("/api/students/"+id+"/progress")).andExpect(status().isOk()).andExpect(jsonPath("$.levels.length()").value(4));
-        assertEquals(7,jdbc.queryForObject("select count(*) from flyway_schema_history where success",Integer.class));
+        assertEquals(8,jdbc.queryForObject("select count(*) from flyway_schema_history where success",Integer.class));
         assertEquals(0,jdbc.queryForObject("select count(*) from hint_usages",Integer.class));
     }
     @Test void twoStudentsAreIndependentAndSnapshotsRoundTrip()throws Exception {

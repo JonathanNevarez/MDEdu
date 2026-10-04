@@ -1,5 +1,23 @@
 # API — estado y contratos iniciales
 
+## Evolución post-prototipo: cuentas de estudiantes
+
+Esta sección sustituye las referencias históricas a acceso anónimo. Todas las escrituras requieren sesión y CSRF, salvo obtención del token mediante GET. `/api/students` (creación histórica) es solo docente. Las lecturas de catálogo y health permanecen públicas.
+
+| Método / ruta | Acceso / resultado |
+|---|---|
+| GET `/api/auth/student/csrf` | Público; token asociado a la sesión |
+| POST `/api/auth/student/login` | CSRF + JSON studentCode/password; identidad mínima, 401 genérico o 429 |
+| GET `/api/auth/student/me` | Sesión de estudiante; studentCode, studentId, authenticated |
+| POST `/api/auth/student/logout` | CSRF; 204, invalida sesión y conserva datos |
+| GET `/api/teacher/participants?page=0` | Docente; 20 por página, sin secretos |
+| POST `/api/teacher/participants` | Docente + CSRF; 201, participant y temporaryPassword una sola vez |
+| POST `/api/teacher/participants/{studentId}/reset-password` | Docente + CSRF; clave nueva y revocación de sesiones previas |
+| PATCH `/api/teacher/participants/{studentId}` | Docente + CSRF; JSON enabled boolean obligatorio |
+
+Las APIs existentes de modelo, progreso, intentos, feedback, UI y sesiones de telemetría validan la pertenencia del studentId a la sesión. ROLE_TEACHER conserva lectura global; los timelines mantienen su frontera docente. No cambia ProgramDto ni los contratos pedagógicos. [Detalles](AUTENTICACION_ESTUDIANTES.md).
+
+
 ## Configurado en Fase 0
 
 El backend prepara `GET /actuator/health` en `http://localhost:8080`.
@@ -397,7 +415,7 @@ configuración versión 1. [Semántica](FASE_5_EVALUACION_PEDAGOGICA.md) y
 
 ## Aprendizaje persistente — Fase 6
 
-Identidad pseudónima de prototipo, sin autenticación. No se envían email/contraseña.
+Estado histórico de Fase 6: identidad pseudónima sin autenticación. Sustituido por la autenticación post-prototipo descrita al inicio de este documento.
 Los endpoints devuelven DTOs construidos a partir de StudentModel EMF validado.
 POST attempts usa una transacción y una sola ejecución/evaluación de Fase 5.
 
@@ -697,7 +715,7 @@ crudas del proveedor; feedback final validado como texto. [Contrato ampliado](FA
 
 `GET /api/teacher/csrf` devuelve token/headerName y crea sesión si hace falta. Enviar ese header con `POST /api/teacher/login` (form username/password) y `POST /api/teacher/logout`; éxito 204. `GET /api/teacher/session` responde 200 autenticado o 401. Cookie HttpOnly/SameSite Strict, Secure en prod. No persistir credenciales en el cliente.
 
-Requieren docente: `/api/meta/**`, `/api/adaptation/**`, `/api/attempts/{id}/adaptation`, timelines de estudiantes e índices de sesión. Meta-IU no añade mutaciones. Las APIs estudiantiles existentes permanecen anónimas; los UUID no son un sistema de autenticación de estudiantes.
+Requieren docente: `/api/meta/**`, `/api/adaptation/**`, `/api/attempts/{id}/adaptation`, timelines de estudiantes e índices de sesión. Meta-IU no añade mutaciones. Ese era el alcance de Fase 13. La evolución post-prototipo añade sesión de estudiante y ownership, como se describe al inicio; un UUID aislado no autoriza acceso.
 
 Errores contienen `timestamp`, `status`, `code`, `message`, `requestId`. Los errores de dominio mantienen su diagnóstico anterior; `httpStatus` identifica el estado HTTP cuando `status` contiene el estado histórico del juego. Categorías: VALIDATION_ERROR, UNAUTHORIZED, FORBIDDEN, RESOURCE_NOT_FOUND, CONFLICT, RATE_LIMITED e INTERNAL_ERROR. JSON >256 KiB: 413; UUID/enum/paginación inválidos: 400. Sin SQL ni stack traces en respuestas.
 

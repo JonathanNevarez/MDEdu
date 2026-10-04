@@ -1,5 +1,13 @@
 # Arquitectura inicial
 
+## Evolución post-prototipo: identidad persistente
+
+`StudentAccount → Student(UUID) → StudentModel / progreso / intentos / adaptación / feedback / telemetría`.
+V8 añade cuentas y una secuencia concurrente; no reemplaza las entidades de aprendizaje. Spring Security mantiene una sesión HTTP con principal Student y ROLE_STUDENT; los endpoints validan ownership. ROLE_TEACHER administra participantes y consulta la evidencia. Las sesiones de telemetría siguen siendo entidades independientes. Reset/disable revocan mediante credential_version consultada en cada request. El frontend consulta `/me`; localStorage deja de ser autoridad.
+
+Fases 0–13 cerradas, sin Fase 14. [Diseño de autenticación](AUTENTICACION_ESTUDIANTES.md). Las secciones siguientes conservan la evolución histórica de la arquitectura.
+
+
 Estado: los diagramas generales describen el diseño objetivo. Ya existen el
 arranque de Fase 0, el metamodelo de Fase 1 y el flujo estructural de Fase 2
 descrito a continuación, el M2T aislado de Fase 3 y el juego determinista de Fase 4.
@@ -327,6 +335,6 @@ requieren autorización real antes de exponer writes. [Diseño](FASE_12_META_UI.
 
 ## Fronteras de calidad de Fase 13
 
-La tubería pedagógica y sus modelos no cambian. Spring Security delimita rutas docentes con sesión/CSRF, mientras la API estudiantil conserva su contrato anónimo. Filtros limitan payload y correlacionan solicitudes; advice normaliza errores. Un limitador sincronizado y acotado cobra cada intento HTTP de proveedores externos. React incorpora ErrorBoundary, cliente HTTP compartido y guard docente, respaldado por enforcement en backend.
+La tubería pedagógica y sus modelos no cambian. Spring Security delimita rutas docentes con sesión/CSRF, mientras en ese checkpoint la API estudiantil conservaba su contrato anónimo (reemplazado por autenticación post-prototipo, descrita al inicio). Filtros limitan payload y correlacionan solicitudes; advice normaliza errores. Un limitador sincronizado y acotado cobra cada intento HTTP de proveedores externos. React incorpora ErrorBoundary, cliente HTTP compartido y guard docente, respaldado por enforcement en backend.
 
 El despliegue completo usa Nginx sin root para SPA/proxy `/api`, backend Java 21 sin root y PostgreSQL en volumen independiente. Health coordina el orden DB/backend/frontend. Dockerfiles multietapa construyen artefactos MDE desde fuente. El Compose anterior de DB local permanece intacto. Ver SEGURIDAD.md y DESPLIEGUE.md para límites y operación.

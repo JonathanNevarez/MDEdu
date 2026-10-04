@@ -1,3 +1,4 @@
+import {Participants} from './Participants';
 import { useCallback, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { metaUiApi as api } from './metaUiApi';
@@ -79,13 +80,14 @@ function Parameters() {
   const state=useRead('parameters', api.parameters);if (!state.value) return <ReadState error={state.error}/>;
   return <section><h2>Parámetros activos</h2><p>Solo lectura · {state.value.source} · parametersVersion: {state.value.parametersVersion}</p><div className="parameter-grid"><article><h3>Ayuda y feedback</h3><Fields value={{hintLevel:state.value.values.hintLevel,feedbackDetail:state.value.values.feedbackDetail,maxHintsPerActivity:state.value.values.maxHintsPerActivity}}/></article><article><h3>Dificultad y ruta</h3><Fields value={{difficultyAdjustmentEnabled:state.value.values.difficultyAdjustmentEnabled,routeAdaptationEnabled:state.value.values.routeAdaptationEnabled,maxAttemptsBeforeReinforcement:state.value.values.maxAttemptsBeforeReinforcement}}/></article><article><h3>Umbrales</h3><Fields value={{failureThreshold:state.value.values.failureThreshold,successThreshold:state.value.values.successThreshold,masteryThreshold:state.value.values.masteryThreshold}}/></article></div><details><summary>Detalles técnicos · parametersHash</summary><Fields value={{version:state.value.values.version,parametersHash:state.value.parametersHash}}/></details></section>;
 }
-const sections=['Modelo del estudiante','Intentos','Adaptaciones','Reglas','Parámetros'] as const;
+const sections=['Modelo del estudiante','Intentos','Adaptaciones','Reglas','Parámetros','Participantes'] as const;
 type Section=typeof sections[number];
 export function MetaUiPage() {
   const [page, setPage]=useState(0);const [student, select]=useState('');const [section, setSection]=useState<Section>('Modelo del estudiante');
   const students=useRead(`students/${page}`, s => api.students(page, s));const caps=useRead('capabilities', api.capabilities);
   let content: ReactNode;
-  if (section === 'Reglas') content=<Rules/>;
+  if (section === 'Participantes') content=<Participants/>;
+  else if (section === 'Reglas') content=<Rules/>;
   else if (section === 'Parámetros') content=<Parameters/>;
   else if (!student) content=<div className="meta-empty"><Icon name="book"/><h2>El aprendizaje, en perspectiva</h2><p>Selecciona un estudiante para consultar su información.</p><p>Su progreso, intentos y adaptaciones aparecerán aquí.</p></div>;
   else if (section === 'Modelo del estudiante') content=<Model key={student} student={student}/>;

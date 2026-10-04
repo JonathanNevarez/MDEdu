@@ -29,7 +29,7 @@ cd ..
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-dev.ps1
 ```
 
-Abrir `http://127.0.0.1:5173/aventura`. La Meta-IU está en `/docente`, con login real y consulta de solo lectura. La contraseña docente debe tener al menos 12 caracteres; no hay credenciales predeterminadas. Detener con `scripts/stop-dev.ps1`; los datos PostgreSQL se conservan.
+Abrir `http://127.0.0.1:5173/ingresar`. El docente provisiona código y clave desde `/docente` → Participantes; reglas y parámetros continúan en solo lectura. El login recupera el mismo progreso desde otro navegador. [Autenticación de estudiantes](docs/AUTENTICACION_ESTUDIANTES.md). La contraseña docente debe tener al menos 12 caracteres; no hay credenciales predeterminadas. Detener con `scripts/stop-dev.ps1`; los datos PostgreSQL se conservan.
 
 ## Docker completo
 

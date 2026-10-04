@@ -30,7 +30,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Testcontainers @SpringBootTest(properties={"spring.config.import=","LLM_PROVIDER=FAKE","LLM_API_KEY=","LLM_MODEL="}) @AutoConfigureMockMvc
+@org.springframework.security.test.context.support.WithMockUser(roles="TEACHER")
 class FeedbackIT {
+    private static org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder post(String path,Object... args){return org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post(path,args).with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf());}
     @Container static final PostgreSQLContainer<?> DB=new PostgreSQLContainer<>("postgres:17-bookworm");
     @DynamicPropertySource static void database(DynamicPropertyRegistry r){r.add("spring.datasource.url",DB::getJdbcUrl);r.add("spring.datasource.username",DB::getUsername);r.add("spring.datasource.password",DB::getPassword);}
     @Autowired LearningService learning;@Autowired StudentModelProjectionService projection;@Autowired AdaptationManager manager;
@@ -112,7 +114,7 @@ class FeedbackIT {
         mvc.perform(post("/api/feedback/generate").contentType("application/json").content(json.writeValueAsString(Map.of("studentId",id,"attemptId",missing.attemptId())))).andExpect(status().isNotFound());
     }
     @Test void versionFourAndAuditContainNoRawPayloads() throws Exception {
-        assertEquals(7,jdbc.queryForObject("select count(*) from flyway_schema_history where success",Integer.class));
+        assertEquals(8,jdbc.queryForObject("select count(*) from flyway_schema_history where success",Integer.class));
         var id=learning.create("Secret Name").id();var attempt=submit(id,"SEQUENCES","SEQUENCES");var result=feedback.generate(id,attempt.attemptId());
         String row=jdbc.queryForObject("select response_json from feedback_records where id=?",String.class,result.feedbackId());
         assertFalse(row.contains("Secret Name"));assertFalse(row.contains("instructions"));assertEquals(64,result.promptHash().length());assertEquals(64,result.sanitizedContextHash().length());

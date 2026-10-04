@@ -14,6 +14,7 @@ import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWrite
 import org.springframework.web.cors.*;
 import com.project.shared.infrastructure.config.CorsProperties;
 @Configuration(proxyBeanMethods=false)
+@org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 public class TeacherSecurityConfiguration {
  public static final String[] TEACHER_PATHS={"/api/meta/**","/api/teacher/**","/api/adaptation/**","/api/attempts/*/adaptation","/api/students/*/attempts/*/timeline","/api/sessions/*/timeline"};
  @Bean UserDetailsService teacherUsers(Environment env) {
@@ -33,7 +34,8 @@ public class TeacherSecurityConfiguration {
   return http.headers(h->h.contentTypeOptions(c->{}).frameOptions(f->f.deny()).referrerPolicy(r->r.policy(ReferrerPolicy.NO_REFERRER))
    .contentSecurityPolicy(c->c.policyDirectives("default-src 'none'; frame-ancestors 'none'; base-uri 'none'")));
  }
- @Bean @Order(1) SecurityFilterChain teacher(HttpSecurity http,CorsConfigurationSource securityCors)throws Exception {
+ @Bean @Order(1) SecurityFilterChain teacher(HttpSecurity http,CorsConfigurationSource securityCors,org.springframework.beans.factory.ObjectProvider<StudentAccounts> accounts)throws Exception {
+  http.addFilterAfter(new StudentSessionFilter(accounts),org.springframework.security.web.context.SecurityContextHolderFilter.class);
   headers(http).securityMatcher(TEACHER_PATHS).cors(c->c.configurationSource(securityCors))
    .authorizeHttpRequests(a->a.requestMatchers("/api/teacher/csrf","/api/teacher/login").permitAll().anyRequest().hasRole("TEACHER"))
    .sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).sessionFixation(f->f.changeSessionId()))
@@ -44,11 +46,17 @@ public class TeacherSecurityConfiguration {
   // Default HttpSession CSRF protection remains enabled for teacher login/logout/writes.
   return http.build();
  }
- @Bean @Order(2) SecurityFilterChain student(HttpSecurity http,CorsConfigurationSource securityCors)throws Exception {
-  headers(http).cors(c->c.configurationSource(securityCors)).authorizeHttpRequests(a->a.anyRequest().permitAll())
-   .sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-   // Anonymous JSON student API has no cookie-based authority; teacher endpoints use the first chain.
-   .csrf(c->c.ignoringRequestMatchers("/api/**"));
+ @Bean @Order(2) SecurityFilterChain student(HttpSecurity http,CorsConfigurationSource securityCors,org.springframework.beans.factory.ObjectProvider<StudentAccounts> accounts)throws Exception {
+  http.addFilterAfter(new StudentSessionFilter(accounts),org.springframework.security.web.context.SecurityContextHolderFilter.class);
+  headers(http).cors(c->c.configurationSource(securityCors)).authorizeHttpRequests(a->a
+   .requestMatchers("/api/auth/student/csrf","/api/auth/student/login").permitAll()
+   .requestMatchers(org.springframework.http.HttpMethod.GET,"/api/game/levels","/api/game/levels/*").permitAll()
+   .requestMatchers(org.springframework.http.HttpMethod.POST,"/api/students").hasRole("TEACHER")
+   .requestMatchers("/api/**").hasAnyRole("STUDENT","TEACHER").anyRequest().permitAll())
+   .sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).sessionFixation(f->f.changeSessionId()))
+   .requestCache(c->c.disable())
+   .exceptionHandling(e->e.authenticationEntryPoint((r,s,x)->ApiErrors.write(s,401)).accessDeniedHandler((r,s,x)->ApiErrors.write(s,403)))
+   .logout(l->l.logoutUrl("/api/auth/student/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID").logoutSuccessHandler((r,s,a)->s.setStatus(204)));
   return http.build();
  }
 }

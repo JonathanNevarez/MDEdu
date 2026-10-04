@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync } from 'node:fs';
-import { test, expect, type APIRequestContext } from '@playwright/test';
+import {test,expect,createStudent,loginStudentById} from './studentFixtures';
+import {type APIRequestContext} from '@playwright/test';
 const api = process.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8080';
 async function submit(request: APIRequestContext, studentId: string, levelId: string, fixture = levelId) {
   const program = JSON.parse(readFileSync(`../backend/src/test/resources/evaluation/${fixture}.json`, 'utf8'));
@@ -11,7 +12,7 @@ test('two real histories produce distinct UI; hints, Luma, repeat and refresh ne
   try {
     const ids: string[] = [];
     for (let i=0;i<2;i++) {
-      const r = await request.post(`${api}/api/students`, {data: {}});ids.push((await r.json()).id as string);
+      const r = await createStudent(request);ids.push((await r.json()).id as string);
       for(const level of ['SEQUENCES','VARIABLES','CONDITIONALS']) await submit(request,ids[i]!,level);
     }
     const failure = await submit(request,ids[0]!,'LOOPS','LOOPS_MANUAL');
@@ -20,7 +21,7 @@ test('two real histories produce distinct UI; hints, Luma, repeat and refresh ne
     expect(success.execution.evaluation.activityPassed).toBe(true);
     const pa=await a.newPage();const pb=await b.newPage();
     for(const [page,id] of [[pa,ids[0]!],[pb,ids[1]!]] as const) {
-      await page.goto('/');await page.evaluate(student => localStorage.setItem('mdedu.student.id.v1',student),id);
+      await page.goto('/');await loginStudentById(page,id);await page.evaluate(student => localStorage.setItem('mdedu.student.id.v1',student),id);
       await page.goto('/aventura/LOOPS');
     }
     await expect(pa.getByRole('region',{name:'Pista'})).toBeVisible();
@@ -42,13 +43,13 @@ test('two real histories produce distinct UI; hints, Luma, repeat and refresh ne
   } finally {await a.close();await b.close();}
 });
 test('advance uses a real backend target; local tampering cannot unlock a level', async ({page,request}) => {
-  const id=(await (await request.post(`${api}/api/students`,{data:{}})).json()).id as string;
+  const id=(await (await createStudent(request)).json()).id as string;
   const denied=await request.get(`${api}/api/students/${id}/activities/LOOPS/ui-configuration`);expect(denied.status()).toBe(409);
   let attempt;
   for(let i=0;i<9;i++) attempt=await submit(request,id,'SEQUENCES');
   const c=await (await request.get(`${api}/api/students/${id}/attempts/${attempt.attemptId}/ui-configuration`)).json();
   expect(c.configuration.navigationMode).toBe('ADVANCE');expect(c.configuration.nextActivityId).toBe('VARIABLES');
-  await page.goto('/');await page.evaluate(student=>localStorage.setItem('mdedu.student.id.v1',student),id);
+  await page.goto('/');await loginStudentById(page,id);await page.evaluate(student=>localStorage.setItem('mdedu.student.id.v1',student),id);
   await page.goto('/aventura/SEQUENCES');await page.getByRole('link',{name:'Continuar',exact:true}).click();
   await expect(page).toHaveURL(/aventura\/VARIABLES$/);
   // Controlled client-side tampering: server progress and submission remain authoritative.
@@ -59,7 +60,7 @@ test('advance uses a real backend target; local tampering cannot unlock a level'
 await expect(page.getByRole('heading',{name:'Nivel bloqueado'})).toBeVisible();
 });
 test('controlled configurations show and hide escaped code in the same bundle, with reduced motion', async ({page,request},testInfo) => {
-  const id=(await (await request.post(`${api}/api/students`,{data:{}})).json()).id as string;
+  const id=(await (await createStudent(request)).json()).id as string;
   const original=await (await request.get(`${api}/api/students/${id}/activities/SEQUENCES/ui-configuration`)).json();
   let show=false;
   await page.route('**/api/students/*/activities/SEQUENCES/ui-configuration',async route=>{
@@ -68,7 +69,7 @@ test('controlled configurations show and hide escaped code in the same bundle, w
       code:{available:true,text:'<script>window.injected=true</script>',reason:null}}});
   });
   await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/');
-  await page.evaluate(student=>localStorage.setItem('mdedu.student.id.v1',student),id);await page.goto('/aventura/SEQUENCES');
+  await loginStudentById(page,id);await page.evaluate(student=>localStorage.setItem('mdedu.student.id.v1',student),id);await page.goto('/aventura/SEQUENCES');
   await expect(page.locator('.game-activity')).toBeVisible();await expect(page.getByRole('region',{name:'Código generado'})).toHaveCount(0);
   show=true;await page.reload();await expect(page.getByRole('region',{name:'Código generado'})).toBeVisible();
   await expect(page.getByRole('region',{name:'Pista'})).toBeVisible();

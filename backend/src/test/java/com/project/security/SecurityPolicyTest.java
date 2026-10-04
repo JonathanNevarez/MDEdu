@@ -8,6 +8,19 @@ import java.util.*;
 import java.util.concurrent.*;
 import static org.junit.jupiter.api.Assertions.*;
 class SecurityPolicyTest {
+ @Test void studentCredentialObjectsNeverRenderSecrets(){
+  String secret="synthetic-secret-value";
+  assertFalse(new com.project.shared.security.StudentSessionController.Login("EST-001",secret).toString().contains(secret));
+  assertFalse(new com.project.shared.security.StudentAccounts.Issued(null,secret).toString().contains(secret));
+ }
+ @Test void studentLoginBudgetBoundsConcurrentRequestsAndSuccessfulLoginsDoNotEraseFailures()throws Exception{
+  var limiter=new com.project.shared.security.StudentLoginLimiter(5,300);
+  try(var pool=Executors.newFixedThreadPool(8)){var jobs=new ArrayList<Future<Boolean>>();for(int i=0;i<20;i++)jobs.add(pool.submit(()->limiter.allowed("peer")));int accepted=0;for(var j:jobs)if(j.get())accepted++;assertEquals(5,accepted);}
+  limiter.completed("peer",false);for(int i=0;i<4;i++)limiter.completed("peer",true);
+  for(int i=0;i<3;i++){assertTrue(limiter.allowed("peer"));limiter.completed("peer",false);}
+  assertTrue(limiter.allowed("peer"));limiter.completed("peer",true);
+  assertTrue(limiter.allowed("peer"));limiter.completed("peer",false);assertFalse(limiter.allowed("peer"));
+ }
  @Test void productionRejectsFakeProvider(){
   var settings=new com.project.llm.provider.LlmSettings(new MockEnvironment().withProperty("LLM_PROVIDER","FAKE"));
   assertThrows(IllegalStateException.class,()->new com.project.shared.security.ProductionLlmGuard(settings));

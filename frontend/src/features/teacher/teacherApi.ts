@@ -1,7 +1,7 @@
 import {apiBase, httpFetch, checkResponse} from '../../shared/http';
 export async function teacherSession(signal?: AbortSignal) {
  const response=await httpFetch(`${apiBase}/api/teacher/session`,{credentials:'include',signal});
- if(response.status===401) return false;
+ if(response.status===401 || response.status===403) return false;
  checkResponse(response);return true;
 }
 async function csrf() {

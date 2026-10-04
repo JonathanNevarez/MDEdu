@@ -21,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "app.cors.allowed-origins=http://localhost:5173,http://127.0.0.1:5173"
 })
 @Import({com.project.shared.security.TeacherSecurityConfiguration.class,CorsConfiguration.class, CorsConfigurationTest.ProbeController.class})
+@org.springframework.security.test.context.support.WithMockUser(roles="TEACHER")
 class CorsConfigurationTest {
 
     @Autowired

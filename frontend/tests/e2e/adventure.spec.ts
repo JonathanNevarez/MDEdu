@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import {test,expect} from './studentFixtures';
 
 // Integration E2E: existing backend must run at VITE_API_BASE_URL (default :8080).
 test('mapa, secuencia real, replay, reinicio y progreso persistido', async ({ page }, testInfo) => {

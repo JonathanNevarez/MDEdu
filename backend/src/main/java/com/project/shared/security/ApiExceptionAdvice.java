@@ -5,6 +5,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Map;
 @RestControllerAdvice
 public class ApiExceptionAdvice {
+ @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class) public ResponseEntity<Map<String,Object>> denied(Exception e){return ResponseEntity.status(403).body(ApiErrors.body(403));}
  @ExceptionHandler({org.springframework.web.bind.MethodArgumentNotValidException.class,org.springframework.http.converter.HttpMessageNotReadableException.class,
   org.springframework.web.method.annotation.MethodArgumentTypeMismatchException.class,org.springframework.web.bind.MissingServletRequestParameterException.class,
   jakarta.validation.ConstraintViolationException.class,IllegalArgumentException.class})

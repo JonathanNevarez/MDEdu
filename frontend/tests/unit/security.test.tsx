@@ -21,8 +21,8 @@ it('uses a CSRF token and cookies for login and logout without persisting creden
  const fetch=vi.fn().mockResolvedValueOnce(Response.json({token:'test-csrf',headerName:'X-CSRF-TOKEN'})).mockResolvedValueOnce(new Response(null,{status:204})).mockResolvedValueOnce(Response.json({token:'logout-csrf',headerName:'X-CSRF-TOKEN'})).mockResolvedValueOnce(new Response(null,{status:204}));vi.stubGlobal('fetch',fetch);
  await teacherLogin('test-user','test-only');await teacherLogout();
  expect(fetch.mock.calls[1]![1].credentials).toBe('include');
- expect(fetch.mock.calls[1]![1].headers['X-CSRF-TOKEN']).toBe('test-csrf');
- expect(fetch.mock.calls[3]![1].headers['X-CSRF-TOKEN']).toBe('logout-csrf');
+ expect(fetch.mock.calls[1]![1].headers.get('X-CSRF-TOKEN')).toBe('test-csrf');
+ expect(fetch.mock.calls[3]![1].headers.get('X-CSRF-TOKEN')).toBe('logout-csrf');
  expect(localStorage.length+sessionStorage.length).toBe(0);
 });
 it('treats an expired teacher session as unauthenticated',async()=>{

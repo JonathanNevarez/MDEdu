@@ -1,3 +1,4 @@
+import {studentMe} from '../student/studentAuth';
 import { httpFetch, ApiError, checkResponse } from '../../shared/http';
 import { ensureSession, studentFetch } from '../telemetry/client';
 import type { ProgramDto } from '../programming/dto/program';
@@ -17,32 +18,19 @@ async function request<T>(path: string, body?: unknown, signal?: AbortSignal): P
   checkResponse(response);
   return response.json() as Promise<T>;
 }
-let memoryStudentId: string | null = null;
 let initializing: Promise<{ studentId: string; progress: StudentProgress }> | null = null;
 async function initialize() {
-  let id = memoryStudentId;
-  try { id = localStorage.getItem(studentKey) ?? id; } catch { /* Session identity still works without storage. */ }
-  async function create() {
-    const student = await request<{ id: string }>('/students', {});
-    memoryStudentId = student.id;
-    try { localStorage.setItem(studentKey, student.id); } catch { /* Keep only the identity in memory. */ }
-    return student.id;
-  }
-  if (!id) id = await create();
-  let progress: StudentProgress;
-  try { progress = await request<StudentProgress>(`/students/${encodeURIComponent(id)}/progress`); }
-  catch (error) {
-    if (!(error instanceof ApiError) || error.status !== 404) throw error;
-    id = await create(); // Exactly one recovery; errors on the replacement propagate.
-    progress = await request<StudentProgress>(`/students/${encodeURIComponent(id)}/progress`);
-  }
-  memoryStudentId = id;
-  try { localStorage.removeItem('mdedu.game.progress.v1'); } catch { /* Legacy progress is never read. */ }
+  const identity=await studentMe();
+  if(!identity)throw new ApiError(401);
+  const id=identity.studentId;
+  const progress=await request<StudentProgress>(`/students/${encodeURIComponent(id)}/progress`);
+  // Compatibility display cache only. Never read to select identity or claim historical data.
+  try {localStorage.setItem(studentKey,id);localStorage.removeItem('mdedu.game.progress.v1');}catch{/* Optional cache. */}
   await ensureSession(id);
-  return { studentId: id, progress };
+  return {studentId:id,progress};
 }
 export function ensureStudent() {
-  // React StrictMode and concurrent mounts share creation, never duplicate a student.
+  // React StrictMode and concurrent mounts share the authenticated identity lookup.
   initializing ??= initialize().finally(() => { initializing = null; });
   return initializing;
 }

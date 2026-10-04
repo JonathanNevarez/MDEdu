@@ -1,0 +1,473 @@
+{
+  "version": 1,
+  "levels": [
+    {
+      "levelId": "SEQ-01",
+      "requiredConcept": "SEQUENCES",
+      "requiredConstructs": [
+        "Move"
+      ],
+      "blockingPatternIds": [
+        "WRONG_ORDER",
+        "MISSING_ACTION"
+      ],
+      "referenceActions": [
+        "MOVE",
+        "MOVE",
+        "TURN_RIGHT",
+        "MOVE",
+        "MOVE"
+      ],
+      "parameters": {
+        "minimumManualRepetitions": 3,
+        "minimumLoopIterations": 2,
+        "expectedIterationCount": 7,
+        "declarationOrdinal": 1,
+        "variableType": "INTEGER",
+        "expectedInitialValue": 0,
+        "expectedFinalValue": 1,
+        "requireDynamicCondition": true,
+        "requireBothBranches": false
+      }
+    },
+    {
+      "levelId": "SEQ-02",
+      "requiredConcept": "SEQUENCES",
+      "requiredConstructs": [
+        "Move"
+      ],
+      "blockingPatternIds": [
+        "WRONG_ORDER",
+        "MISSING_ACTION"
+      ],
+      "referenceActions": [
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE"
+      ],
+      "parameters": {
+        "minimumManualRepetitions": 3,
+        "minimumLoopIterations": 2,
+        "expectedIterationCount": 7,
+        "declarationOrdinal": 1,
+        "variableType": "INTEGER",
+        "expectedInitialValue": 0,
+        "expectedFinalValue": 1,
+        "requireDynamicCondition": true,
+        "requireBothBranches": false
+      }
+    },
+    {
+      "levelId": "SEQ-03",
+      "requiredConcept": "SEQUENCES",
+      "requiredConstructs": [
+        "Move"
+      ],
+      "blockingPatternIds": [
+        "WRONG_ORDER",
+        "MISSING_ACTION"
+      ],
+      "referenceActions": [
+        "MOVE",
+        "MOVE",
+        "TURN_RIGHT",
+        "MOVE",
+        "MOVE",
+        "TURN_LEFT",
+        "MOVE",
+        "MOVE"
+      ],
+      "parameters": {
+        "minimumManualRepetitions": 3,
+        "minimumLoopIterations": 2,
+        "expectedIterationCount": 7,
+        "declarationOrdinal": 1,
+        "variableType": "INTEGER",
+        "expectedInitialValue": 0,
+        "expectedFinalValue": 1,
+        "requireDynamicCondition": true,
+        "requireBothBranches": false
+      }
+    },
+    {
+      "levelId": "SEQ-04",
+      "requiredConcept": "SEQUENCES",
+      "requiredConstructs": [
+        "Move"
+      ],
+      "blockingPatternIds": [
+        "WRONG_ORDER",
+        "MISSING_ACTION"
+      ],
+      "referenceActions": [
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "TURN_RIGHT",
+        "MOVE",
+        "MOVE"
+      ],
+      "parameters": {
+        "minimumManualRepetitions": 3,
+        "minimumLoopIterations": 2,
+        "expectedIterationCount": 7,
+        "declarationOrdinal": 1,
+        "variableType": "INTEGER",
+        "expectedInitialValue": 0,
+        "expectedFinalValue": 1,
+        "requireDynamicCondition": true,
+        "requireBothBranches": false
+      }
+    },
+    {
+      "levelId": "VAR-01",
+      "requiredConcept": "VARIABLES",
+      "requiredConstructs": [
+        "VariableDeclaration",
+        "Assignment"
+      ],
+      "blockingPatternIds": [
+        "INCORRECT_UPDATE"
+      ],
+      "referenceActions": [],
+      "parameters": {
+        "minimumManualRepetitions": 3,
+        "minimumLoopIterations": 2,
+        "expectedIterationCount": 7,
+        "declarationOrdinal": 1,
+        "variableType": "INTEGER",
+        "expectedInitialValue": 0,
+        "expectedFinalValue": 7,
+        "requireDynamicCondition": true,
+        "requireBothBranches": false
+      }
+    },
+    {
+      "levelId": "VAR-02",
+      "requiredConcept": "VARIABLES",
+      "requiredConstructs": [
+        "VariableDeclaration",
+        "Assignment"
+      ],
+      "blockingPatternIds": [
+        "INCORRECT_UPDATE"
+      ],
+      "referenceActions": [],
+      "parameters": {
+        "minimumManualRepetitions": 3,
+        "minimumLoopIterations": 2,
+        "expectedIterationCount": 7,
+        "declarationOrdinal": 1,
+        "variableType": "INTEGER",
+        "expectedInitialValue": 0,
+        "expectedFinalValue": 2,
+        "requireDynamicCondition": true,
+        "requireBothBranches": false
+      }
+    },
+    {
+      "levelId": "VAR-03",
+      "requiredConcept": "VARIABLES",
+      "requiredConstructs": [
+        "VariableDeclaration",
+        "Assignment"
+      ],
+      "blockingPatternIds": [
+        "INCORRECT_UPDATE"
+      ],
+      "referenceActions": [],
+      "parameters": {
+        "minimumManualRepetitions": 3,
+        "minimumLoopIterations": 2,
+        "expectedIterationCount": 7,
+        "declarationOrdinal": 1,
+        "variableType": "INTEGER",
+        "expectedInitialValue": 3,
+        "expectedFinalValue": 0,
+        "requireDynamicCondition": true,
+        "requireBothBranches": false
+      }
+    },
+    {
+      "levelId": "VAR-04",
+      "requiredConcept": "VARIABLES",
+      "requiredConstructs": [
+        "VariableDeclaration",
+        "Assignment"
+      ],
+      "blockingPatternIds": [
+        "INCORRECT_UPDATE"
+      ],
+      "referenceActions": [],
+      "parameters": {
+        "minimumManualRepetitions": 3,
+        "minimumLoopIterations": 2,
+        "expectedIterationCount": 7,
+        "declarationOrdinal": 1,
+        "variableType": "INTEGER",
+        "expectedInitialValue": 0,
+        "expectedFinalValue": 2,
+        "requireDynamicCondition": true,
+        "requireBothBranches": false
+      }
+    },
+    {
+      "levelId": "COND-01",
+      "requiredConcept": "CONDITIONALS",
+      "requiredConstructs": [
+        "If"
+      ],
+      "blockingPatternIds": [
+        "MISSING_CONDITION",
+        "IDENTICAL_BRANCHES",
+        "CONSTANT_CONDITION",
+        "MISSING_REQUIRED_BRANCH"
+      ],
+      "referenceActions": [],
+      "parameters": {
+        "minimumManualRepetitions": 3,
+        "minimumLoopIterations": 2,
+        "expectedIterationCount": 7,
+        "declarationOrdinal": 1,
+        "variableType": "INTEGER",
+        "expectedInitialValue": 0,
+        "expectedFinalValue": 1,
+        "requireDynamicCondition": true,
+        "requireBothBranches": false
+      }
+    },
+    {
+      "levelId": "COND-02",
+      "requiredConcept": "CONDITIONALS",
+      "requiredConstructs": [
+        "IfElse"
+      ],
+      "blockingPatternIds": [
+        "MISSING_CONDITION",
+        "IDENTICAL_BRANCHES",
+        "CONSTANT_CONDITION",
+        "MISSING_REQUIRED_BRANCH"
+      ],
+      "referenceActions": [],
+      "parameters": {
+        "minimumManualRepetitions": 3,
+        "minimumLoopIterations": 2,
+        "expectedIterationCount": 7,
+        "declarationOrdinal": 1,
+        "variableType": "INTEGER",
+        "expectedInitialValue": 0,
+        "expectedFinalValue": 1,
+        "requireDynamicCondition": true,
+        "requireBothBranches": true
+      }
+    },
+    {
+      "levelId": "COND-03",
+      "requiredConcept": "CONDITIONALS",
+      "requiredConstructs": [
+        "IfElse"
+      ],
+      "blockingPatternIds": [
+        "MISSING_CONDITION",
+        "IDENTICAL_BRANCHES",
+        "CONSTANT_CONDITION",
+        "MISSING_REQUIRED_BRANCH"
+      ],
+      "referenceActions": [],
+      "parameters": {
+        "minimumManualRepetitions": 3,
+        "minimumLoopIterations": 2,
+        "expectedIterationCount": 7,
+        "declarationOrdinal": 1,
+        "variableType": "INTEGER",
+        "expectedInitialValue": 0,
+        "expectedFinalValue": 1,
+        "requireDynamicCondition": true,
+        "requireBothBranches": true
+      }
+    },
+    {
+      "levelId": "COND-04",
+      "requiredConcept": "CONDITIONALS",
+      "requiredConstructs": [
+        "IfElse"
+      ],
+      "blockingPatternIds": [
+        "MISSING_CONDITION",
+        "IDENTICAL_BRANCHES",
+        "CONSTANT_CONDITION",
+        "MISSING_REQUIRED_BRANCH"
+      ],
+      "referenceActions": [],
+      "parameters": {
+        "minimumManualRepetitions": 3,
+        "minimumLoopIterations": 2,
+        "expectedIterationCount": 7,
+        "declarationOrdinal": 1,
+        "variableType": "INTEGER",
+        "expectedInitialValue": 1,
+        "expectedFinalValue": 1,
+        "requireDynamicCondition": true,
+        "requireBothBranches": true
+      }
+    },
+    {
+      "levelId": "COND-05",
+      "requiredConcept": "CONDITIONALS",
+      "requiredConstructs": [
+        "IfElse"
+      ],
+      "blockingPatternIds": [
+        "MISSING_CONDITION",
+        "IDENTICAL_BRANCHES",
+        "CONSTANT_CONDITION",
+        "MISSING_REQUIRED_BRANCH"
+      ],
+      "referenceActions": [],
+      "parameters": {
+        "minimumManualRepetitions": 3,
+        "minimumLoopIterations": 2,
+        "expectedIterationCount": 7,
+        "declarationOrdinal": 1,
+        "variableType": "INTEGER",
+        "expectedInitialValue": 0,
+        "expectedFinalValue": 1,
+        "requireDynamicCondition": true,
+        "requireBothBranches": true
+      }
+    },
+    {
+      "levelId": "LOOP-01",
+      "requiredConcept": "LOOPS",
+      "requiredConstructs": [
+        "Repeat"
+      ],
+      "blockingPatternIds": [
+        "REPETITIVE_SEQUENCE_WITHOUT_LOOP",
+        "LOOP_NEVER_EXECUTES",
+        "INCORRECT_REPETITION_COUNT",
+        "UNNECESSARY_LOOP",
+        "POSSIBLE_INFINITE_LOOP"
+      ],
+      "referenceActions": [],
+      "parameters": {
+        "minimumManualRepetitions": 3,
+        "minimumLoopIterations": 2,
+        "expectedIterationCount": 7,
+        "declarationOrdinal": 1,
+        "variableType": "INTEGER",
+        "expectedInitialValue": 0,
+        "expectedFinalValue": 1,
+        "requireDynamicCondition": true,
+        "requireBothBranches": false
+      }
+    },
+    {
+      "levelId": "LOOP-02",
+      "requiredConcept": "LOOPS",
+      "requiredConstructs": [
+        "Repeat"
+      ],
+      "blockingPatternIds": [
+        "REPETITIVE_SEQUENCE_WITHOUT_LOOP",
+        "LOOP_NEVER_EXECUTES",
+        "INCORRECT_REPETITION_COUNT",
+        "UNNECESSARY_LOOP",
+        "POSSIBLE_INFINITE_LOOP"
+      ],
+      "referenceActions": [],
+      "parameters": {
+        "minimumManualRepetitions": 3,
+        "minimumLoopIterations": 2,
+        "expectedIterationCount": 4,
+        "declarationOrdinal": 1,
+        "variableType": "INTEGER",
+        "expectedInitialValue": 0,
+        "expectedFinalValue": 1,
+        "requireDynamicCondition": true,
+        "requireBothBranches": false
+      }
+    },
+    {
+      "levelId": "LOOP-03",
+      "requiredConcept": "LOOPS",
+      "requiredConstructs": [
+        "Repeat"
+      ],
+      "blockingPatternIds": [
+        "REPETITIVE_SEQUENCE_WITHOUT_LOOP",
+        "LOOP_NEVER_EXECUTES",
+        "INCORRECT_REPETITION_COUNT",
+        "UNNECESSARY_LOOP",
+        "POSSIBLE_INFINITE_LOOP"
+      ],
+      "referenceActions": [],
+      "parameters": {
+        "minimumManualRepetitions": 3,
+        "minimumLoopIterations": 2,
+        "expectedIterationCount": 3,
+        "declarationOrdinal": 1,
+        "variableType": "INTEGER",
+        "expectedInitialValue": 0,
+        "expectedFinalValue": 1,
+        "requireDynamicCondition": true,
+        "requireBothBranches": false
+      }
+    },
+    {
+      "levelId": "LOOP-04",
+      "requiredConcept": "LOOPS",
+      "requiredConstructs": [
+        "While"
+      ],
+      "blockingPatternIds": [
+        "REPETITIVE_SEQUENCE_WITHOUT_LOOP",
+        "LOOP_NEVER_EXECUTES",
+        "INCORRECT_REPETITION_COUNT",
+        "UNNECESSARY_LOOP",
+        "POSSIBLE_INFINITE_LOOP"
+      ],
+      "referenceActions": [],
+      "parameters": {
+        "minimumManualRepetitions": 3,
+        "minimumLoopIterations": 2,
+        "expectedIterationCount": 5,
+        "declarationOrdinal": 1,
+        "variableType": "INTEGER",
+        "expectedInitialValue": 0,
+        "expectedFinalValue": 1,
+        "requireDynamicCondition": true,
+        "requireBothBranches": false
+      }
+    },
+    {
+      "levelId": "LOOP-05",
+      "requiredConcept": "LOOPS",
+      "requiredConstructs": [
+        "Repeat"
+      ],
+      "blockingPatternIds": [
+        "REPETITIVE_SEQUENCE_WITHOUT_LOOP",
+        "LOOP_NEVER_EXECUTES",
+        "INCORRECT_REPETITION_COUNT",
+        "UNNECESSARY_LOOP",
+        "POSSIBLE_INFINITE_LOOP"
+      ],
+      "referenceActions": [],
+      "parameters": {
+        "minimumManualRepetitions": 3,
+        "minimumLoopIterations": 2,
+        "expectedIterationCount": 4,
+        "declarationOrdinal": 1,
+        "variableType": "INTEGER",
+        "expectedInitialValue": 0,
+        "expectedFinalValue": 1,
+        "requireDynamicCondition": true,
+        "requireBothBranches": false
+      }
+    }
+  ]
+}

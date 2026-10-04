@@ -8,4 +8,5 @@ public class ActivityRow {
     public String title;
     public String conceptId;
     public boolean reinforcement;
+    public boolean archived;
 }

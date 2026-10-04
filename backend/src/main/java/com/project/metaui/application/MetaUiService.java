@@ -35,8 +35,10 @@ public class MetaUiService {
         var items=jdbc.query("""
             with selected as (select id,created_at,last_updated from students order by created_at desc,id limit ? offset ?)
             select s.*, (select count(*) from attempts a where a.student_id=s.id) attempt_count,
-            (select count(distinct l.concept_id) from student_activity_progress p join learning_activities l on l.id=p.activity_id
-             where p.student_id=s.id and p.completed_at is not null) completed_concepts
+            (select count(*) from (select l.concept_id from learning_activities l
+             left join student_activity_progress p on p.activity_id=l.id and p.student_id=s.id
+             where not l.archived and not l.reinforcement group by l.concept_id
+             having bool_and(p.completed_at is not null)) completed) completed_concepts
             from selected s order by s.created_at desc,s.id
             """,(rs,n)->new StudentSummary(rs.getObject("id",UUID.class),rs.getTimestamp("created_at").toInstant(),
                 rs.getTimestamp("last_updated").toInstant(),rs.getLong("attempt_count"),rs.getLong("completed_concepts")),size,offset);

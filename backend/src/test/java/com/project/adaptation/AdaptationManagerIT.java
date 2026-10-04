@@ -41,13 +41,13 @@ class AdaptationManagerIT {
     @Autowired JdbcTemplate jdbc;
     @MockitoSpyBean GameExecutionService execution;
     @MockitoSpyBean SolutionEvaluationService evaluation;
-    ProgramDto fixture(String name) throws Exception {try(var in=getClass().getResourceAsStream("/evaluation/"+name+".json")){return json.readValue(in,ProgramDto.class);}}
+    ProgramDto fixture(String name) throws Exception {try(var in=getClass().getResourceAsStream("/challenges/"+name+".json")){return json.readValue(in,ProgramDto.class);}}
     AttemptResponse submit(UUID id,String level,String file) throws Exception {return learning.submit(new SubmitAttempt(id,level,1000L,0,fixture(file)));}
-    void openLoops(UUID id) throws Exception {for(String level:List.of("SEQUENCES","VARIABLES","CONDITIONALS"))submit(id,level,level);}
+    void openLoops(UUID id) throws Exception {for(String level:List.of("SEQ-01","VAR-01","COND-01"))submit(id,level,level);}
     @Test void actualThreeFailuresDecisionAuditAndNoDoubleExecution() throws Exception {
         var id=learning.create("Do not persist this display name in audit").id();openLoops(id);
-        submit(id,"LOOPS","LOOPS_MANUAL");submit(id,"LOOPS","LOOPS_MANUAL");clearInvocations(execution,evaluation);
-        var response=submit(id,"LOOPS","LOOPS_MANUAL");var decision=response.adaptation();
+        submit(id,"LOOP-01","LOOP-01_MANUAL");submit(id,"LOOP-01","LOOP-01_MANUAL");clearInvocations(execution,evaluation);
+        var response=submit(id,"LOOP-01","LOOP-01_MANUAL");var decision=response.adaptation();
         verify(execution,times(1)).execute(any(),any());verify(evaluation,times(1)).evaluate(any(),any(),any());
         assertEquals("FuncionalSinConcepto",decision.selectedRule());assertEquals(2,decision.actions().size());assertFalse(decision.llmUsed());
         assertTrue(decision.actionAudit().stream().anyMatch(a->a.reasonCode().equals("NOT_APPLICABLE_NO_REINFORCEMENT_ACTIVITY")));
@@ -67,20 +67,20 @@ class AdaptationManagerIT {
     }
     @Test void highMasteryHasRealGraphSuccessorAndDifferentStudentDecision() throws Exception {
         var a=learning.create(null).id();var b=learning.create(null).id();AttemptResponse high=null;
-        for(int i=0;i<8;i++)high=submit(a,"SEQUENCES","SEQUENCES");
-        var no=submit(b,"SEQUENCES","SEQUENCES");
+        for(int i=0;i<8;i++)high=submit(a,"SEQ-01","SEQ-01");
+        var no=submit(b,"SEQ-01","SEQ-01");
         assertEquals("DominioAlto",high.adaptation().selectedRule());assertEquals("VARIABLES",high.adaptation().actions().getFirst().targetConceptId());
         assertNull(no.adaptation().selectedRule());assertEquals("NO_RULE_MATCHED",no.adaptation().explanation().reason());
         assertNotEquals(high.adaptation().decisionFingerprint(),no.adaptation().decisionFingerprint());
     }
     @Test void idempotencyAfterNewAttemptsUsesOriginalSnapshot() throws Exception {
-        var id=learning.create(null).id();var first=submit(id,"SEQUENCES","SEQUENCES");
-        for(int i=0;i<8;i++)submit(id,"SEQUENCES","SEQUENCES");
+        var id=learning.create(null).id();var first=submit(id,"SEQ-01","SEQ-01");
+        for(int i=0;i<8;i++)submit(id,"SEQ-01","SEQ-01");
         assertEquals(first.adaptation(),manager.decide(id,first.attemptId()));
         assertEquals(1,jdbc.queryForObject("select count(*) from adaptation_decisions where attempt_id=?",Integer.class,first.attemptId()));
     }
     @Test void concurrentCreationHasSingleDecision() throws Exception {
-        var id=learning.create(null).id();var attempt=submit(id,"SEQUENCES","SEQUENCES").attemptId();
+        var id=learning.create(null).id();var attempt=submit(id,"SEQ-01","SEQ-01").attemptId();
         // Only this test's decision is removed; immutable input remains to exercise concurrent creation.
         jdbc.update("delete from adaptation_decisions where attempt_id=?",attempt);
         var ready=new CountDownLatch(2);var start=new CountDownLatch(1);
@@ -95,7 +95,7 @@ class AdaptationManagerIT {
         var id=learning.create(null).id();
         jdbc.execute("CREATE FUNCTION fail_adaptation_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test audit failure'; END $$");
         jdbc.execute("CREATE TRIGGER fail_audit BEFORE INSERT ON adaptation_decision_rules FOR EACH ROW EXECUTE FUNCTION fail_adaptation_audit()");
-        try {assertThrows(RuntimeException.class,()->submit(id,"SEQUENCES","SEQUENCES"));}
+        try {assertThrows(RuntimeException.class,()->submit(id,"SEQ-01","SEQ-01"));}
         finally {jdbc.execute("DROP TRIGGER fail_audit ON adaptation_decision_rules");jdbc.execute("DROP FUNCTION fail_adaptation_audit()");}
         assertEquals(0,jdbc.queryForObject("select count(*) from adaptation_decisions where student_id=?",Integer.class,id));
         assertEquals(0,jdbc.queryForObject("select count(*) from adaptation_attempt_inputs where student_id=?",Integer.class,id));
@@ -103,7 +103,7 @@ class AdaptationManagerIT {
         assertEquals(0,projection.project(id).getConceptMasteries().getFirst().getAttemptCount());
     }
     @Test void endpointsAndClientCannotOverridePedagogy() throws Exception {
-        var id=learning.create(null).id();var other=learning.create(null).id();var response=submit(id,"SEQUENCES","SEQUENCES");
+        var id=learning.create(null).id();var other=learning.create(null).id();var response=submit(id,"SEQ-01","SEQ-01");
         String body=json.writeValueAsString(Map.of("studentId",id,"attemptId",response.attemptId(),"masteryScore",1,"selectedRule","FORGED"));
         mvc.perform(post("/api/adaptation/decide").with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf()).contentType("application/json").content(body)).andExpect(status().isOk())
             .andExpect(jsonPath("$.decisionId").value(response.adaptation().decisionId().toString())).andExpect(jsonPath("$.selectedRule").doesNotExist());
@@ -115,15 +115,15 @@ class AdaptationManagerIT {
     }
     @Test void postAttemptHasAdaptationAndStatelessDoesNotPersist() throws Exception {
         var id=learning.create(null).id();
-        mvc.perform(post("/api/attempts").contentType("application/json").content(json.writeValueAsString(new SubmitAttempt(id,"SEQUENCES",1000L,0,fixture("SEQUENCES")))))
+        mvc.perform(post("/api/attempts").contentType("application/json").content(json.writeValueAsString(new SubmitAttempt(id,"SEQ-01",1000L,0,fixture("SEQ-01")))))
             .andExpect(status().isCreated()).andExpect(jsonPath("$.execution.evaluation.activityPassed").value(true)).andExpect(jsonPath("$.adaptation.explanation.reason").value("NO_RULE_MATCHED"));
         int before=jdbc.queryForObject("select count(*) from adaptation_decisions",Integer.class);
-        mvc.perform(post("/api/game/levels/LOOPS/execute").contentType("application/json").content(json.writeValueAsString(fixture("LOOPS_MANUAL"))))
+        mvc.perform(post("/api/game/levels/LOOP-01/execute").contentType("application/json").content(json.writeValueAsString(fixture("LOOP-01_MANUAL"))))
             .andExpect(status().isOk()).andExpect(jsonPath("$.evaluation.activityPassed").value(false));
         assertEquals(before,jdbc.queryForObject("select count(*) from adaptation_decisions",Integer.class));
     }
     @Test void legacyAttemptWithoutEvidenceIsExplicitConflictNotReevaluated() throws Exception {
-        var id=learning.create(null).id();var attempt=submit(id,"SEQUENCES","SEQUENCES").attemptId();
+        var id=learning.create(null).id();var attempt=submit(id,"SEQ-01","SEQ-01").attemptId();
         jdbc.update("delete from adaptation_decisions where attempt_id=?",attempt);jdbc.update("delete from adaptation_attempt_inputs where attempt_id=?",attempt);
         clearInvocations(execution,evaluation);
         mvc.perform(post("/api/adaptation/decide").with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf()).contentType("application/json").content(json.writeValueAsString(Map.of("studentId",id,"attemptId",attempt)))).andExpect(status().isConflict());

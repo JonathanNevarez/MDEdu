@@ -110,7 +110,9 @@ public final class GridWorldExecutionEngine {
                 if (!"true".equals(l.getValue()) && !"false".equals(l.getValue())) throw error("INVALID_LITERAL", "Booleano inválido: usa true o false.");
                 return new Value(ValueType.BOOLEAN, Boolean.parseBoolean(l.getValue()));
             }
-            if (e instanceof VariableReference r) return declared(r.getDeclaration());
+            if (e instanceof VariableReference r) {
+                var value=declared(r.getDeclaration());event("VARIABLE_READ",r.getDeclaration().getName());return value;
+            }
             if (e instanceof SensorExpression s) {
                 boolean result = switch (s.getSensor()) {
                     case FRONT_CLEAR -> world.clear(world.direction);

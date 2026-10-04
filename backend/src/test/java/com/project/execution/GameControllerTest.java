@@ -25,7 +25,7 @@ class GameControllerTest {
     @Autowired MockMvc mvc;
     String path="/api/game/levels/SEQUENCES/execute";
     @Test void catalogAndLookup() throws Exception {
-        mvc.perform(get("/api/game/levels")).andExpect(status().isOk()).andExpect(jsonPath("$.levels.length()").value(4));
+        mvc.perform(get("/api/game/levels")).andExpect(status().isOk()).andExpect(jsonPath("$.levels.length()").value(18));
         mvc.perform(get("/api/game/levels/SEQUENCES")).andExpect(status().isOk()).andExpect(jsonPath("$.title").value("Primeros pasos"));
         mvc.perform(get("/api/game/levels/missing")).andExpect(status().isNotFound());
         mvc.perform(post("/api/game/levels/missing/execute").contentType(MediaType.APPLICATION_JSON).content("{\"contractVersion\":1,\"name\":\"p\",\"statements\":[]}")).andExpect(status().isNotFound());

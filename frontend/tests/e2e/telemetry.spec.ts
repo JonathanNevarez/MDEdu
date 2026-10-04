@@ -2,14 +2,14 @@ import { authenticateTeacher } from './teacherAuth';
 import { readFileSync, writeFileSync } from 'node:fs';
 import {test,expect,createStudent,loginStudentById} from './studentFixtures';
 const api = process.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8080';
-test('real session and manual LOOPS reconstruct a complete isolated audit without replay', async ({page, request}, testInfo) => {
+test('real session and manual LOOP-01 reconstruct a complete isolated audit without replay', async ({page, request}, testInfo) => {
  await authenticateTeacher(request);
  const student=(await (await createStudent(request)).json()).id as string;
- for(const level of ['SEQUENCES','VARIABLES','CONDITIONALS']) {
-  const program=JSON.parse(readFileSync(`../backend/src/test/resources/evaluation/${level}.json`,'utf8'));
+ for(const level of ['SEQ-01','VAR-01','COND-01']) {
+  const program=JSON.parse(readFileSync(`../backend/src/test/resources/challenges/${level}.json`,'utf8'));
   expect((await request.post(`${api}/api/attempts`,{data:{studentId:student,levelId:level,program,hintCount:0,resolutionTimeMs:1000}})).status()).toBe(201);
  }
- await page.goto('/');await loginStudentById(page,student);await page.evaluate(id=>localStorage.setItem('mdedu.student.id.v1',id),student);await page.goto('/aventura/LOOPS');
+ await page.goto('/');await loginStudentById(page,student);await page.evaluate(id=>localStorage.setItem('mdedu.student.id.v1',id),student);await page.goto('/aventura/LOOP-01');
  await expect(page.getByTestId('game-blockly').locator('.blocklySvg')).toBeVisible();
  const session=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('mdedu.session.v1')!).id as string);
  for(let i=0;i<7;i++)await page.getByRole('button',{name:'+ Avanzar',exact:true}).click();

@@ -1,0 +1,43 @@
+{
+  "contractVersion": 1,
+  "name": "LOOP-05",
+  "statements": [
+    {
+      "kind": "variableDeclaration",
+      "declarationId": "pasos",
+      "name": "pasos",
+      "valueType": "INTEGER",
+      "initialValue": {
+        "kind": "literal",
+        "valueType": "INTEGER",
+        "value": "4"
+      }
+    },
+    {
+      "kind": "repeat",
+      "count": {
+        "kind": "variableReference",
+        "declarationId": "pasos"
+      },
+      "body": [
+        {
+          "kind": "ifElse",
+          "condition": {
+            "kind": "sensorExpression",
+            "sensor": "FRONT_CLEAR"
+          },
+          "thenBranch": [
+            {
+              "kind": "move"
+            }
+          ],
+          "elseBranch": [
+            {
+              "kind": "turnRight"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

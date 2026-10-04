@@ -76,7 +76,7 @@ class GeminiFeedbackIT {
     @BeforeEach void reset(){mode="VALID";classifierCalls.set(0);feedbackCalls.set(0);bodies.clear();}
     @AfterAll static void stop(){SERVER.stop(0);EXECUTOR.shutdownNow();}
     AttemptResponse submit(UUID id,String level,String fixture)throws Exception {
-        try(var in=getClass().getResourceAsStream("/evaluation/"+fixture+".json")){
+        try(var in=getClass().getResourceAsStream("/challenges/"+fixture+".json")){
             return learning.submit(new SubmitAttempt(id,level,100L,0,json.readValue(in,ProgramDto.class)));
         }
     }
@@ -87,7 +87,7 @@ class GeminiFeedbackIT {
     }
     String studentState(UUID id)throws Exception{return json.writeValueAsString(projection.dto(projection.project(id)));}
     @Test void internalQuotaStopsActualHttpAndUsesPedagogicalFallback()throws Exception {
-        var student=learning.create(null).id();var first=submit(student,"SEQUENCES","SEQUENCES");var second=submit(student,"SEQUENCES","SEQUENCES");
+        var student=learning.create(null).id();var first=submit(student,"SEQ-01","SEQ-01");var second=submit(student,"SEQ-01","SEQ-01");
         var limited=new LlmRateLimiter(1,60,1,10,java.time.Clock.systemUTC());
         var fixture=new java.util.Properties();
         try(var input=getClass().getResourceAsStream("/teacher-test.properties")){fixture.load(input);}
@@ -99,8 +99,8 @@ class GeminiFeedbackIT {
     }
     @Test void knownLoopsPrivacyPersistenceIdempotencyAndUiSemantics()throws Exception {
         var id=learning.create("Private Gemini Student private.gemini@example.com").id();
-        for(String level:List.of("SEQUENCES","VARIABLES","CONDITIONALS"))submit(id,level,level);
-        var attempt=submit(id,"LOOPS","LOOPS_MANUAL");String before=studentState(id);
+        for(String level:List.of("SEQ-01","VAR-01","COND-01"))submit(id,level,level);
+        var attempt=submit(id,"LOOP-01","LOOP-01_MANUAL");String before=studentState(id);
         var result=feedback.generate(id,attempt.attemptId());
         assertEquals(Source.GEMINI,result.source());assertEquals(Provider.GEMINI,result.provider());assertTrue(result.llmUsed());
         assertEquals("configured-test-model",result.model());assertEquals("REPETITIVE_SEQUENCE_WITHOUT_LOOP",result.focus());
@@ -126,20 +126,20 @@ class GeminiFeedbackIT {
         assertEquals("GEMINI",jdbc.queryForObject("select source from feedback_records where id=?",String.class,result.feedbackId()));
     }
     @Test void unknownUsesClassifierThenFeedbackWithoutChangingLearning()throws Exception {
-        var id=learning.create(null).id();var attempt=submit(id,"SEQUENCES","SEQUENCES");unknown(attempt.attemptId());String before=studentState(id);
+        var id=learning.create(null).id();var attempt=submit(id,"SEQ-01","SEQ-01");unknown(attempt.attemptId());String before=studentState(id);
         var result=feedback.generate(id,attempt.attemptId());assertEquals(Source.GEMINI,result.source());assertEquals(List.of("LOGIC_FLOW_ISSUE"),result.classification().errorTags());
         assertEquals(1,classifierCalls.get());assertEquals(1,feedbackCalls.get());assertTrue(bodies.get(1).contains("LOGIC_FLOW_ISSUE"));
         assertEquals(before,studentState(id));assertEquals(attempt.adaptation(),adaptation.byAttempt(attempt.attemptId()));
     }
     @ParameterizedTest @ValueSource(strings={"LOW_CONFIDENCE","UNKNOWN_TAG"})
     void classificationRejectedUsesFallback(String scenario)throws Exception {
-        mode=scenario;var id=learning.create(null).id();var attempt=submit(id,"SEQUENCES","SEQUENCES");unknown(attempt.attemptId());
+        mode=scenario;var id=learning.create(null).id();var attempt=submit(id,"SEQ-01","SEQ-01");unknown(attempt.attemptId());
         var result=feedback.generate(id,attempt.attemptId());assertEquals(Source.FALLBACK,result.source());assertEquals(scenario,result.fallbackReason());assertFalse(result.llmUsed());assertNull(result.classification());
         assertEquals(1,classifierCalls.get());assertEquals(0,feedbackCalls.get());
     }
     @ParameterizedTest @ValueSource(strings={"INVALID","EMPTY","STAGE","400","401","403","429","500","503","TIMEOUT"})
     void failuresPreserveLearningAndFallBack(String scenario)throws Exception {
-        mode=scenario;var id=learning.create(null).id();var attempt=submit(id,"SEQUENCES","SEQUENCES");String before=studentState(id);
+        mode=scenario;var id=learning.create(null).id();var attempt=submit(id,"SEQ-01","SEQ-01");String before=studentState(id);
         var result=feedback.generate(id,attempt.attemptId());assertEquals(Source.FALLBACK,result.source());assertEquals(Provider.GEMINI,result.provider());assertFalse(result.llmUsed());assertNotNull(result.fallbackReason());
         assertEquals(before,studentState(id));assertEquals(attempt.adaptation(),adaptation.byAttempt(attempt.attemptId()));
         assertEquals(Set.of("429","500","503","TIMEOUT").contains(scenario)?2:1,feedbackCalls.get());
@@ -154,13 +154,13 @@ class GeminiFeedbackIT {
         int port;try(var socket=new java.net.ServerSocket(0,0,java.net.InetAddress.getLoopbackAddress())){port=socket.getLocalPort();}
         var settings=new LlmSettings(Provider.GEMINI,"configured-test-model","gemini-test-secret-never-log",200,1);
         var adapter=new GeminiLlmProvider(settings,URI.create("http://127.0.0.1:"+port+"/v1/interactions"));
-        var id=learning.create(null).id();var attempt=submit(id,"SEQUENCES","SEQUENCES");String before=studentState(id);
+        var id=learning.create(null).id();var attempt=submit(id,"SEQ-01","SEQ-01");String before=studentState(id);
         var result=orchestrator(settings,adapter).generate(id,attempt.attemptId());
         assertEquals(Source.FALLBACK,result.source());assertEquals("PROVIDER_ERROR",result.fallbackReason());assertFalse(result.llmUsed());
         assertEquals(before,studentState(id));assertEquals(attempt.adaptation(),adaptation.byAttempt(attempt.attemptId()));
     }
     @Test void concurrentRequestsPersistOnce()throws Exception {
-        var id=learning.create(null).id();var attempt=submit(id,"SEQUENCES","SEQUENCES");
+        var id=learning.create(null).id();var attempt=submit(id,"SEQ-01","SEQ-01");
         var ready=new CountDownLatch(2);var go=new CountDownLatch(1);
         try(var pool=Executors.newFixedThreadPool(2)){
             Callable<FeedbackDto> task=()->{ready.countDown();go.await();return feedback.generate(id,attempt.attemptId());};

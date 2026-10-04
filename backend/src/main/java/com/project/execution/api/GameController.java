@@ -20,6 +20,7 @@ public class GameController {
         var level = catalog.find(id);
         return level.isPresent() ? ResponseEntity.ok(level.get()) : ResponseEntity.status(404).body(new Failure("LEVEL_NOT_FOUND", "Nivel no encontrado."));
     }
+    @org.springframework.security.access.prepost.PreAuthorize("hasRole('TEACHER') or @studentAccess.challenge(#id)")
     @PostMapping("/{id}/execute") public ResponseEntity<?> execute(@PathVariable String id, @RequestBody ProgramDto dto) {
         var level = catalog.find(id);
         if (level.isEmpty()) return ResponseEntity.status(404).body(new Failure("LEVEL_NOT_FOUND", "Nivel no encontrado."));

@@ -28,21 +28,21 @@ for(const viewport of [{width:1440,height:900},{width:1366,height:768}]) {
   for(const label of await page.locator('.node-label').all()){const bounds=await label.boundingBox();expect(bounds).not.toBeNull();expect(bounds!.y+bounds!.height).toBeLessThanOrEqual(mapBounds!.y+mapBounds!.height);}
   const student=await page.evaluate(()=>localStorage.getItem('mdedu.student.id.v1'));
   expect(student).toBeTruthy();
-  await page.getByRole('button',{name:/Secuencias:.*Disponible/}).click();await expect(page.getByTestId('game-blockly').locator('.blocklySvg')).toBeVisible();await shot('secuencias');
+  await page.getByRole('button',{name:/Secuencias:.*Disponible/}).click();await page.getByRole('region',{name:'Retos de Secuencias'}).getByRole('link',{name:/Abrir reto/}).click();await expect(page.getByTestId('game-blockly').locator('.blocklySvg')).toBeVisible();await shot('secuencias');
   for(const name of ['+ Avanzar','+ Avanzar','+ Girar derecha','+ Avanzar','+ Avanzar'])await page.getByRole('button',{name,exact:true}).click();
-  await page.getByRole('button',{name:'▶ Ejecutar',exact:true}).click();await expect(page.getByRole('status').filter({hasText:'¡Nivel completado!'})).toBeVisible();await expect(page.getByRole('region',{name:'Evaluación de tu solución'})).toHaveAttribute('data-passed','true');await shot('feedback-exito');
+  await page.getByRole('button',{name:'▶ Ejecutar',exact:true}).click();await expect(page.getByRole('status').filter({hasText:'¡Reto completado!'})).toBeVisible();await expect(page.getByRole('region',{name:'Evaluación de tu solución'})).toHaveAttribute('data-passed','true');await shot('feedback-exito');
   // Unlock through real evaluation, never through forged client-side progress.
-  for(const levelId of ['VARIABLES','CONDITIONALS']){
+  for(const levelId of ['VAR-01','COND-01']){
    await page.goto(`/aventura/${levelId}`);await expect(page.getByTestId('game-blockly').locator('.blocklySvg')).toBeVisible();await shot(levelId.toLowerCase());
-   const program=JSON.parse(readFileSync(`../backend/src/test/resources/evaluation/${levelId}.json`,'utf8'));
+   const program=JSON.parse(readFileSync(`../backend/src/test/resources/challenges/${levelId}.json`,'utf8'));
    const response=await request.post(`${api}/api/attempts`,{data:{studentId:student,levelId,program,hintCount:0,resolutionTimeMs:1000}});expect(response.status()).toBe(201);expect((await response.json()).execution.evaluation.activityPassed).toBe(true);
   }
-  await page.goto('/aventura/LOOPS');await expect(page.getByTestId('game-blockly').locator('.blocklySvg')).toBeVisible();await shot('ciclos');
+  await page.goto('/aventura/LOOP-01');await expect(page.getByTestId('game-blockly').locator('.blocklySvg')).toBeVisible();await shot('ciclos');
   for(let i=0;i<7;i++)await page.getByRole('button',{name:'+ Avanzar',exact:true}).click();
   const result=page.waitForResponse(r=>r.url().endsWith('/api/attempts')&&r.request().method()==='POST');
   await page.getByRole('button',{name:'▶ Ejecutar',exact:true}).click();const attempt=await(await result).json();expect(attempt.execution.evaluation.activityPassed).toBe(false);
   await expect(page.getByRole('status').filter({hasText:'todavía falta aplicar el concepto'})).toBeVisible();await expect(page.getByRole('region',{name:'Pista'})).toBeVisible();await shot('feedback-pedagogico');await audit('feedback-pedagogico');
-  await page.getByRole('link',{name:'← Volver al mapa'}).click();await expect(page.getByRole('button',{name:/Ciclos:.*Disponible/})).toBeVisible();await page.getByText('Mi progreso · 3 de 4 conceptos completados',{exact:true}).click();await expect(page.getByRole('meter')).toHaveCount(4);await shot('progreso');await audit('progreso');
+  await page.getByRole('link',{name:'← Volver al mapa'}).click();await expect(page.getByRole('button',{name:/Ciclos:.*Disponible/})).toBeVisible();await page.getByText('Mi progreso · 3 de 18 retos completados',{exact:true}).click();await expect(page.getByRole('meter')).toHaveCount(4);await shot('progreso');await audit('progreso');
   await page.goto('/laboratorio');await expect(page.getByTestId('blockly-editor').locator('.blocklySvg')).toBeVisible();await shot('laboratorio');
   await page.goto('/docente/login');await shot('docente-login');await loginTeacherPage(page);await shot('docente-vacio');
   await page.getByLabel('Estudiante pseudónimo').selectOption(student!);await expect(page.getByRole('heading',{name:'LOOPS',exact:true})).toBeVisible();await shot('docente-modelo');await audit('docente-modelo');

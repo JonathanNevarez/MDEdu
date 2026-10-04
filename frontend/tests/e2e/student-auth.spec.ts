@@ -12,9 +12,9 @@ test('teacher provisions once; fresh devices recover identical progress and cann
   const code=await issued.getByRole('heading').innerText();const password=await issued.locator('code').innerText();await issued.getByRole('button',{name:'Ocultar clave'}).click();await expect(issued).toHaveCount(0);
   const pa=await a.newPage();await pa.goto('/aventura');await expect(pa).toHaveURL(/ingresar$/);
   await pa.getByLabel('Código de estudiante').fill(code);await pa.getByLabel('Clave',{exact:true}).fill(password);await pa.getByRole('button',{name:'Ingresar',exact:true}).click();
-  await pa.getByRole('button',{name:/Secuencias:.*Disponible/}).click();
+  await pa.getByRole('button',{name:/Secuencias:.*Disponible/}).click();await pa.getByRole('region',{name:'Retos de Secuencias'}).getByRole('link',{name:/Abrir reto/}).click();
   for(const name of ['+ Avanzar','+ Avanzar','+ Girar derecha','+ Avanzar','+ Avanzar'])await pa.getByRole('button',{name,exact:true}).click();
-  await pa.getByRole('button',{name:'▶ Ejecutar',exact:true}).click();await expect(pa.getByRole('status').filter({hasText:'¡Nivel completado!'})).toBeVisible();
+  await pa.getByRole('button',{name:'▶ Ejecutar',exact:true}).click();await expect(pa.getByRole('status').filter({hasText:'¡Reto completado!'})).toBeVisible();
   const identity=await(await a.request.get(`${api}/api/auth/student/me`)).json();const id=identity.studentId;
   const model=await(await a.request.get(`${api}/api/students/${id}/model`)).json();const progress=await(await a.request.get(`${api}/api/students/${id}/progress`)).json();
   await pa.getByRole('button',{name:'Cerrar sesión',exact:true}).click();await expect(pa).toHaveURL(/ingresar$/);

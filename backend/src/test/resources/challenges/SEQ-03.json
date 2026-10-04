@@ -1,0 +1,30 @@
+{
+  "contractVersion": 1,
+  "name": "SEQ-03",
+  "statements": [
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "turnRight"
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "turnLeft"
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    }
+  ]
+}

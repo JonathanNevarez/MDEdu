@@ -19,8 +19,8 @@ class GeminiNoKeyFeedbackIT {
     @Autowired LearningService learning;@Autowired FeedbackOrchestrator feedback;@Autowired ObjectMapper json;
     @Test void applicationStartsAttemptsAdaptAndFeedbackFallsBackWithoutKey() throws Exception {
         var id=learning.create(null).id();ProgramDto program;
-        try(var in=getClass().getResourceAsStream("/evaluation/SEQUENCES.json")){program=json.readValue(in,ProgramDto.class);}
-        var attempt=learning.submit(new SubmitAttempt(id,"SEQUENCES",100L,0,program));assertNotNull(attempt.adaptation());assertTrue(attempt.execution().evaluation().activityPassed());
+        try(var in=getClass().getResourceAsStream("/challenges/SEQ-01.json")){program=json.readValue(in,ProgramDto.class);}
+        var attempt=learning.submit(new SubmitAttempt(id,"SEQ-01",100L,0,program));assertNotNull(attempt.adaptation());assertTrue(attempt.execution().evaluation().activityPassed());
         var result=feedback.generate(id,attempt.attemptId());assertEquals(Source.FALLBACK,result.source());assertEquals("DISABLED",result.fallbackReason());assertFalse(result.llmUsed());assertEquals(Provider.GEMINI,result.provider());
     }
 }

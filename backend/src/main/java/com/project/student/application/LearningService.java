@@ -29,7 +29,7 @@ public class LearningService {
     public StudentDto create(String displayName) {
         var now=Instant.now();var s=new StudentRow();s.id=UUID.randomUUID();s.displayName=displayName;s.createdAt=now;s.lastUpdated=now;students.saveAndFlush(s);
         for(var concept:store.concepts()) {var m=new MasteryRow();m.id=UUID.randomUUID();m.studentId=s.id;m.conceptId=concept.id;m.masteryScore=policy.values().initialMastery();m.lastUpdated=now;store.save(m);}
-        for(var activity:store.activities()) if(!activity.reinforcement) {var p=new ProgressRow();p.id=UUID.randomUUID();p.studentId=s.id;p.activityId=activity.id;store.save(p);}
+        for(var activity:store.activities()) if(!activity.reinforcement && !activity.archived) {var p=new ProgressRow();p.id=UUID.randomUUID();p.studentId=s.id;p.activityId=activity.id;store.save(p);}
         unlock(s.id,now);return new StudentDto(s.id,s.displayName,s.createdAt);
     }
     @Transactional
@@ -37,7 +37,7 @@ public class LearningService {
         // A per-student row lock serializes every mastery/progress update, including different concepts.
         var student=students.lock(request.studentId()).orElseThrow(()->new ResponseStatusException(NOT_FOUND,"STUDENT_NOT_FOUND"));
         var level=levels.find(request.levelId()).orElseThrow(()->new ResponseStatusException(NOT_FOUND,"LEVEL_NOT_FOUND"));
-        var activity=store.activities().stream().filter(a->a.id.equals(level.id())).findFirst().orElseThrow(()->new ResponseStatusException(NOT_FOUND,"ACTIVITY_NOT_FOUND"));
+        var activity=store.activities().stream().filter(a->a.id.equals(level.id()) && !a.archived).findFirst().orElseThrow(()->new ResponseStatusException(NOT_FOUND,"ACTIVITY_NOT_FOUND"));
         var progress=store.progress(student.id).stream().filter(p->p.activityId.equals(activity.id)).findFirst().orElseThrow();
         if(progress.unlockedAt==null)throw new ResponseStatusException(CONFLICT,"ACTIVITY_LOCKED");
         var auditedAttemptId=UUID.randomUUID();
@@ -74,6 +74,10 @@ public class LearningService {
         var states=new HashMap<String,ConceptGraphService.Achievement>();store.masteries(studentId).forEach(m->states.put(m.conceptId,new ConceptGraphService.Achievement(m.successCount,m.masteryScore)));
         var history=new HashSet<String>();for(var p:rows)if(p.unlockedAt!=null)activities.stream().filter(a->a.id.equals(p.activityId)).forEach(a->history.add(a.conceptId));
         var unlocked=graph.unlocked(concepts.stream().map(c->new ConceptGraphService.Node(c.id,c.minimumMasteryToUnlock,c.prerequisites)).toList(),states,history);
-        for(var p:rows)if(p.unlockedAt==null && activities.stream().anyMatch(a->a.id.equals(p.activityId)&&unlocked.contains(a.conceptId)))p.unlockedAt=now;
+        for(var level:levels.all().levels()) {
+            var p=rows.stream().filter(row->row.activityId.equals(level.id())).findFirst().orElseThrow();
+            boolean previousPassed=level.prerequisiteLevelIds().stream().allMatch(previous->rows.stream().anyMatch(row->row.activityId.equals(previous)&&row.completedAt!=null));
+            if(p.unlockedAt==null && unlocked.contains(level.conceptId()) && previousPassed)p.unlockedAt=now;
+        }
     }
 }

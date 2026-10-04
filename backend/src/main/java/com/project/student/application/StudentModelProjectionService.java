@@ -13,6 +13,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class StudentModelProjectionService {
+    @org.springframework.beans.factory.annotation.Autowired private com.project.execution.application.LevelCatalog levels;
     private final StudentRepository students;
     private final LearningStore store;
     private final StudentModelPolicy policy;
@@ -30,7 +31,7 @@ public class StudentModelProjectionService {
         var activities=new LinkedHashMap<String,Activity>();
         for(var r:store.activities()) {
             var a=f.createActivity();a.setId(r.id);a.setTitle(r.title);a.setConcept(concepts.get(r.conceptId));activities.put(r.id,a);model.getActivities().add(a);
-            (r.reinforcement?a.getConcept().getReinforcementActivities():a.getConcept().getActivities()).add(a);
+            if(!r.archived)(r.reinforcement?a.getConcept().getReinforcementActivities():a.getConcept().getActivities()).add(a);
             var objective=f.createLearningObjective();objective.setId("OBJECTIVE_"+r.id);objective.setDescription("Aplicar "+a.getConcept().getName()+" en "+r.title);objective.setConcept(a.getConcept());
             model.getLearningObjectives().add(objective);a.getLearningObjectives().add(objective);
         }
@@ -64,7 +65,13 @@ public class StudentModelProjectionService {
             m.getAttempts().stream().map(a->new AttemptDto(a.getId(),a.getActivity().getId(),a.getConcept().getId(),a.isSuccessful(),a.isFunctionalPassed(),a.getResolutionTime(),a.getHintCount(),a.getSubmittedAt().toInstant(),a.getErrorPatterns().stream().map(ErrorPattern::getId).toList())).toList(),m.getLastUpdated().toInstant());
     }
     public ProgressDto progress(StudentModel m) {
-        return new ProgressDto(m.getProgress().stream().map(p->{var c=m.getConceptMasteries().stream().filter(a->a.getConcept()==p.getConcept()).findFirst().orElseThrow();
-            return new ProgressEntry(p.getActivity().getId(),p.getConcept().getId(),p.isCompleted(),p.isUnlocked(),c.getMasteryScore(),c.getAttemptCount());}).toList());
+        var entries=new ArrayList<ProgressEntry>();
+        for(var level:levels.all().levels()) {
+            var p=m.getProgress().stream().filter(row->row.getActivity().getId().equals(level.id())).findFirst().orElseThrow();
+            var c=m.getConceptMasteries().stream().filter(row->row.getConcept()==p.getConcept()).findFirst().orElseThrow();
+            boolean current=p.isUnlocked()&&!p.isCompleted()&&entries.stream().noneMatch(e->e.conceptId().equals(level.conceptId())&&e.current());
+            entries.add(new ProgressEntry(level.id(),level.conceptId(),p.isCompleted(),p.isUnlocked(),c.getMasteryScore(),c.getAttemptCount(),level.order(),current));
+        }
+        return new ProgressDto(List.copyOf(entries));
     }
 }

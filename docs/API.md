@@ -1,5 +1,14 @@
 # API — estado y contratos iniciales
 
+## Evolución post-prototipo: 18 retos guiados
+
+`GET /api/game/levels` conserva el endpoint y devuelve 18 entradas con `id`, `conceptId`, `concept`, `title`, `shortDescription`, `description`, `learningObjective`, `difficulty`, `order` dentro del concepto, `prerequisiteLevelIds`, `worldConfig`, `allowedBlockGroups` y `criteria`. Los conceptos se agrupan por conceptId; no hay endpoint duplicado.
+
+`GET /api/students/{id}/progress` conserva `levels` y añade `concepts`, `total`, `completedCount`. Cada entrada añade `order` y `current`; cada concepto contiene conceptId, total, completedCount y challenges. `current` identifica el primer reto disponible sin completar de cada concepto. La identidad y el progreso se consultan en servidor.
+
+`POST /api/attempts` sigue recibiendo levelId, ahora SEQ-01…LOOP-05. Retos bloqueados: 409; IDs archivados: 404. `POST /api/game/levels/{id}/execute` exige también un reto activo desbloqueado para estudiantes (403 en caso contrario); el docente mantiene ejecución de diagnóstico. No concede progreso. Catálogo público y laboratorio conservados. Véase [catálogo](CATALOGO_RETOS.md).
+
+
 ## Evolución post-prototipo: cuentas de estudiantes
 
 Esta sección sustituye las referencias históricas a acceso anónimo. Todas las escrituras requieren sesión y CSRF, salvo obtención del token mediante GET. `/api/students` (creación histórica) es solo docente. Las lecturas de catálogo y health permanecen públicas.

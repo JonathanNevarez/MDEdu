@@ -13,9 +13,9 @@ test('Gemini local HTTP adapter delivers validated feedback to the adaptive UI',
   const sessionResponse = await request.post(`${api}/api/sessions`, {data: {studentId: id}});
   expect(sessionResponse.status()).toBe(201); const session = await sessionResponse.json();
   let attempt;
-  for (const level of ['SEQUENCES', 'VARIABLES', 'CONDITIONALS', 'LOOPS']) {
-    const fixture = level === 'LOOPS' ? 'LOOPS_MANUAL' : level;
-    const program = JSON.parse(readFileSync(`../backend/src/test/resources/evaluation/${fixture}.json`, 'utf8'));
+  for (const level of ['SEQ-01', 'VAR-01', 'COND-01', 'LOOP-01']) {
+    const fixture = level === 'LOOP-01' ? 'LOOP-01_MANUAL' : level;
+    const program = JSON.parse(readFileSync(`../backend/src/test/resources/challenges/${fixture}.json`, 'utf8'));
     const response = await request.post(`${api}/api/attempts`, { headers: {'X-Session-Id': session.id}, data: { studentId: id, levelId: level, program, hintCount: 0, resolutionTimeMs: 1000 } });
     expect(response.status()).toBe(201); attempt = await response.json();
   }
@@ -24,7 +24,7 @@ test('Gemini local HTTP adapter delivers validated feedback to the adaptive UI',
   const feedback = await response.json();
   expect(feedback.provider).toBe('GEMINI'); expect(feedback.source).toBe('GEMINI'); expect(feedback.llmUsed).toBe(true);
   await page.goto('/'); await loginStudentById(page,id);await page.evaluate(({studentId, sessionId}) => {localStorage.setItem('mdedu.student.id.v1', studentId);sessionStorage.setItem('mdedu.session.v1', JSON.stringify({id: sessionId, studentId, status: 'ACTIVE'}));}, {studentId: id, sessionId: session.id});
-  await page.goto('/aventura/LOOPS');
+  await page.goto('/aventura/LOOP-01');
   await expect(page.getByRole('region', { name: 'Luma' })).toBeVisible();
   await expect(page.getByRole('region', { name: 'Pista' })).toContainText(feedback.message);
   await expect(page.getByRole('button', { name: 'Intentar de nuevo' })).toBeVisible();

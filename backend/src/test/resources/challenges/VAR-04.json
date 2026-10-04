@@ -1,0 +1,67 @@
+{
+  "contractVersion": 1,
+  "name": "VAR-04",
+  "statements": [
+    {
+      "kind": "variableDeclaration",
+      "declarationId": "llaves",
+      "name": "llaves",
+      "valueType": "INTEGER",
+      "initialValue": {
+        "kind": "literal",
+        "valueType": "INTEGER",
+        "value": "0"
+      }
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "assignment",
+      "targetDeclarationId": "llaves",
+      "value": {
+        "kind": "literal",
+        "valueType": "INTEGER",
+        "value": "1"
+      }
+    },
+    {
+      "kind": "variableDeclaration",
+      "declarationId": "primera",
+      "name": "primera",
+      "valueType": "INTEGER",
+      "initialValue": {
+        "kind": "variableReference",
+        "declarationId": "llaves"
+      }
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "assignment",
+      "targetDeclarationId": "llaves",
+      "value": {
+        "kind": "literal",
+        "valueType": "INTEGER",
+        "value": "2"
+      }
+    },
+    {
+      "kind": "variableDeclaration",
+      "declarationId": "segunda",
+      "name": "segunda",
+      "valueType": "INTEGER",
+      "initialValue": {
+        "kind": "variableReference",
+        "declarationId": "llaves"
+      }
+    },
+    {
+      "kind": "move"
+    }
+  ]
+}

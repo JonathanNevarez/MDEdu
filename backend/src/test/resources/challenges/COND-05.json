@@ -1,0 +1,52 @@
+{
+  "contractVersion": 1,
+  "name": "COND-05",
+  "statements": [
+    {
+      "kind": "ifElse",
+      "condition": {
+        "kind": "sensorExpression",
+        "sensor": "FRONT_CLEAR"
+      },
+      "thenBranch": [
+        {
+          "kind": "move"
+        }
+      ],
+      "elseBranch": [
+        {
+          "kind": "turnRight"
+        }
+      ]
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "ifElse",
+      "condition": {
+        "kind": "sensorExpression",
+        "sensor": "LEFT_CLEAR"
+      },
+      "thenBranch": [
+        {
+          "kind": "turnLeft"
+        },
+        {
+          "kind": "move"
+        },
+        {
+          "kind": "move"
+        }
+      ],
+      "elseBranch": [
+        {
+          "kind": "turnRight"
+        }
+      ]
+    }
+  ]
+}

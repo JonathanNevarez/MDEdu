@@ -15,7 +15,12 @@ public final class LearningDtos {
         int consecutiveFailures,double averageResolutionTime,int hintCount,List<String> recentErrorPatterns,Instant lastUpdated) {}
     public record AttemptDto(String id,String levelId,String conceptId,boolean successful,boolean functionalPassed,long resolutionTimeMs,int hintCount,Instant submittedAt,List<String> errorPatterns) {}
     public record ModelDto(StudentDto student,int modelVersion,List<MasteryDto> conceptMasteries,List<AttemptDto> recentAttempts,Instant lastUpdated) {}
-    public record ProgressEntry(String levelId,String conceptId,boolean completed,boolean unlocked,double masteryScore,int attemptCount) {}
-    public record ProgressDto(List<ProgressEntry> levels) {}
+    public record ProgressEntry(String levelId,String conceptId,boolean completed,boolean unlocked,double masteryScore,int attemptCount,int order,boolean current) {
+        public ProgressEntry(String id,String concept,boolean completed,boolean unlocked,double mastery,int attempts){this(id,concept,completed,unlocked,mastery,attempts,0,false);}
+    }
+    public record ConceptProgress(String conceptId,int total,int completedCount,List<ProgressEntry> challenges) {}
+    public record ProgressDto(List<ProgressEntry> levels,List<ConceptProgress> concepts,int total,int completedCount) {
+        public ProgressDto(List<ProgressEntry> levels){this(levels,levels.stream().map(ProgressEntry::conceptId).distinct().map(id->{var items=levels.stream().filter(p->p.conceptId().equals(id)).toList();return new ConceptProgress(id,items.size(),(int)items.stream().filter(ProgressEntry::completed).count(),items);}).toList(),levels.size(),(int)levels.stream().filter(ProgressEntry::completed).count());}
+    }
     public record AttemptResponse(UUID attemptId,EvaluatedExecution execution,ModelDto studentModel,ProgressDto progress,MasteryUpdater.Change masteryUpdate,com.project.adaptation.manager.DecisionTypes.DecisionDto adaptation) {}
 }

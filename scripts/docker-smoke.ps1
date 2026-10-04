@@ -39,9 +39,9 @@ try {
     $issued=$null
     $csrf=Invoke-RestMethod "$api/auth/student/csrf" -WebSession $studentSession
     $studentHeaders=@{};$studentHeaders[$csrf.headerName]=$csrf.token
-    foreach ($level in @('SEQUENCES','VARIABLES','CONDITIONALS','LOOPS')) {
-        $fixture=if($level -eq 'LOOPS'){'LOOPS_MANUAL'}else{$level}
-        $program=Get-Content -Raw (Join-Path $ProjectRoot "backend/src/test/resources/evaluation/$fixture.json") | ConvertFrom-Json
+    foreach ($level in @('SEQ-01','VAR-01','COND-01','LOOP-01')) {
+        $fixture=if($level -eq 'LOOP-01'){'LOOP-01_MANUAL'}else{$level}
+        $program=Get-Content -Raw (Join-Path $ProjectRoot "backend/src/test/resources/challenges/$fixture.json") | ConvertFrom-Json
         $body=@{studentId=$student.id;levelId=$level;program=$program;hintCount=0;resolutionTimeMs=1000}|ConvertTo-Json -Depth 100
         $attempt=Invoke-RestMethod "$api/attempts" -Method Post -WebSession $studentSession -Headers $studentHeaders -ContentType 'application/json' -Body $body
     }

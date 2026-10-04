@@ -57,7 +57,7 @@ public class UiConfigurationService {
             var allowed=new TreeMap<String,String>();
             var current=learning.activities().stream().filter(a->a.id.equals(activity)).findFirst().orElseThrow();
             for(var concept:learning.concepts())if(concept.prerequisites.contains(current.conceptId))
-                for(var next:learning.activities())if(!next.reinforcement&&next.conceptId.equals(concept.id)&&learning.progress(student).stream().anyMatch(p->p.activityId.equals(next.id)&&p.unlockedAt!=null))allowed.put(concept.id,next.id);
+                for(var next:learning.activities())if(!next.reinforcement&&!next.archived&&next.conceptId.equals(concept.id)&&learning.progress(student).stream().anyMatch(p->p.activityId.equals(next.id)&&p.unlockedAt!=null))allowed.putIfAbsent(concept.id,next.id);
             var config=projection.project(base,decision.actions(),feedback,allowed);
             var code=config.isShowCodePanel()?codes.generate(student,attempt):null;
             observed=response(config,attempt,feedback,code,false,null);
@@ -69,15 +69,16 @@ public class UiConfigurationService {
         return observed;
     }
     private ConcreteUIModel base(String activity) throws Exception {
-        if(!Set.of("SEQUENCES","VARIABLES","CONDITIONALS","LOOPS").contains(activity))throw new IllegalArgumentException("Unknown activity");
+        var concept=learning.activities().stream().filter(a->a.id.equals(activity)).map(a->a.conceptId).findFirst().orElseThrow();
         var rs=new ResourceSetImpl();rs.getPackageRegistry().put(UiPackage.eNS_URI,UiPackage.eINSTANCE);
         rs.getResourceFactoryRegistry().getExtensionToFactoryMap().put("ui",new XMIResourceFactoryImpl());
         var resource=rs.createResource(URI.createURI("memory:/base.ui"));
-        try(var in=UiPackage.class.getResourceAsStream("/examples/concrete-"+activity.toLowerCase(Locale.ROOT)+".ui")) {
+        try(var in=UiPackage.class.getResourceAsStream("/examples/concrete-"+concept.toLowerCase(Locale.ROOT)+".ui")) {
             if(in==null)throw new IllegalStateException("Missing ATL output");resource.load(in,Map.of());
         }
         var model=(ConcreteUIModel)resource.getContents().getFirst();
         if(Diagnostician.INSTANCE.validate(model).getSeverity()!=Diagnostic.OK)throw new IllegalArgumentException("Invalid ATL base");
+        model.setActivityId(activity);
         return model;
     }
     private Response response(FinalUIConfiguration c,UUID attempt,FeedbackDto feedback,AttemptCodeService.Code code,boolean safe,String reason) {

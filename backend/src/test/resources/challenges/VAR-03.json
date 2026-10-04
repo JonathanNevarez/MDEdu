@@ -1,0 +1,83 @@
+{
+  "contractVersion": 1,
+  "name": "VAR-03",
+  "statements": [
+    {
+      "kind": "variableDeclaration",
+      "declarationId": "energia",
+      "name": "energia",
+      "valueType": "INTEGER",
+      "initialValue": {
+        "kind": "literal",
+        "valueType": "INTEGER",
+        "value": "3"
+      }
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "assignment",
+      "targetDeclarationId": "energia",
+      "value": {
+        "kind": "literal",
+        "valueType": "INTEGER",
+        "value": "2"
+      }
+    },
+    {
+      "kind": "variableDeclaration",
+      "declarationId": "paso1",
+      "name": "paso1",
+      "valueType": "INTEGER",
+      "initialValue": {
+        "kind": "variableReference",
+        "declarationId": "energia"
+      }
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "assignment",
+      "targetDeclarationId": "energia",
+      "value": {
+        "kind": "literal",
+        "valueType": "INTEGER",
+        "value": "1"
+      }
+    },
+    {
+      "kind": "variableDeclaration",
+      "declarationId": "paso2",
+      "name": "paso2",
+      "valueType": "INTEGER",
+      "initialValue": {
+        "kind": "variableReference",
+        "declarationId": "energia"
+      }
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "assignment",
+      "targetDeclarationId": "energia",
+      "value": {
+        "kind": "literal",
+        "valueType": "INTEGER",
+        "value": "0"
+      }
+    },
+    {
+      "kind": "variableDeclaration",
+      "declarationId": "paso3",
+      "name": "paso3",
+      "valueType": "INTEGER",
+      "initialValue": {
+        "kind": "variableReference",
+        "declarationId": "energia"
+      }
+    }
+  ]
+}

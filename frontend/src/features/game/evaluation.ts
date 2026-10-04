@@ -6,8 +6,8 @@ export function applyEvaluation(progress: Progress, levelId: string, evaluation?
   return evaluation?.activityPassed === true ? completeLevel(progress, levelId) : progress;
 }
 export function evaluationMessage(result: ExecutionResult): string {
-  if (result.evaluation?.activityPassed) return '¡Nivel completado!';
+  if (result.evaluation?.activityPassed) return '¡Reto completado!';
   if (!result.success) return 'No alcanzaste la meta todavía. Intenta nuevamente.';
   if (!result.evaluation) return 'La evaluación no está disponible. Intenta nuevamente.';
-  return '¡Llegaste a la meta! Pero todavía falta aplicar el concepto de este nivel.';
+  return '¡Llegaste a la meta! Pero todavía falta aplicar el concepto de este reto.';
 }

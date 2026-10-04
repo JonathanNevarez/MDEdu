@@ -51,7 +51,7 @@ export function GameEditor({ level, busy, onRun, onMessage }: {
       <button disabled={busy} onClick={() => append('turn_left')}>+ Girar izquierda</button>
       <button disabled={busy} onClick={() => append('turn_right')}>+ Girar derecha</button>
     </div>
-    <div ref={host} className="game-blockly" data-testid="game-blockly" aria-label="Editor Blockly del nivel" />
+    <div ref={host} className="game-blockly" data-testid="game-blockly" aria-label="Editor Blockly del reto" />
     <button className="game-primary run-button" disabled={busy} onClick={run}>▶ Ejecutar</button>
   </section>;
 }

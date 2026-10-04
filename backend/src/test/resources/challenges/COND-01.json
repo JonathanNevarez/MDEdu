@@ -1,0 +1,21 @@
+{
+  "contractVersion": 1,
+  "name": "COND-01",
+  "statements": [
+    {
+      "kind": "if",
+      "condition": {
+        "kind": "sensorExpression",
+        "sensor": "FRONT_CLEAR"
+      },
+      "thenBranch": [
+        {
+          "kind": "move"
+        },
+        {
+          "kind": "move"
+        }
+      ]
+    }
+  ]
+}

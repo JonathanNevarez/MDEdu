@@ -6,28 +6,29 @@ test('mapa, secuencia real, replay, reinicio y progreso persistido', async ({ pa
   page.on('pageerror', error => errors.push(error.message));
   page.on('request', request => { if (request.url().endsWith('/api/attempts')) executions++; });
   await page.goto('/aventura');
-  await expect(page.getByRole('heading', { name: 'Mi primera programación' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Aprender' })).toBeVisible();
   await expect(page.getByRole('button', { name: /: .*\.( Disponible| Bloqueado)/ })).toHaveCount(4);
-  await expect(page.getByRole('button', { name: /Secuencias:.*Disponible/ })).toHaveAttribute('aria-disabled', 'false');
+  await expect(page.getByRole('button', { name: /Secuencias:.*Disponible/ })).toHaveAttribute('aria-pressed', 'true');
   const locked = page.getByRole('button', { name: /Variables:.*Bloqueado/ });
-  await expect(locked).toHaveAttribute('aria-disabled', 'true');
+  await expect(page.getByRole('region', { name: 'Retos de Secuencias' }).getByRole('link', { name: /Abrir reto/ })).toHaveCount(1);
   await page.screenshot({ path: testInfo.outputPath('map.png'), fullPage: true });
   await locked.focus(); await page.keyboard.press('Enter');
-  await expect(page.getByRole('status')).toHaveText('Completa el nivel anterior para continuar.');
+  await expect(page.getByRole('region', { name: 'Retos de Variables' }).getByRole('link')).toHaveCount(0);
   await expect(page).toHaveURL(/\/aventura$/);
   await page.getByRole('button', { name: /Secuencias:.*Disponible/ }).click();
+  await page.getByRole('region', { name: 'Retos de Secuencias' }).getByRole('link', { name: /Abrir reto/ }).click();
   await expect(page.getByTestId('game-blockly').locator('.blocklySvg')).toBeVisible();
   await expect(page.getByRole('img', { name: /GridWorld: personaje en 1, 1/ })).toBeVisible();
   for (const name of ['+ Avanzar', '+ Avanzar', '+ Girar derecha', '+ Avanzar', '+ Avanzar'])
     { await page.getByRole('button', { name, exact: true }).focus(); await page.keyboard.press('Enter'); }
   await page.getByRole('button', { name: '▶ Ejecutar', exact: true }).focus(); await page.keyboard.press('Enter');
   await expect(page.getByRole('img', { name: /GridWorld: personaje en 3, 3, dirección SOUTH/ })).toBeVisible();
-  await expect(page.getByRole('status').filter({ hasText: '¡Nivel completado!' })).toBeVisible();
+  await expect(page.getByRole('status').filter({ hasText: '¡Reto completado!' })).toBeVisible();
   expect(executions).toBe(1);
   await page.screenshot({ path: testInfo.outputPath('completed.png'), fullPage: true });
   await page.getByRole('button', { name: 'Reproducir', exact: true }).click();
   await expect(page.getByRole('img', { name: /GridWorld: personaje en 1, 1/ })).toBeVisible();
-  await expect(page.getByRole('status').filter({ hasText: '¡Nivel completado!' })).toBeVisible();
+  await expect(page.getByRole('status').filter({ hasText: '¡Reto completado!' })).toBeVisible();
   expect(executions).toBe(1);
   await page.getByRole('button', { name: 'Reiniciar', exact: true }).click();
   await expect(page.getByRole('img', { name: /GridWorld: personaje en 1, 1/ })).toBeVisible();
@@ -37,6 +38,7 @@ test('mapa, secuencia real, replay, reinicio y progreso persistido', async ({ pa
   await page.evaluate(() => localStorage.removeItem('mdedu.game.progress.v1'));
   await page.reload();
   await expect(page.getByRole('button', { name: /Variables:.*Disponible/ })).toBeVisible();
-  await expect(page.getByRole('button', { name: /Secuencias:.*Completado/ })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Retos de Secuencias' }).getByRole('link', { name: /Completado/ })).toHaveCount(1);
+  await expect(page.getByRole('region', { name: 'Retos de Secuencias' }).getByRole('link', { name: /Abrir reto/ })).toHaveCount(1);
   expect(errors).toEqual([]);
 });

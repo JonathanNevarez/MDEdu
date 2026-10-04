@@ -22,8 +22,18 @@ public final class GameTypes {
     public record WorldConfig(int width, int height, Position playerPosition,
         Direction playerDirection, Position goalPosition, List<Position> obstacles,
         List<Position> keys, List<Position> doors) {}
+    public record Checkpoint(String variable, int value, Position position) {}
+    public record Criteria(List<Position> orderedItems, List<Checkpoint> variableCheckpoints,
+        List<String> readVariables, int minimumDecisions, List<String> requiredStatements) {}
     public record Level(String id, String concept, String title, String description, int order,
-        List<String> prerequisiteLevelIds, WorldConfig worldConfig, List<String> allowedBlockGroups) {}
+        List<String> prerequisiteLevelIds, WorldConfig worldConfig, List<String> allowedBlockGroups,
+        String conceptId, String learningObjective, String difficulty, Criteria criteria, String shortDescription) {
+        public String conceptId() { return conceptId == null ? id : conceptId; }
+        public Level(String id, String concept, String title, String description, int order,
+            List<String> prerequisites, WorldConfig world, List<String> groups) {
+            this(id,concept,title,description,order,prerequisites,world,groups,id,description,"LEGACY",null,description);
+        }
+    }
     public record Catalog(int version, List<Level> levels) {}
     public record Door(Position position, boolean open) {}
     public record Variable(String id, String name, String type, Object value) {}

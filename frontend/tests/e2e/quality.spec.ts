@@ -26,16 +26,16 @@ test('accessible map, activity and persisted feedback at laptop size',async({pag
  const cspErrors:string[]=[];page.on('console',message=>{if(message.text().includes('Content Security Policy'))cspErrors.push(message.text());});
  await page.setViewportSize({width:1280,height:800});await page.emulateMedia({reducedMotion:'reduce'});
  await page.goto('/aventura');await expect(page.getByRole('button',{name:/Secuencias:.*Disponible/})).toBeVisible();await audit(page);
- await page.getByRole('button',{name:/Secuencias:.*Disponible/}).click();await expect(page.getByTestId('game-blockly').locator('.blocklySvg')).toBeVisible();await audit(page);
+ await page.getByRole('button',{name:/Secuencias:.*Disponible/}).click();await page.getByRole('region',{name:'Retos de Secuencias'}).getByRole('link',{name:/Abrir reto/}).click();await expect(page.getByTestId('game-blockly').locator('.blocklySvg')).toBeVisible();await audit(page);
  const id=await page.evaluate(()=>localStorage.getItem('mdedu.student.id.v1'));
  let attemptId='';
- for(const levelId of ['SEQUENCES','VARIABLES','CONDITIONALS','LOOPS']){
-  const program=JSON.parse(readFileSync(`../backend/src/test/resources/evaluation/${levelId==='LOOPS'?'LOOPS_MANUAL':levelId}.json`,'utf8'));
+ for(const levelId of ['SEQ-01','VAR-01','COND-01','LOOP-01']){
+  const program=JSON.parse(readFileSync(`../backend/src/test/resources/challenges/${levelId==='LOOP-01'?'LOOP-01_MANUAL':levelId}.json`,'utf8'));
   const response=await request.post(`${api}/api/attempts`,{data:{studentId:id,levelId,program,hintCount:0,resolutionTimeMs:1000}});
   expect(response.status()).toBe(201);attemptId=(await response.json()).attemptId;
  }
  expect((await request.post(`${api}/api/feedback/generate`,{data:{studentId:id,attemptId}})).status()).toBe(200);
- await page.goto('/aventura/LOOPS');await expect(page.getByRole('region',{name:'Pista'})).toBeVisible();await audit(page);
+ await page.goto('/aventura/LOOP-01');await expect(page.getByRole('region',{name:'Pista'})).toBeVisible();await audit(page);
  expect(await page.locator('html').evaluate(el=>el.scrollWidth<=el.ownerDocument.defaultView!.innerWidth)).toBe(true);
  expect(cspErrors).toEqual([]);
 });

@@ -3,7 +3,7 @@ import {test,expect,createStudent,loginStudentById} from './studentFixtures';
 import {type APIRequestContext} from '@playwright/test';
 const api = process.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8080';
 async function submit(request: APIRequestContext, studentId: string, levelId: string, fixture = levelId) {
-  const program = JSON.parse(readFileSync(`../backend/src/test/resources/evaluation/${fixture}.json`, 'utf8'));
+  const program = JSON.parse(readFileSync(`../backend/src/test/resources/challenges/${fixture}.json`, 'utf8'));
   const r = await request.post(`${api}/api/attempts`, {data: {studentId, levelId, program, hintCount: 0, resolutionTimeMs: 1000}});
   expect(r.status()).toBe(201);return r.json();
 }
@@ -13,16 +13,16 @@ test('two real histories produce distinct UI; hints, Luma, repeat and refresh ne
     const ids: string[] = [];
     for (let i=0;i<2;i++) {
       const r = await createStudent(request);ids.push((await r.json()).id as string);
-      for(const level of ['SEQUENCES','VARIABLES','CONDITIONALS']) await submit(request,ids[i]!,level);
+      for(const level of ['SEQ-01','VAR-01','COND-01']) await submit(request,ids[i]!,level);
     }
-    const failure = await submit(request,ids[0]!,'LOOPS','LOOPS_MANUAL');
-    const success = await submit(request,ids[1]!,'LOOPS');
+    const failure = await submit(request,ids[0]!,'LOOP-01','LOOP-01_MANUAL');
+    const success = await submit(request,ids[1]!,'LOOP-01');
     expect(failure.execution.success).toBe(true);expect(failure.execution.evaluation.activityPassed).toBe(false);
     expect(success.execution.evaluation.activityPassed).toBe(true);
     const pa=await a.newPage();const pb=await b.newPage();
     for(const [page,id] of [[pa,ids[0]!],[pb,ids[1]!]] as const) {
       await page.goto('/');await loginStudentById(page,id);await page.evaluate(student => localStorage.setItem('mdedu.student.id.v1',student),id);
-      await page.goto('/aventura/LOOPS');
+      await page.goto('/aventura/LOOP-01');
     }
     await expect(pa.getByRole('region',{name:'Pista'})).toBeVisible();
     await expect(pa.getByRole('region',{name:'Luma'})).toBeVisible();
@@ -44,32 +44,32 @@ test('two real histories produce distinct UI; hints, Luma, repeat and refresh ne
 });
 test('advance uses a real backend target; local tampering cannot unlock a level', async ({page,request}) => {
   const id=(await (await createStudent(request)).json()).id as string;
-  const denied=await request.get(`${api}/api/students/${id}/activities/LOOPS/ui-configuration`);expect(denied.status()).toBe(409);
+  const denied=await request.get(`${api}/api/students/${id}/activities/LOOP-01/ui-configuration`);expect(denied.status()).toBe(409);
   let attempt;
-  for(let i=0;i<9;i++) attempt=await submit(request,id,'SEQUENCES');
+  for(let i=0;i<9;i++) attempt=await submit(request,id,'SEQ-01');
   const c=await (await request.get(`${api}/api/students/${id}/attempts/${attempt.attemptId}/ui-configuration`)).json();
-  expect(c.configuration.navigationMode).toBe('ADVANCE');expect(c.configuration.nextActivityId).toBe('VARIABLES');
+  expect(c.configuration.navigationMode).toBe('ADVANCE');expect(c.configuration.nextActivityId).toBe('VAR-01');
   await page.goto('/');await loginStudentById(page,id);await page.evaluate(student=>localStorage.setItem('mdedu.student.id.v1',student),id);
-  await page.goto('/aventura/SEQUENCES');await page.getByRole('link',{name:'Continuar',exact:true}).click();
-  await expect(page).toHaveURL(/aventura\/VARIABLES$/);
+  await page.goto('/aventura/SEQ-01');await page.getByRole('link',{name:'Continuar',exact:true}).click();
+  await expect(page).toHaveURL(/aventura\/VAR-01$/);
   // Controlled client-side tampering: server progress and submission remain authoritative.
-  await page.route('**/api/students/*/activities/SEQUENCES/ui-configuration',route=>route.fulfill({json:{...c,configuration:{...c.configuration,nextActivityId:'LOOPS'}}}));
-  await page.goto('/aventura/SEQUENCES');await page.getByRole('link',{name:'Continuar',exact:true}).click();
-  const lockedProgram=JSON.parse(readFileSync('../backend/src/test/resources/evaluation/LOOPS.json','utf8'));
-  expect((await request.post(`${api}/api/attempts`,{data:{studentId:id,levelId:'LOOPS',program:lockedProgram,hintCount:0,resolutionTimeMs:1000}})).status()).toBe(409);
-await expect(page.getByRole('heading',{name:'Nivel bloqueado'})).toBeVisible();
+  await page.route('**/api/students/*/activities/SEQ-01/ui-configuration',route=>route.fulfill({json:{...c,configuration:{...c.configuration,nextActivityId:'LOOP-01'}}}));
+  await page.goto('/aventura/SEQ-01');await page.getByRole('link',{name:'Continuar',exact:true}).click();
+  const lockedProgram=JSON.parse(readFileSync('../backend/src/test/resources/challenges/LOOP-01.json','utf8'));
+  expect((await request.post(`${api}/api/attempts`,{data:{studentId:id,levelId:'LOOP-01',program:lockedProgram,hintCount:0,resolutionTimeMs:1000}})).status()).toBe(409);
+await expect(page.getByRole('heading',{name:'Reto bloqueado'})).toBeVisible();
 });
 test('controlled configurations show and hide escaped code in the same bundle, with reduced motion', async ({page,request},testInfo) => {
   const id=(await (await createStudent(request)).json()).id as string;
-  const original=await (await request.get(`${api}/api/students/${id}/activities/SEQUENCES/ui-configuration`)).json();
+  const original=await (await request.get(`${api}/api/students/${id}/activities/SEQ-01/ui-configuration`)).json();
   let show=false;
-  await page.route('**/api/students/*/activities/SEQUENCES/ui-configuration',async route=>{
+  await page.route('**/api/students/*/activities/SEQ-01/ui-configuration',async route=>{
     await route.fulfill({json:{...original,configuration:{...original.configuration,showCodePanel:show,generatedCodeVisible:show,
       hintPanelMode:show?'EXPANDED':'HIDDEN',hintStage:show?'CONCEPTUAL_HINT':'NONE',tutorMode:show?'HINT':'HIDDEN',transitionMode:'SUBTLE'},
       code:{available:true,text:'<script>window.injected=true</script>',reason:null}}});
   });
   await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/');
-  await loginStudentById(page,id);await page.evaluate(student=>localStorage.setItem('mdedu.student.id.v1',student),id);await page.goto('/aventura/SEQUENCES');
+  await loginStudentById(page,id);await page.evaluate(student=>localStorage.setItem('mdedu.student.id.v1',student),id);await page.goto('/aventura/SEQ-01');
   await expect(page.locator('.game-activity')).toBeVisible();await expect(page.getByRole('region',{name:'Código generado'})).toHaveCount(0);
   show=true;await page.reload();await expect(page.getByRole('region',{name:'Código generado'})).toBeVisible();
   await expect(page.getByRole('region',{name:'Pista'})).toBeVisible();

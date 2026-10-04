@@ -1,0 +1,48 @@
+{
+  "contractVersion": 1,
+  "name": "VAR-01",
+  "statements": [
+    {
+      "kind": "variableDeclaration",
+      "declarationId": "codigo",
+      "name": "codigo",
+      "valueType": "INTEGER",
+      "initialValue": {
+        "kind": "literal",
+        "valueType": "INTEGER",
+        "value": "0"
+      }
+    },
+    {
+      "kind": "assignment",
+      "targetDeclarationId": "codigo",
+      "value": {
+        "kind": "literal",
+        "valueType": "INTEGER",
+        "value": "7"
+      }
+    },
+    {
+      "kind": "variableDeclaration",
+      "declarationId": "copia",
+      "name": "copia",
+      "valueType": "INTEGER",
+      "initialValue": {
+        "kind": "variableReference",
+        "declarationId": "codigo"
+      }
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "move"
+    }
+  ]
+}

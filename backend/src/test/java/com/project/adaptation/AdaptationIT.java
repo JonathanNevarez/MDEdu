@@ -32,11 +32,11 @@ class AdaptationIT {
     @Autowired ObjectMapper json;
     @Autowired JdbcTemplate jdbc;
     AttemptResponse submit(UUID id,String level,String file) throws Exception {
-        try(var in=getClass().getResourceAsStream("/evaluation/"+file+".json")) {
+        try(var in=getClass().getResourceAsStream("/challenges/"+file+".json")) {
             return learning.submit(new SubmitAttempt(id,level,1000L,0,json.readValue(in,ProgramDto.class)));
         }
     }
-    void openLoops(UUID id) throws Exception { for(String c:List.of("SEQUENCES","VARIABLES","CONDITIONALS")) submit(id,c,c); }
+    void openLoops(UUID id) throws Exception { for(String c:List.of("SEQ-01","VAR-01","COND-01")) submit(id,c,c); }
     RuleEngineResult evaluate(UUID id,AttemptResponse response) {
         var model=projection.project(id);var before=EcoreUtil.copy(model);
         var attempt=model.getAttempts().stream().filter(a->a.getId().equals(response.attemptId().toString())).findFirst().orElseThrow();
@@ -47,37 +47,37 @@ class AdaptationIT {
     @Test void realStudentsProduceDifferentCandidatesWithoutSideEffects() throws Exception {
         var a=learning.create("Rules A").id();var b=learning.create("Rules B").id();openLoops(a);openLoops(b);
         AttemptResponse ra=null,rb=null;
-        for(int i=0;i<8;i++) ra=submit(a,"LOOPS","LOOPS");
-        for(int i=0;i<3;i++) rb=submit(b,"LOOPS","LOOPS_MANUAL");
+        for(int i=0;i<8;i++) ra=submit(a,"LOOP-01","LOOP-01");
+        for(int i=0;i<3;i++) rb=submit(b,"LOOP-01","LOOP-01_MANUAL");
         var resultA=evaluate(a,ra);var resultB=evaluate(b,rb);
         assertEquals(List.of("DominioAlto"),resultA.matches().stream().map(m->m.ruleId()).toList());
         assertEquals(List.of("ReforzarCiclos","ErrorRepetido","FuncionalSinConcepto"),resultB.matches().stream().map(m->m.ruleId()).toList());
         assertEquals(.80,projection.project(a).getConceptMasteries().get(3).getMasteryScore());
         assertEquals(0,projection.project(b).getConceptMasteries().get(3).getMasteryScore());
-        assertEquals(8,jdbc.queryForObject("select count(*) from flyway_schema_history where success",Integer.class));
+        assertEquals(9,jdbc.queryForObject("select count(*) from flyway_schema_history where success",Integer.class));
         assertEquals(4,jdbc.queryForObject("select count(*) from information_schema.tables where table_schema='public' and table_name like 'adaptation%'",Integer.class));
         Files.createDirectories(Path.of("target/adaptation-evidence"));
         Files.writeString(Path.of("target/adaptation-evidence/students-ab.json"),json.writerWithDefaultPrettyPrinter().writeValueAsString(Map.of("A",resultA,"B",resultB)));
     }
     @Test void phaseFiveManualLoopAndExactRepeatedPolicy() throws Exception {
         var id=learning.create(null).id();openLoops(id);
-        var first=submit(id,"LOOPS","LOOPS_MANUAL");var firstMatches=evaluate(id,first);
+        var first=submit(id,"LOOP-01","LOOP-01_MANUAL");var firstMatches=evaluate(id,first);
         assertTrue(first.execution().evaluation().functionalCorrectness().passed());
         assertFalse(first.execution().evaluation().structuralCorrectness().requiredConceptUsed());
         assertEquals("REPETITIVE_SEQUENCE_WITHOUT_LOOP",first.execution().evaluation().patterns().getFirst().id());
         assertFalse(first.masteryUpdate().reasons().contains("REPEATED_ERROR_PATTERN"));
         assertEquals(List.of("FuncionalSinConcepto"),firstMatches.matches().stream().map(m->m.ruleId()).toList());
-        var second=submit(id,"LOOPS","LOOPS_MANUAL");
+        var second=submit(id,"LOOP-01","LOOP-01_MANUAL");
         assertTrue(second.masteryUpdate().reasons().contains("REPEATED_ERROR_PATTERN"));
         assertTrue(evaluate(id,second).matches().stream().anyMatch(m->m.ruleId().equals("ErrorRepetido")));
-        var correct=submit(id,"LOOPS","LOOPS");assertTrue(correct.execution().evaluation().activityPassed());
+        var correct=submit(id,"LOOP-01","LOOP-01");assertTrue(correct.execution().evaluation().activityPassed());
         assertTrue(evaluate(id,correct).matches().stream().noneMatch(m->m.ruleId().equals("FuncionalSinConcepto")));
     }
     @Test void rejectsCrossStudentOrStaleContext() throws Exception {
         var a=learning.create(null).id();var b=learning.create(null).id();
-        var response=submit(a,"SEQUENCES","SEQUENCES");var modelA=projection.project(a);var modelB=projection.project(b);
+        var response=submit(a,"SEQ-01","SEQ-01");var modelA=projection.project(a);var modelB=projection.project(b);
         assertThrows(IllegalArgumentException.class,()->contexts.create(modelB,modelA.getAttempts().getFirst(),response.execution().evaluation(),response.masteryUpdate()));
-        submit(a,"SEQUENCES","SEQUENCES");var after=projection.project(a);
+        submit(a,"SEQ-01","SEQ-01");var after=projection.project(a);
         var old=after.getAttempts().stream().filter(t->t.getId().equals(response.attemptId().toString())).findFirst().orElseThrow();
         assertThrows(IllegalArgumentException.class,()->contexts.create(after,old,response.execution().evaluation(),response.masteryUpdate()));
     }

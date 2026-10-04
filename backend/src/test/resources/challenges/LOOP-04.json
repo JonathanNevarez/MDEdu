@@ -1,0 +1,18 @@
+{
+  "contractVersion": 1,
+  "name": "LOOP-04",
+  "statements": [
+    {
+      "kind": "while",
+      "condition": {
+        "kind": "sensorExpression",
+        "sensor": "FRONT_CLEAR"
+      },
+      "body": [
+        {
+          "kind": "move"
+        }
+      ]
+    }
+  ]
+}

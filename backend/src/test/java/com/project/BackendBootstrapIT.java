@@ -65,7 +65,7 @@ class BackendBootstrapIT {
 
     @Test
     void bootstrapAndLearningMigrationsRunAgainstPostgresql() {
-        assertThat(flyway.info().current().getVersion().getVersion()).isEqualTo("8");
+        assertThat(flyway.info().current().getVersion().getVersion()).isEqualTo("9");
         assertThat(flyway.info().pending()).isEmpty();
         assertThat(jdbc.queryForObject("SELECT success FROM flyway_schema_history WHERE version = '1'",
                 Boolean.class)).isTrue();

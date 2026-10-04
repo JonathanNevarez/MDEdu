@@ -2,7 +2,7 @@ export type Position = { x: number; y: number };
 export type Direction = 'NORTH' | 'EAST' | 'SOUTH' | 'WEST';
 export interface WorldConfig { width: number; height: number; playerPosition: Position; playerDirection: Direction;
   goalPosition: Position; obstacles: Position[]; keys: Position[]; doors: Position[] }
-export interface Level { id: string; concept: string; title: string; description: string; order: number;
+export interface Level { shortDescription?: string; conceptId?: string; learningObjective?: string; difficulty?: string; id: string; concept: string; title: string; description: string; order: number;
   prerequisiteLevelIds: string[]; worldConfig: WorldConfig; allowedBlockGroups: string[] }
 export interface Catalog { version: number; levels: Level[] }
 export interface WorldState { playerPosition: Position; playerDirection: Direction; hasKey: boolean;

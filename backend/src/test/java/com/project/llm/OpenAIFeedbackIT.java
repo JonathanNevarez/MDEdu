@@ -42,10 +42,10 @@ class OpenAIFeedbackIT {
     @Autowired LearningService learning;@Autowired FeedbackOrchestrator feedback;@Autowired AdaptationManager adaptation;@Autowired StudentModelProjectionService projection;@Autowired ObjectMapper json;
     @AfterAll static void stop(){SERVER.stop(0);}
     @Test void realAdapterPreservesDecisionAndEveryProviderFailureFallsBack() throws Exception {
-        ProgramDto program;try(var in=getClass().getResourceAsStream("/evaluation/SEQUENCES.json")){program=json.readValue(in,ProgramDto.class);}
+        ProgramDto program;try(var in=getClass().getResourceAsStream("/challenges/SEQ-01.json")){program=json.readValue(in,ProgramDto.class);}
         for(String mode:List.of("VALID","INVALID","429","503","401","TIMEOUT")) {
             status=mode.matches("[0-9]+")?Integer.parseInt(mode):200;delay=mode.equals("TIMEOUT")?500:0;invalid=mode.equals("INVALID");
-            var id=learning.create(null).id();var attempt=learning.submit(new SubmitAttempt(id,"SEQUENCES",100L,0,program));
+            var id=learning.create(null).id();var attempt=learning.submit(new SubmitAttempt(id,"SEQ-01",100L,0,program));
             String before=json.writeValueAsString(projection.dto(projection.project(id)));var result=feedback.generate(id,attempt.attemptId());
             assertEquals(mode.equals("VALID")?Source.OPENAI:Source.FALLBACK,result.source(),mode);assertEquals(mode.equals("VALID"),result.llmUsed());
             assertEquals(attempt.adaptation(),adaptation.byAttempt(attempt.attemptId()));assertEquals(before,json.writeValueAsString(projection.dto(projection.project(id))));

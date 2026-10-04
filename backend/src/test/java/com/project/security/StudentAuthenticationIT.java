@@ -27,8 +27,8 @@ class StudentAuthenticationIT {
  Csrf token(MockHttpSession s)throws Exception{var r=get("/api/auth/student/csrf");if(s!=null)r.session(s);var x=mvc.perform(r).andExpect(status().isOk()).andReturn();return new Csrf((MockHttpSession)x.getRequest().getSession(),json.readTree(x.getResponse().getContentAsString()).path("token").asText());}
  MockHttpSession login(StudentAccounts.Issued issued)throws Exception{var c=token(null);String old=c.session().getId();var r=mvc.perform(post("/api/auth/student/login").session(c.session()).header("X-CSRF-TOKEN",c.token()).contentType("application/json").content(json.writeValueAsString(Map.of("studentCode"," "+issued.participant().studentCode().toLowerCase(Locale.ROOT)+" ","password",issued.temporaryPassword())))).andExpect(status().isOk()).andExpect(jsonPath("$.studentId").value(issued.participant().studentId().toString())).andExpect(jsonPath("$.passwordHash").doesNotExist()).andReturn();assertNotEquals(old,r.getRequest().getSession().getId());return (MockHttpSession)r.getRequest().getSession();}
  @Test void crossDevicePreservesExactModelProgressAndHistory()throws Exception{
-  var account=accounts.create();var a=login(account);var c=token(a);var program=json.readTree(getClass().getResourceAsStream("/evaluation/SEQUENCES.json"));
-  mvc.perform(post("/api/attempts").session(a).header("X-CSRF-TOKEN",c.token()).contentType("application/json").content(json.writeValueAsString(Map.of("studentId",account.participant().studentId(),"levelId","SEQUENCES","program",program,"hintCount",0,"resolutionTimeMs",1000)))).andExpect(status().isCreated()).andExpect(jsonPath("$.execution.evaluation.activityPassed").value(true));
+  var account=accounts.create();var a=login(account);var c=token(a);var program=json.readTree(getClass().getResourceAsStream("/challenges/SEQ-01.json"));
+  mvc.perform(post("/api/attempts").session(a).header("X-CSRF-TOKEN",c.token()).contentType("application/json").content(json.writeValueAsString(Map.of("studentId",account.participant().studentId(),"levelId","SEQ-01","program",program,"hintCount",0,"resolutionTimeMs",1000)))).andExpect(status().isCreated()).andExpect(jsonPath("$.execution.evaluation.activityPassed").value(true));
   String base="/api/students/"+account.participant().studentId();
   String model=mvc.perform(get(base+"/model").session(a)).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
   String progress=mvc.perform(get(base+"/progress").session(a)).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
@@ -37,12 +37,20 @@ class StudentAuthenticationIT {
   assertEquals(1,jdbc.queryForObject("select count(*) from attempts where student_id=?",Integer.class,account.participant().studentId()));
   mvc.perform(get("/api/auth/student/me").session(b)).andExpect(jsonPath("$.studentCode").value(account.participant().studentCode()));
  }
+ @Test void authenticatedStudentCannotExecuteOrSubmitLockedChallenges()throws Exception{
+  var account=accounts.create();var session=login(account);var csrf=token(session);
+  for(String id:List.of("SEQ-02","VAR-01","COND-01","LOOP-01")){
+   var program=json.readTree(getClass().getResourceAsStream("/challenges/"+id+".json"));
+   mvc.perform(post("/api/game/levels/"+id+"/execute").session(session).header("X-CSRF-TOKEN",csrf.token()).contentType("application/json").content(json.writeValueAsString(program))).andExpect(status().isForbidden());
+   mvc.perform(post("/api/attempts").session(session).header("X-CSRF-TOKEN",csrf.token()).contentType("application/json").content(json.writeValueAsString(Map.of("studentId",account.participant().studentId(),"levelId",id,"program",program,"hintCount",0,"resolutionTimeMs",1000)))).andExpect(status().isConflict());
+  }
+ }
  @Test void isolationCoversReadsWritesUiSessionsAndFeedback()throws Exception{
   var a=accounts.create();var b=accounts.create();var s=login(a);var c=token(s);UUID id=b.participant().studentId();
-  for(String suffix:List.of("/model","/progress","/activities/SEQUENCES/ui-configuration"))mvc.perform(get("/api/students/"+id+suffix).session(s)).andExpect(status().isForbidden());
+  for(String suffix:List.of("/model","/progress","/activities/SEQ-01/ui-configuration"))mvc.perform(get("/api/students/"+id+suffix).session(s)).andExpect(status().isForbidden());
   for(String path:List.of("/api/sessions","/api/feedback/generate"))mvc.perform(post(path).session(s).header("X-CSRF-TOKEN",c.token()).contentType("application/json").content(json.writeValueAsString(Map.of("studentId",id,"attemptId",UUID.randomUUID())))).andExpect(status().isForbidden());
-  var program=json.readTree(getClass().getResourceAsStream("/evaluation/SEQUENCES.json"));
-  mvc.perform(post("/api/attempts").session(s).header("X-CSRF-TOKEN",c.token()).contentType("application/json").content(json.writeValueAsString(Map.of("studentId",id,"levelId","SEQUENCES","program",program,"hintCount",0,"resolutionTimeMs",1000)))).andExpect(status().isForbidden());
+  var program=json.readTree(getClass().getResourceAsStream("/challenges/SEQ-01.json"));
+  mvc.perform(post("/api/attempts").session(s).header("X-CSRF-TOKEN",c.token()).contentType("application/json").content(json.writeValueAsString(Map.of("studentId",id,"levelId","SEQ-01","program",program,"hintCount",0,"resolutionTimeMs",1000)))).andExpect(status().isForbidden());
   mvc.perform(get("/api/feedback/"+UUID.randomUUID()).session(s)).andExpect(status().isForbidden());
   mvc.perform(get("/api/teacher/participants").session(s)).andExpect(status().isForbidden());
  }

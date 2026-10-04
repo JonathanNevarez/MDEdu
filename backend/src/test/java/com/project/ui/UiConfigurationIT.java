@@ -30,35 +30,35 @@ class UiConfigurationIT {
  @Autowired LearningService learning;@Autowired ObjectMapper json;@Autowired JdbcTemplate jdbc;@Autowired MockMvc mvc;
  @org.springframework.test.context.bean.override.mockito.MockitoSpyBean UiProjection uiProjection;
  @Autowired UiConfigurationService ui;@Autowired AttemptProgramStore programs;@Autowired AttemptCodeService codes;@Autowired FeedbackOrchestrator feedback;
- ProgramDto fixture(String name)throws Exception{try(var in=getClass().getResourceAsStream("/evaluation/"+name+".json")){return json.readValue(in,ProgramDto.class);}}
+ ProgramDto fixture(String name)throws Exception{try(var in=getClass().getResourceAsStream("/challenges/"+name+".json")){return json.readValue(in,ProgramDto.class);}}
  AttemptResponse submit(UUID id,String level,String name)throws Exception{return learning.submit(new SubmitAttempt(id,level,1000L,0,fixture(name)));}
  @Test void persistedProgramsOwnershipCodeAndLegacyUnavailable()throws Exception{
-  var id=learning.create(null).id();var attempt=submit(id,"SEQUENCES","SEQUENCES");
-  assertEquals(fixture("SEQUENCES"),programs.find(id,attempt.attemptId()).orElseThrow());
+  var id=learning.create(null).id();var attempt=submit(id,"SEQ-01","SEQ-01");
+  assertEquals(fixture("SEQ-01"),programs.find(id,attempt.attemptId()).orElseThrow());
   assertTrue(programs.find(UUID.randomUUID(),attempt.attemptId()).isEmpty());
   var code=codes.generate(id,attempt.attemptId());assertTrue(code.available(),code.reason());assertTrue(code.text().contains("move"));
   jdbc.update("delete from attempt_programs where attempt_id=?",attempt.attemptId());assertEquals("PROGRAM_SNAPSHOT_UNAVAILABLE",codes.generate(id,attempt.attemptId()).reason());
  }
  @Test void loopsHintsRepeatRefreshAndOneHundredDeterministicConfigurations()throws Exception{
-  var id=learning.create(null).id();for(String level:List.of("SEQUENCES","VARIABLES","CONDITIONALS"))submit(id,level,level);
-  var attempt=submit(id,"LOOPS","LOOPS_MANUAL");var f=feedback.generate(id,attempt.attemptId());assertFalse(f.llmUsed());
+  var id=learning.create(null).id();for(String level:List.of("SEQ-01","VAR-01","COND-01"))submit(id,level,level);
+  var attempt=submit(id,"LOOP-01","LOOP-01_MANUAL");var f=feedback.generate(id,attempt.attemptId());assertFalse(f.llmUsed());
   var first=ui.byAttempt(id,attempt.attemptId());assertFalse(first.safeDefault(),first.reason());assertFalse(first.feedback().focus().contains("_"));
   assertNotEquals(HintPanelMode.HIDDEN,first.configuration().hintPanelMode());assertEquals(NavigationMode.REPEAT,first.configuration().navigationMode());
-  assertEquals(first.fingerprint(),ui.latest(id,"LOOPS").fingerprint());
+  assertEquals(first.fingerprint(),ui.latest(id,"LOOP-01").fingerprint());
   for(int i=0;i<100;i++)assertEquals(first,ui.byAttempt(id,attempt.attemptId()));
   mvc.perform(get("/api/students/{s}/attempts/{a}/ui-configuration",UUID.randomUUID(),attempt.attemptId())).andExpect(status().isNotFound());
  }
  @Test void lockedActivityAndInitialSafeConfiguration()throws Exception{
-  var id=learning.create(null).id();assertEquals(NavigationMode.STAY,ui.latest(id,"SEQUENCES").configuration().navigationMode());
-  mvc.perform(get("/api/students/{s}/activities/LOOPS/ui-configuration",id)).andExpect(status().isConflict());
+  var id=learning.create(null).id();assertEquals(NavigationMode.STAY,ui.latest(id,"SEQ-01").configuration().navigationMode());
+  mvc.perform(get("/api/students/{s}/activities/LOOP-01/ui-configuration",id)).andExpect(status().isConflict());
  }
  @Test void corruptSnapshotCannotProduceCode()throws Exception{
-  var id=learning.create(null).id();var attempt=submit(id,"SEQUENCES","SEQUENCES");
+  var id=learning.create(null).id();var attempt=submit(id,"SEQ-01","SEQ-01");
   jdbc.update("update attempt_programs set program_dto_json='{}' where attempt_id=?",attempt.attemptId());
   assertEquals("Attempt program integrity failure",assertThrows(org.springframework.dao.InvalidDataAccessApiUsageException.class,()->programs.find(id,attempt.attemptId())).getMostSpecificCause().getMessage());
  }
  @Test void uiFailureFallsBackWithoutMutatingAttemptsOrLearning()throws Exception{
-  var id=learning.create(null).id();var attempt=submit(id,"SEQUENCES","SEQUENCES");
+  var id=learning.create(null).id();var attempt=submit(id,"SEQ-01","SEQ-01");
   var before=jdbc.queryForList("select * from student_concept_mastery where student_id=? order by concept_id",id);
   org.mockito.Mockito.doThrow(new IllegalArgumentException("test invalid UI")).when(uiProjection).project(org.mockito.ArgumentMatchers.any(),org.mockito.ArgumentMatchers.anyList(),org.mockito.ArgumentMatchers.any(),org.mockito.ArgumentMatchers.anyMap());
   var safe=ui.byAttempt(id,attempt.attemptId());assertTrue(safe.safeDefault());assertFalse(safe.configuration().showCodePanel());assertEquals(NavigationMode.STAY,safe.configuration().navigationMode());assertNull(safe.configuration().nextActivityId());
@@ -68,9 +68,9 @@ class UiConfigurationIT {
  }
  @Test void actualSuccessAdvancesAndDifferentHistoriesStayIndependent()throws Exception{
   var a=learning.create(null).id();var b=learning.create(null).id();AttemptResponse last=null;
-  for(int i=0;i<9;i++)last=submit(a,"SEQUENCES","SEQUENCES");
-  var config=ui.byAttempt(a,last.attemptId());assertFalse(config.safeDefault());assertEquals(NavigationMode.ADVANCE,config.configuration().navigationMode());assertEquals("VARIABLES",config.configuration().nextActivityId());
-  var other=ui.latest(b,"SEQUENCES");assertNotEquals(config.fingerprint(),other.fingerprint());assertEquals(NavigationMode.STAY,other.configuration().navigationMode());
+  for(int i=0;i<9;i++)last=submit(a,"SEQ-01","SEQ-01");
+  var config=ui.byAttempt(a,last.attemptId());assertFalse(config.safeDefault());assertEquals(NavigationMode.ADVANCE,config.configuration().navigationMode());assertEquals("VAR-01",config.configuration().nextActivityId());
+  var other=ui.latest(b,"SEQ-01");assertNotEquals(config.fingerprint(),other.fingerprint());assertEquals(NavigationMode.STAY,other.configuration().navigationMode());
  }
 
 }

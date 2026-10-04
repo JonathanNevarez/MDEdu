@@ -1,0 +1,1208 @@
+{
+  "version": 1,
+  "levels": [
+    {
+      "id": "SEQ-01",
+      "conceptId": "SEQUENCES",
+      "concept": "Secuencias",
+      "title": "El primer sendero",
+      "description": "Ordena dos avances, un giro a la derecha y dos avances hasta la bandera.",
+      "learningObjective": "Ordena dos avances, un giro a la derecha y dos avances hasta la bandera.",
+      "difficulty": "INTRODUCCION",
+      "order": 1,
+      "prerequisiteLevelIds": [],
+      "worldConfig": {
+        "width": 5,
+        "height": 5,
+        "playerPosition": {
+          "x": 1,
+          "y": 1
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 3,
+          "y": 3
+        },
+        "obstacles": [
+          {
+            "x": 2,
+            "y": 2
+          }
+        ],
+        "keys": [],
+        "doors": []
+      },
+      "allowedBlockGroups": [
+        "Movimiento"
+      ],
+      "criteria": {
+        "orderedItems": [],
+        "variableCheckpoints": [],
+        "readVariables": [],
+        "minimumDecisions": 0,
+        "requiredStatements": []
+      },
+      "shortDescription": "Ordena avances y giros."
+    },
+    {
+      "id": "SEQ-02",
+      "conceptId": "SEQUENCES",
+      "concept": "Secuencias",
+      "title": "Entrega en el campamento",
+      "description": "Visita las dos llaves en orden de izquierda a derecha antes de llegar al campamento. Se recogen al avanzar.",
+      "learningObjective": "Visita las dos llaves en orden de izquierda a derecha antes de llegar al campamento. Se recogen al avanzar.",
+      "difficulty": "APLICACION",
+      "order": 2,
+      "prerequisiteLevelIds": [
+        "SEQ-01"
+      ],
+      "worldConfig": {
+        "width": 5,
+        "height": 3,
+        "playerPosition": {
+          "x": 0,
+          "y": 1
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 4,
+          "y": 1
+        },
+        "obstacles": [],
+        "keys": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 3,
+            "y": 1
+          }
+        ],
+        "doors": []
+      },
+      "allowedBlockGroups": [
+        "Movimiento"
+      ],
+      "criteria": {
+        "orderedItems": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 3,
+            "y": 1
+          }
+        ],
+        "variableCheckpoints": [],
+        "readVariables": [],
+        "minimumDecisions": 0,
+        "requiredStatements": []
+      },
+      "shortDescription": "Recoge dos llaves en orden."
+    },
+    {
+      "id": "SEQ-03",
+      "conceptId": "SEQUENCES",
+      "concept": "Secuencias",
+      "title": "Cruza el puente",
+      "description": "Planifica una secuencia de movimientos y giros que rodee los obstáculos del puente hasta la bandera. Sin condiciones ni ciclos.",
+      "learningObjective": "Planifica una secuencia de movimientos y giros que rodee los obstáculos del puente hasta la bandera. Sin condiciones ni ciclos.",
+      "difficulty": "RAZONAMIENTO",
+      "order": 3,
+      "prerequisiteLevelIds": [
+        "SEQ-02"
+      ],
+      "worldConfig": {
+        "width": 6,
+        "height": 4,
+        "playerPosition": {
+          "x": 0,
+          "y": 0
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 4,
+          "y": 2
+        },
+        "obstacles": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 3,
+            "y": 1
+          }
+        ],
+        "keys": [],
+        "doors": []
+      },
+      "allowedBlockGroups": [
+        "Movimiento"
+      ],
+      "criteria": {
+        "orderedItems": [],
+        "variableCheckpoints": [],
+        "readVariables": [],
+        "minimumDecisions": 0,
+        "requiredStatements": []
+      },
+      "shortDescription": "Rodea los obstáculos del puente."
+    },
+    {
+      "id": "SEQ-04",
+      "conceptId": "SEQUENCES",
+      "concept": "Secuencias",
+      "title": "La ruta eficiente",
+      "description": "Planifica un recorrido de ocho acciones hasta la bandera, rodeando la barrera central. Revisa los giros y desvíos adicionales sin perder la meta.",
+      "learningObjective": "Planifica un recorrido de ocho acciones hasta la bandera, rodeando la barrera central. Revisa los giros y desvíos adicionales sin perder la meta.",
+      "difficulty": "INTEGRACION",
+      "order": 4,
+      "prerequisiteLevelIds": [
+        "SEQ-03"
+      ],
+      "worldConfig": {
+        "width": 7,
+        "height": 5,
+        "playerPosition": {
+          "x": 0,
+          "y": 1
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 5,
+          "y": 3
+        },
+        "obstacles": [
+          {
+            "x": 2,
+            "y": 2
+          },
+          {
+            "x": 3,
+            "y": 2
+          },
+          {
+            "x": 4,
+            "y": 2
+          },
+          {
+            "x": 5,
+            "y": 0
+          }
+        ],
+        "keys": [],
+        "doors": []
+      },
+      "allowedBlockGroups": [
+        "Movimiento"
+      ],
+      "criteria": {
+        "orderedItems": [],
+        "variableCheckpoints": [],
+        "readVariables": [],
+        "minimumDecisions": 0,
+        "requiredStatements": []
+      },
+      "shortDescription": "Revisa las acciones innecesarias."
+    },
+    {
+      "id": "VAR-01",
+      "conceptId": "VARIABLES",
+      "concept": "Variables",
+      "title": "Guarda el código",
+      "description": "Declara codigo = 0, asigna 7 y lee codigo al declarar copia. Conserva ese valor y avanza cuatro casillas.",
+      "learningObjective": "Declara codigo = 0, asigna 7 y lee codigo al declarar copia. Conserva ese valor y avanza cuatro casillas.",
+      "difficulty": "INTRODUCCION",
+      "order": 1,
+      "prerequisiteLevelIds": [],
+      "worldConfig": {
+        "width": 5,
+        "height": 3,
+        "playerPosition": {
+          "x": 0,
+          "y": 1
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 4,
+          "y": 1
+        },
+        "obstacles": [
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 2
+          }
+        ],
+        "keys": [],
+        "doors": []
+      },
+      "allowedBlockGroups": [
+        "Movimiento",
+        "Variables",
+        "Valores"
+      ],
+      "criteria": {
+        "orderedItems": [],
+        "variableCheckpoints": [
+          {
+            "variable": "codigo",
+            "value": 7,
+            "position": {
+              "x": 0,
+              "y": 1
+            }
+          }
+        ],
+        "readVariables": [
+          "codigo"
+        ],
+        "minimumDecisions": 0,
+        "requiredStatements": []
+      },
+      "shortDescription": "Guarda y consulta un código."
+    },
+    {
+      "id": "VAR-02",
+      "conceptId": "VARIABLES",
+      "concept": "Variables",
+      "title": "Contador de objetos",
+      "description": "Declara contador = 0. Al recoger cada llave asigna 1 y luego 2. Después de cada cambio guarda una lectura en primera y segunda. Avanza hasta la bandera.",
+      "learningObjective": "Declara contador = 0. Al recoger cada llave asigna 1 y luego 2. Después de cada cambio guarda una lectura en primera y segunda. Avanza hasta la bandera.",
+      "difficulty": "APLICACION",
+      "order": 2,
+      "prerequisiteLevelIds": [
+        "VAR-01"
+      ],
+      "worldConfig": {
+        "width": 4,
+        "height": 3,
+        "playerPosition": {
+          "x": 0,
+          "y": 1
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 3,
+          "y": 1
+        },
+        "obstacles": [],
+        "keys": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 2,
+            "y": 1
+          }
+        ],
+        "doors": []
+      },
+      "allowedBlockGroups": [
+        "Movimiento",
+        "Variables",
+        "Valores"
+      ],
+      "criteria": {
+        "orderedItems": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 2,
+            "y": 1
+          }
+        ],
+        "variableCheckpoints": [
+          {
+            "variable": "contador",
+            "value": 1,
+            "position": {
+              "x": 1,
+              "y": 1
+            }
+          },
+          {
+            "variable": "contador",
+            "value": 2,
+            "position": {
+              "x": 2,
+              "y": 1
+            }
+          }
+        ],
+        "readVariables": [
+          "contador"
+        ],
+        "minimumDecisions": 0,
+        "requiredStatements": []
+      },
+      "shortDescription": "Cuenta las llaves recogidas."
+    },
+    {
+      "id": "VAR-03",
+      "conceptId": "VARIABLES",
+      "concept": "Variables",
+      "title": "Energía del explorador",
+      "description": "Declara energia = 3. Tras cada avance asigna 2, 1 y 0; guarda cada lectura en una variable distinta. La energía es un registro lógico, no cambia el movimiento.",
+      "learningObjective": "Declara energia = 3. Tras cada avance asigna 2, 1 y 0; guarda cada lectura en una variable distinta. La energía es un registro lógico, no cambia el movimiento.",
+      "difficulty": "RAZONAMIENTO",
+      "order": 3,
+      "prerequisiteLevelIds": [
+        "VAR-02"
+      ],
+      "worldConfig": {
+        "width": 4,
+        "height": 3,
+        "playerPosition": {
+          "x": 0,
+          "y": 1
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 3,
+          "y": 1
+        },
+        "obstacles": [],
+        "keys": [],
+        "doors": []
+      },
+      "allowedBlockGroups": [
+        "Movimiento",
+        "Variables",
+        "Valores"
+      ],
+      "criteria": {
+        "orderedItems": [],
+        "variableCheckpoints": [
+          {
+            "variable": "energia",
+            "value": 2,
+            "position": {
+              "x": 1,
+              "y": 1
+            }
+          },
+          {
+            "variable": "energia",
+            "value": 1,
+            "position": {
+              "x": 2,
+              "y": 1
+            }
+          },
+          {
+            "variable": "energia",
+            "value": 0,
+            "position": {
+              "x": 3,
+              "y": 1
+            }
+          }
+        ],
+        "readVariables": [
+          "energia"
+        ],
+        "minimumDecisions": 0,
+        "requiredStatements": []
+      },
+      "shortDescription": "Actualiza la energía en cada paso."
+    },
+    {
+      "id": "VAR-04",
+      "conceptId": "VARIABLES",
+      "concept": "Variables",
+      "title": "Inventario de llaves",
+      "description": "Declara llaves = 0; registra 1 y luego 2 al recoger las llaves y guarda ambas lecturas. La puerta abre al avanzar y no consume la llave.",
+      "learningObjective": "Declara llaves = 0; registra 1 y luego 2 al recoger las llaves y guarda ambas lecturas. La puerta abre al avanzar y no consume la llave.",
+      "difficulty": "INTEGRACION",
+      "order": 4,
+      "prerequisiteLevelIds": [
+        "VAR-03"
+      ],
+      "worldConfig": {
+        "width": 5,
+        "height": 3,
+        "playerPosition": {
+          "x": 0,
+          "y": 1
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 4,
+          "y": 1
+        },
+        "obstacles": [],
+        "keys": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 3,
+            "y": 1
+          }
+        ],
+        "doors": [
+          {
+            "x": 2,
+            "y": 1
+          }
+        ]
+      },
+      "allowedBlockGroups": [
+        "Movimiento",
+        "Variables",
+        "Valores"
+      ],
+      "criteria": {
+        "orderedItems": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 3,
+            "y": 1
+          }
+        ],
+        "variableCheckpoints": [
+          {
+            "variable": "llaves",
+            "value": 1,
+            "position": {
+              "x": 1,
+              "y": 1
+            }
+          },
+          {
+            "variable": "llaves",
+            "value": 2,
+            "position": {
+              "x": 3,
+              "y": 1
+            }
+          }
+        ],
+        "readVariables": [
+          "llaves"
+        ],
+        "minimumDecisions": 0,
+        "requiredStatements": []
+      },
+      "shortDescription": "Registra y consulta las llaves."
+    },
+    {
+      "id": "COND-01",
+      "conceptId": "CONDITIONALS",
+      "concept": "Condicionales",
+      "title": "Dos caminos",
+      "description": "Usa Si con el sensor Frente libre para decidir si avanzar por el camino hacia la bandera. La decisión debe controlar los movimientos.",
+      "learningObjective": "Usa Si con el sensor Frente libre para decidir si avanzar por el camino hacia la bandera. La decisión debe controlar los movimientos.",
+      "difficulty": "INTRODUCCION",
+      "order": 1,
+      "prerequisiteLevelIds": [],
+      "worldConfig": {
+        "width": 3,
+        "height": 3,
+        "playerPosition": {
+          "x": 0,
+          "y": 1
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 2,
+          "y": 1
+        },
+        "obstacles": [
+          {
+            "x": 1,
+            "y": 0
+          }
+        ],
+        "keys": [],
+        "doors": []
+      },
+      "allowedBlockGroups": [
+        "Movimiento",
+        "Variables",
+        "Condicionales",
+        "Condiciones",
+        "Valores"
+      ],
+      "criteria": {
+        "orderedItems": [],
+        "variableCheckpoints": [],
+        "readVariables": [],
+        "minimumDecisions": 1,
+        "requiredStatements": []
+      },
+      "shortDescription": "Observa antes de avanzar."
+    },
+    {
+      "id": "COND-02",
+      "conceptId": "CONDITIONALS",
+      "concept": "Condicionales",
+      "title": "Camino bloqueado",
+      "description": "Usa Si / Si no con Frente libre. Si hay un obstáculo, elige un recorrido alternativo por las celdas libres hasta la bandera.",
+      "learningObjective": "Usa Si / Si no con Frente libre. Si hay un obstáculo, elige un recorrido alternativo por las celdas libres hasta la bandera.",
+      "difficulty": "APLICACION",
+      "order": 2,
+      "prerequisiteLevelIds": [
+        "COND-01"
+      ],
+      "worldConfig": {
+        "width": 3,
+        "height": 3,
+        "playerPosition": {
+          "x": 0,
+          "y": 0
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 2,
+          "y": 2
+        },
+        "obstacles": [
+          {
+            "x": 1,
+            "y": 0
+          }
+        ],
+        "keys": [],
+        "doors": []
+      },
+      "allowedBlockGroups": [
+        "Movimiento",
+        "Variables",
+        "Condicionales",
+        "Condiciones",
+        "Valores"
+      ],
+      "criteria": {
+        "orderedItems": [],
+        "variableCheckpoints": [],
+        "readVariables": [],
+        "minimumDecisions": 1,
+        "requiredStatements": []
+      },
+      "shortDescription": "Elige una alternativa al obstáculo."
+    },
+    {
+      "id": "COND-03",
+      "conceptId": "CONDITIONALS",
+      "concept": "Condicionales",
+      "title": "La puerta y la llave",
+      "description": "Recoge la llave y usa Si / Si no con una condición del mundo y dos alternativas distintas para llegar a la meta.",
+      "learningObjective": "Recoge la llave y usa Si / Si no con una condición del mundo y dos alternativas distintas para llegar a la meta.",
+      "difficulty": "RAZONAMIENTO",
+      "order": 3,
+      "prerequisiteLevelIds": [
+        "COND-02"
+      ],
+      "worldConfig": {
+        "width": 6,
+        "height": 4,
+        "playerPosition": {
+          "x": 0,
+          "y": 2
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 5,
+          "y": 2
+        },
+        "obstacles": [
+          {
+            "x": 2,
+            "y": 1
+          },
+          {
+            "x": 3,
+            "y": 1
+          }
+        ],
+        "keys": [
+          {
+            "x": 1,
+            "y": 2
+          }
+        ],
+        "doors": [
+          {
+            "x": 3,
+            "y": 2
+          }
+        ]
+      },
+      "allowedBlockGroups": [
+        "Movimiento",
+        "Variables",
+        "Condicionales",
+        "Condiciones",
+        "Valores"
+      ],
+      "criteria": {
+        "orderedItems": [
+          {
+            "x": 1,
+            "y": 2
+          }
+        ],
+        "variableCheckpoints": [],
+        "readVariables": [],
+        "minimumDecisions": 1,
+        "requiredStatements": []
+      },
+      "shortDescription": "Decide con una llave real."
+    },
+    {
+      "id": "COND-04",
+      "conceptId": "CONDITIONALS",
+      "concept": "Condicionales",
+      "title": "Energía suficiente",
+      "description": "Declara energia = 1. Si energia >= 2, toma el camino directo; si no, rodea por la fila inferior y regresa hasta la bandera. Usa dos alternativas distintas.",
+      "learningObjective": "Declara energia = 1. Si energia >= 2, toma el camino directo; si no, rodea por la fila inferior y regresa hasta la bandera. Usa dos alternativas distintas.",
+      "difficulty": "INTEGRACION",
+      "order": 4,
+      "prerequisiteLevelIds": [
+        "COND-03"
+      ],
+      "worldConfig": {
+        "width": 3,
+        "height": 3,
+        "playerPosition": {
+          "x": 0,
+          "y": 0
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 2,
+          "y": 0
+        },
+        "obstacles": [],
+        "keys": [],
+        "doors": []
+      },
+      "allowedBlockGroups": [
+        "Movimiento",
+        "Variables",
+        "Condicionales",
+        "Condiciones",
+        "Valores"
+      ],
+      "criteria": {
+        "orderedItems": [],
+        "variableCheckpoints": [
+          {
+            "variable": "energia",
+            "value": 1,
+            "position": {
+              "x": 0,
+              "y": 0
+            }
+          }
+        ],
+        "readVariables": [
+          "energia"
+        ],
+        "minimumDecisions": 1,
+        "requiredStatements": []
+      },
+      "shortDescription": "Decide según una variable."
+    },
+    {
+      "id": "COND-05",
+      "conceptId": "CONDITIONALS",
+      "concept": "Condicionales",
+      "title": "El laberinto de decisiones",
+      "description": "Toma al menos dos decisiones que controlen movimientos: observa el frente y, después, el lado izquierdo para encontrar la salida entre los obstáculos.",
+      "learningObjective": "Toma al menos dos decisiones que controlen movimientos: observa el frente y, después, el lado izquierdo para encontrar la salida entre los obstáculos.",
+      "difficulty": "INTEGRACION_FINAL",
+      "order": 5,
+      "prerequisiteLevelIds": [
+        "COND-04"
+      ],
+      "worldConfig": {
+        "width": 3,
+        "height": 3,
+        "playerPosition": {
+          "x": 0,
+          "y": 0
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 2,
+          "y": 2
+        },
+        "obstacles": [
+          {
+            "x": 1,
+            "y": 0
+          }
+        ],
+        "keys": [],
+        "doors": []
+      },
+      "allowedBlockGroups": [
+        "Movimiento",
+        "Variables",
+        "Condicionales",
+        "Condiciones",
+        "Valores"
+      ],
+      "criteria": {
+        "orderedItems": [],
+        "variableCheckpoints": [],
+        "readVariables": [],
+        "minimumDecisions": 2,
+        "requiredStatements": []
+      },
+      "shortDescription": "Combina decisiones del entorno."
+    },
+    {
+      "id": "LOOP-01",
+      "conceptId": "LOOPS",
+      "concept": "Ciclos",
+      "title": "Pasos repetidos",
+      "description": "Avanza siete casillas usando Repetir. Siete avances escritos a mano llegan a la meta pero no superan el objetivo de repetición.",
+      "learningObjective": "Avanza siete casillas usando Repetir. Siete avances escritos a mano llegan a la meta pero no superan el objetivo de repetición.",
+      "difficulty": "INTRODUCCION",
+      "order": 1,
+      "prerequisiteLevelIds": [],
+      "worldConfig": {
+        "width": 8,
+        "height": 3,
+        "playerPosition": {
+          "x": 0,
+          "y": 1
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 7,
+          "y": 1
+        },
+        "obstacles": [
+          {
+            "x": 0,
+            "y": 0
+          },
+          {
+            "x": 0,
+            "y": 2
+          },
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 1,
+            "y": 2
+          },
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 2
+          },
+          {
+            "x": 3,
+            "y": 0
+          },
+          {
+            "x": 3,
+            "y": 2
+          },
+          {
+            "x": 4,
+            "y": 0
+          },
+          {
+            "x": 4,
+            "y": 2
+          },
+          {
+            "x": 5,
+            "y": 0
+          },
+          {
+            "x": 5,
+            "y": 2
+          },
+          {
+            "x": 6,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 2
+          },
+          {
+            "x": 7,
+            "y": 0
+          },
+          {
+            "x": 7,
+            "y": 2
+          }
+        ],
+        "keys": [],
+        "doors": []
+      },
+      "allowedBlockGroups": [
+        "Movimiento",
+        "Variables",
+        "Condicionales",
+        "Ciclos",
+        "Condiciones",
+        "Valores"
+      ],
+      "criteria": {
+        "orderedItems": [],
+        "variableCheckpoints": [],
+        "readVariables": [],
+        "minimumDecisions": 0,
+        "requiredStatements": []
+      },
+      "shortDescription": "Representa una repetición evidente."
+    },
+    {
+      "id": "LOOP-02",
+      "conceptId": "LOOPS",
+      "concept": "Ciclos",
+      "title": "El corredor largo",
+      "description": "Recorre ocho casillas repitiendo una pareja de avances. Calcula cuántas veces debe ejecutarse ese patrón.",
+      "learningObjective": "Recorre ocho casillas repitiendo una pareja de avances. Calcula cuántas veces debe ejecutarse ese patrón.",
+      "difficulty": "APLICACION",
+      "order": 2,
+      "prerequisiteLevelIds": [
+        "LOOP-01"
+      ],
+      "worldConfig": {
+        "width": 9,
+        "height": 3,
+        "playerPosition": {
+          "x": 0,
+          "y": 1
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 8,
+          "y": 1
+        },
+        "obstacles": [
+          {
+            "x": 0,
+            "y": 0
+          },
+          {
+            "x": 0,
+            "y": 2
+          },
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 1,
+            "y": 2
+          },
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 2
+          },
+          {
+            "x": 3,
+            "y": 0
+          },
+          {
+            "x": 3,
+            "y": 2
+          },
+          {
+            "x": 4,
+            "y": 0
+          },
+          {
+            "x": 4,
+            "y": 2
+          },
+          {
+            "x": 5,
+            "y": 0
+          },
+          {
+            "x": 5,
+            "y": 2
+          },
+          {
+            "x": 6,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 2
+          },
+          {
+            "x": 7,
+            "y": 0
+          },
+          {
+            "x": 7,
+            "y": 2
+          },
+          {
+            "x": 8,
+            "y": 0
+          },
+          {
+            "x": 8,
+            "y": 2
+          }
+        ],
+        "keys": [],
+        "doors": []
+      },
+      "allowedBlockGroups": [
+        "Movimiento",
+        "Variables",
+        "Condicionales",
+        "Ciclos",
+        "Condiciones",
+        "Valores"
+      ],
+      "criteria": {
+        "orderedItems": [],
+        "variableCheckpoints": [],
+        "readVariables": [],
+        "minimumDecisions": 0,
+        "requiredStatements": []
+      },
+      "shortDescription": "Calcula las repeticiones de un patrón."
+    },
+    {
+      "id": "LOOP-03",
+      "conceptId": "LOOPS",
+      "concept": "Ciclos",
+      "title": "Patrulla el sendero",
+      "description": "Patrulla tres lados del sendero repitiendo el patrón de dos avances y un giro a la derecha. Calcula las repeticiones hasta la bandera.",
+      "learningObjective": "Patrulla tres lados del sendero repitiendo el patrón de dos avances y un giro a la derecha. Calcula las repeticiones hasta la bandera.",
+      "difficulty": "RAZONAMIENTO",
+      "order": 3,
+      "prerequisiteLevelIds": [
+        "LOOP-02"
+      ],
+      "worldConfig": {
+        "width": 5,
+        "height": 5,
+        "playerPosition": {
+          "x": 1,
+          "y": 1
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 1,
+          "y": 3
+        },
+        "obstacles": [
+          {
+            "x": 2,
+            "y": 2
+          }
+        ],
+        "keys": [],
+        "doors": []
+      },
+      "allowedBlockGroups": [
+        "Movimiento",
+        "Variables",
+        "Condicionales",
+        "Ciclos",
+        "Condiciones",
+        "Valores"
+      ],
+      "criteria": {
+        "orderedItems": [],
+        "variableCheckpoints": [],
+        "readVariables": [],
+        "minimumDecisions": 0,
+        "requiredStatements": []
+      },
+      "shortDescription": "Repite movimientos y giros."
+    },
+    {
+      "id": "LOOP-04",
+      "conceptId": "LOOPS",
+      "concept": "Ciclos",
+      "title": "Hasta encontrar la salida",
+      "description": "Mientras Frente libre, avanza. La bandera está al final del corredor: el borde hace falsa la condición.",
+      "learningObjective": "Mientras Frente libre, avanza. La bandera está al final del corredor: el borde hace falsa la condición.",
+      "difficulty": "INTEGRACION",
+      "order": 4,
+      "prerequisiteLevelIds": [
+        "LOOP-03"
+      ],
+      "worldConfig": {
+        "width": 6,
+        "height": 3,
+        "playerPosition": {
+          "x": 0,
+          "y": 1
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 5,
+          "y": 1
+        },
+        "obstacles": [
+          {
+            "x": 0,
+            "y": 0
+          },
+          {
+            "x": 0,
+            "y": 2
+          },
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 1,
+            "y": 2
+          },
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 2
+          },
+          {
+            "x": 3,
+            "y": 0
+          },
+          {
+            "x": 3,
+            "y": 2
+          },
+          {
+            "x": 4,
+            "y": 0
+          },
+          {
+            "x": 4,
+            "y": 2
+          },
+          {
+            "x": 5,
+            "y": 0
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ],
+        "keys": [],
+        "doors": []
+      },
+      "allowedBlockGroups": [
+        "Movimiento",
+        "Variables",
+        "Condicionales",
+        "Ciclos",
+        "Condiciones",
+        "Valores"
+      ],
+      "criteria": {
+        "orderedItems": [],
+        "variableCheckpoints": [],
+        "readVariables": [],
+        "minimumDecisions": 0,
+        "requiredStatements": []
+      },
+      "shortDescription": "Repite mientras el frente esté libre."
+    },
+    {
+      "id": "LOOP-05",
+      "conceptId": "LOOPS",
+      "concept": "Ciclos",
+      "title": "El desafío del explorador",
+      "description": "Declara pasos = 4. Repite pasos veces: si el frente está libre avanza; si no gira a la derecha. Recoge la llave y cruza la puerta hasta la bandera.",
+      "learningObjective": "Declara pasos = 4. Repite pasos veces: si el frente está libre avanza; si no gira a la derecha. Recoge la llave y cruza la puerta hasta la bandera.",
+      "difficulty": "INTEGRACION_FINAL",
+      "order": 5,
+      "prerequisiteLevelIds": [
+        "LOOP-04"
+      ],
+      "worldConfig": {
+        "width": 5,
+        "height": 3,
+        "playerPosition": {
+          "x": 0,
+          "y": 1
+        },
+        "playerDirection": "EAST",
+        "goalPosition": {
+          "x": 4,
+          "y": 1
+        },
+        "obstacles": [],
+        "keys": [
+          {
+            "x": 1,
+            "y": 1
+          }
+        ],
+        "doors": [
+          {
+            "x": 3,
+            "y": 1
+          }
+        ]
+      },
+      "allowedBlockGroups": [
+        "Movimiento",
+        "Variables",
+        "Condicionales",
+        "Ciclos",
+        "Condiciones",
+        "Valores"
+      ],
+      "criteria": {
+        "orderedItems": [
+          {
+            "x": 1,
+            "y": 1
+          }
+        ],
+        "variableCheckpoints": [],
+        "readVariables": [
+          "pasos"
+        ],
+        "minimumDecisions": 1,
+        "requiredStatements": [
+          "VariableDeclaration",
+          "IfElse",
+          "Repeat"
+        ]
+      },
+      "shortDescription": "Integra estado, decisiones y repetición."
+    }
+  ]
+}

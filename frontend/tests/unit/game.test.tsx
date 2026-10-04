@@ -2,6 +2,7 @@ import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import challengeData from '../../../backend/src/main/resources/game/challenges.v1.json';
 import catalogData from '../../../backend/src/main/resources/game/levels.v1.json';
 import type { Catalog, TraceEvent } from '../../src/features/game/types';
 import { completeLevel, emptyProgress, levelStatus, progressKey, readProgress, saveProgress } from '../../src/features/game/progress';
@@ -11,7 +12,13 @@ import { AdventurePage } from '../../src/features/game/AdventurePage';
 const catalog = catalogData as Catalog;
 beforeEach(() => localStorage.clear());
 afterEach(() => vi.unstubAllGlobals());
-describe('Aventura provisional', () => {
+describe('Aventura: compatibilidad histórica y catálogo guiado', () => {
+  it('ofrece 18 retos en cuatro conceptos sin anticipar ciclos', () => {
+    const levels = challengeData.levels;
+    expect(levels).toHaveLength(18);
+    expect(['SEQUENCES','VARIABLES','CONDITIONALS','LOOPS'].map(id => levels.filter(l => l.conceptId === id).length)).toEqual([4,4,5,5]);
+    expect(levels.filter(l => l.conceptId !== 'LOOPS').every(l => !gameToolbox(l.allowedBlockGroups).contents.flatMap(c => c.contents).some(b => ['mdedu_repeat','mdedu_while'].includes(b.type)))).toBe(true);
+  });
   it('desbloquea por prerequisites y conserva progreso tras recargar', () => {
     let progress = emptyProgress();
     expect(catalog.levels.map(l => levelStatus(l, progress))).toEqual(['UNLOCKED', 'LOCKED', 'LOCKED', 'LOCKED']);
@@ -47,19 +54,22 @@ describe('Aventura provisional', () => {
     expect(gameToolbox(catalog.levels[2]!.allowedBlockGroups).contents.flatMap(c => c.contents).some(b => b.type === 'mdedu_repeat')).toBe(false);
     expect(gameToolbox(catalog.levels[3]!.allowedBlockGroups).contents.flatMap(c => c.contents).some(b => b.type === 'mdedu_repeat')).toBe(true);
   });
-  it('el clic bloqueado explica el requisito sin abrir la actividad', async () => {
+  it('un concepto bloqueado permite inspeccionar sus retos sin iniciarlos', async () => {
+    const catalog = challengeData as Catalog;
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/api/game/levels') ? catalog : url.endsWith('/api/auth/student/me') ? { studentId: 'student',studentCode:'EST-001',authenticated:true } : { levels: catalog.levels.map((l, i) => ({ levelId: l.id, completed: false, unlocked: i === 0 })) } })));
     render(<MemoryRouter initialEntries={['/aventura']}><Routes><Route path="/aventura" element={<AdventurePage />} /></Routes></MemoryRouter>);
     const locked = await screen.findByRole('button', { name: /Variables:.*Bloqueado/ });
     await userEvent.click(locked);
-    expect(screen.getByRole('status')).toHaveTextContent('Completa el nivel anterior para continuar.');
-    expect(screen.getByRole('heading', { name: 'Mi primera programación' })).toBeVisible();
+    expect(screen.getByRole('region', {name: 'Retos de Variables'})).toHaveTextContent('Bloqueado');
+    expect(screen.getByRole('region', {name: 'Retos de Variables'}).querySelectorAll('a')).toHaveLength(0);
+    expect(screen.getByRole('heading', { name: 'Aprender' })).toBeVisible();
     expect(screen.queryByTestId('game-blockly')).not.toBeInTheDocument();
   });
-  it('una URL directa no abre un nivel bloqueado', async () => {
+  it('una URL directa no abre un reto bloqueado', async () => {
+    const catalog = challengeData as Catalog;
     vi.stubGlobal('fetch', vi.fn(async (url: string) => ({ ok: true, json: async () => url.endsWith('/api/game/levels') ? catalog : url.endsWith('/api/auth/student/me') ? { studentId: 'student',studentCode:'EST-001',authenticated:true } : { levels: catalog.levels.map((l, i) => ({ levelId: l.id, completed: false, unlocked: i === 0 })) } })));
-    render(<MemoryRouter initialEntries={['/aventura/LOOPS']}><Routes><Route path="/aventura/:levelId" element={<AdventurePage />} /></Routes></MemoryRouter>);
-    expect(await screen.findByRole('heading', { name: 'Nivel bloqueado' })).toBeVisible();
+    render(<MemoryRouter initialEntries={['/aventura/LOOP-01']}><Routes><Route path="/aventura/:levelId" element={<AdventurePage />} /></Routes></MemoryRouter>);
+    expect(await screen.findByRole('heading', { name: 'Reto bloqueado' })).toBeVisible();
     expect(screen.queryByTestId('game-blockly')).not.toBeInTheDocument();
   });
 });

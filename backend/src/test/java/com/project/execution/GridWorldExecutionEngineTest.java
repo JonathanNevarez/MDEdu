@@ -141,15 +141,11 @@ class GridWorldExecutionEngineTest {
         assertEquals("COMPLETED",ENGINE.execute(program(F.createMove()),world(Direction.EAST),1).status());
         assertEquals(1,ENGINE.execute(program(F.createMove(),F.createMove()),world(Direction.EAST),1).steps());
     }
-    @Test void catalogFourWorldsPrerequisitesAndSolutions() throws Exception {
-        var catalog=new LevelCatalog(new ObjectMapper()).all();assertEquals(4,catalog.levels().size());
-        assertEquals(List.of("SEQUENCES","VARIABLES","CONDITIONALS","LOOPS"),catalog.levels().stream().map(Level::id).toList());
+    @Test void catalogEighteenWorldsAndFourConcepts() throws Exception {
+        var catalog=new LevelCatalog(new ObjectMapper()).all();assertEquals(18,catalog.levels().size());
+        assertEquals(List.of("SEQUENCES","VARIABLES","CONDITIONALS","LOOPS"),catalog.levels().stream().map(Level::conceptId).distinct().toList());
         var seq=program(F.createMove(),F.createMove(),F.createTurnRight(),F.createMove(),F.createMove());
-        assertTrue(ENGINE.execute(seq,catalog.levels().get(0).worldConfig(),200).success());
-        for(int index=1;index<4;index++) {
-            var r=F.createRepeat();r.setCount(integer(index==1?4:index==2?5:7));r.getBody().add(F.createMove());
-            assertTrue(ENGINE.execute(program(r),catalog.levels().get(index).worldConfig(),200).success());
-        }
+        assertTrue(ENGINE.execute(seq,catalog.levels().getFirst().worldConfig(),200).success());
         var levels=new ArrayList<>(catalog.levels());var first=levels.getFirst();
         levels.set(0,new Level(first.id(),first.concept(),first.title(),first.description(),1,List.of("LOOPS"),first.worldConfig(),first.allowedBlockGroups()));
         assertThrows(IllegalArgumentException.class,()->LevelCatalog.validate(new Catalog(1,levels)));

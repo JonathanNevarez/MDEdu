@@ -1,0 +1,35 @@
+{
+  "contractVersion": 1,
+  "name": "COND-03",
+  "statements": [
+    {
+      "kind": "move"
+    },
+    {
+      "kind": "ifElse",
+      "condition": {
+        "kind": "sensorExpression",
+        "sensor": "HAS_KEY"
+      },
+      "thenBranch": [
+        {
+          "kind": "move"
+        },
+        {
+          "kind": "move"
+        },
+        {
+          "kind": "move"
+        },
+        {
+          "kind": "move"
+        }
+      ],
+      "elseBranch": [
+        {
+          "kind": "turnRight"
+        }
+      ]
+    }
+  ]
+}

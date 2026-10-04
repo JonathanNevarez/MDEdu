@@ -18,15 +18,15 @@ test('Ciclos distingue repetición manual y un ciclo correcto', async ({ page, r
   const api = process.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8080';
   const created = await createStudent(request); expect(created.status()).toBe(201);
   const studentId = (await created.json()).id as string;
-  for (const levelId of ['SEQUENCES', 'VARIABLES', 'CONDITIONALS']) {
-    const program = JSON.parse(readFileSync(`../backend/src/test/resources/evaluation/${levelId}.json`, 'utf8'));
+  for (const levelId of ['SEQ-01', 'VAR-01', 'COND-01']) {
+    const program = JSON.parse(readFileSync(`../backend/src/test/resources/challenges/${levelId}.json`, 'utf8'));
     const result = await request.post(`${api}/api/attempts`, { data: { studentId, levelId, program, hintCount: 0, resolutionTimeMs: 1000 } });
     expect(result.status()).toBe(201); expect((await result.json()).execution.evaluation.activityPassed).toBe(true);
   }
   await page.goto('/');
   await loginStudentById(page,studentId);await page.evaluate(id => localStorage.setItem('mdedu.student.id.v1', id), studentId);
   await page.goto('/aventura');
-  await page.getByRole('button', { name: /Ciclos:.*Disponible/ }).click();
+  await page.getByRole('button', { name: /Ciclos:.*Disponible/ }).click();await page.getByRole('region',{name:'Retos de Ciclos'}).getByRole('link',{name:/Abrir reto/}).click();
   for (let i = 0; i < 7; i++) await page.getByRole('button', { name: '+ Avanzar', exact: true }).click();
   const manualResponse = page.waitForResponse(r => r.url().endsWith('/api/attempts') && r.request().method() === 'POST');
   await page.getByRole('button', { name: '▶ Ejecutar', exact: true }).click();
@@ -36,10 +36,10 @@ test('Ciclos distingue repetición manual y un ciclo correcto', async ({ page, r
   await expect(page.getByRole('status').filter({ hasText: 'todavía falta aplicar el concepto' })).toBeVisible();
   await expect(page.locator('.evaluation-feedback').getByText('Prueba a representar esa repetición con un ciclo.', { exact: false })).toBeVisible();
   await page.screenshot({ path: testInfo.outputPath('manual-pedagogical-failure.png'), fullPage: true });
-  expect((await (await request.get(`${api}/api/students/${studentId}/progress`)).json()).levels.find((l: { levelId: string }) => l.levelId === 'LOOPS').completed).toBe(false);
+  expect((await (await request.get(`${api}/api/students/${studentId}/progress`)).json()).levels.find((l: { levelId: string }) => l.levelId === 'LOOP-01').completed).toBe(false);
   await page.getByRole('link', { name: '← Volver al mapa' }).click();
   await expect(page.getByRole('button', { name: /Ciclos:.*Disponible/ })).toBeVisible();
-  await page.getByRole('button', { name: /Ciclos:.*Disponible/ }).click();
+  await page.getByRole('button', { name: /Ciclos:.*Disponible/ }).click();await page.getByRole('region',{name:'Retos de Ciclos'}).getByRole('link',{name:/Abrir reto/}).click();
   await page.getByRole('treeitem', { name: 'Ciclos', exact: true }).click();
   const repeatSource = page.getByRole('option', { name: /^Repetir,/ });
   const repeat = page.getByRole('region', { name: 'Blocks workspace.' }).getByRole('figure', { name: /^Repetir, Empty, Hacer/ });
@@ -62,8 +62,8 @@ test('Ciclos distingue repetición manual y un ciclo correcto', async ({ page, r
   await page.getByRole('button', { name: '▶ Ejecutar', exact: true }).click();
   const loop = (await (await loopResponse).json()).execution;
   expect(loop.success).toBe(true); expect(loop.evaluation.activityPassed).toBe(true);
-  await expect(page.getByRole('status').filter({ hasText: '¡Nivel completado!' })).toBeVisible();
+  await expect(page.getByRole('status').filter({ hasText: '¡Reto completado!' })).toBeVisible();
   await page.screenshot({ path: testInfo.outputPath('loop-pedagogical-pass.png'), fullPage: true });
-  expect((await (await request.get(`${api}/api/students/${studentId}/progress`)).json()).levels.find((l: { levelId: string }) => l.levelId === 'LOOPS').completed).toBe(true);
+  expect((await (await request.get(`${api}/api/students/${studentId}/progress`)).json()).levels.find((l: { levelId: string }) => l.levelId === 'LOOP-01').completed).toBe(true);
   expect(errors).toEqual([]);
 });

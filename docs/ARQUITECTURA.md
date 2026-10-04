@@ -1,5 +1,12 @@
 # Arquitectura inicial
 
+## Evolución post-prototipo: catálogo guiado de 18 retos
+
+LevelCatalog carga `challenges.v1.json` y PatternCatalog su evaluación correspondiente, conservando la configuración histórica para interpretar evidencia. Criteria comprueba exclusivamente el modelo EMF y la traza real; no añade primitivas ni compara código. La semántica del intérprete permanece: solo se añade VARIABLE_READ a la traza para comprobar lecturas reales, incluso con cortocircuito. Los activos MDE permanecen intactos.
+
+LearningService combina ConceptGraph/prerequisites/mastery con el predecesor dentro de cada concepto bajo el bloqueo transaccional existente del estudiante. V9 archiva las cuatro Activities originales y añade 18 Activities/Progress sin modificar historial, cuentas ni dominio. DTOs de progreso agregan totales y reto actual por concepto. UiConfigurationService reutiliza la base ATL del concepto y vincula el ID del reto en memoria. Meta-IU proyecta la lista completa. [Diseño y mundos](CATALOGO_RETOS.md).
+
+
 ## Evolución post-prototipo: identidad persistente
 
 `StudentAccount → Student(UUID) → StudentModel / progreso / intentos / adaptación / feedback / telemetría`.

@@ -35,11 +35,11 @@ class MetaUiIT {
  @Autowired AttemptTimelineService timeline;@Autowired JdbcTemplate jdbc;@Autowired ObjectMapper json;@Autowired MockMvc mvc;
  @MockitoSpyBean GameExecutionService execution;@MockitoSpyBean AdaptationManager adaptation;
  @MockitoSpyBean FeedbackOrchestrator feedback;@MockitoSpyBean UiConfigurationService ui;
- AttemptResponse submit(UUID id,String level,String fixture)throws Exception{try(var in=getClass().getResourceAsStream("/evaluation/"+fixture+".json")){return learning.submit(new SubmitAttempt(id,level,100L,0,json.readValue(in,ProgramDto.class)));}}
+ AttemptResponse submit(UUID id,String level,String fixture)throws Exception{try(var in=getClass().getResourceAsStream("/challenges/"+fixture+".json")){return learning.submit(new SubmitAttempt(id,level,100L,0,json.readValue(in,ProgramDto.class)));}}
  @Test void readOnlyLoopsOverviewDecisionAndTimelineAreOriginal()throws Exception {
   var student=learning.create("META_PRIVATE_SENTINEL").id();
-  for(String level:List.of("SEQUENCES","VARIABLES","CONDITIONALS"))submit(student,level,level);
-  var attempt=submit(student,"LOOPS","LOOPS_MANUAL");var f=feedback.generate(student,attempt.attemptId());var config=ui.byAttempt(student,attempt.attemptId());
+  for(String level:List.of("SEQ-01","VAR-01","COND-01"))submit(student,level,level);
+  var attempt=submit(student,"LOOP-01","LOOP-01_MANUAL");var f=feedback.generate(student,attempt.attemptId());var config=ui.byAttempt(student,attempt.attemptId());
   var beforeModel=models.dto(models.project(student));var beforeEvents=jdbc.queryForObject("select count(*) from attempt_events",Long.class);
   var decisions=jdbc.queryForList("select * from adaptation_decisions order by id");
   clearInvocations(execution,adaptation,feedback,ui);
@@ -57,13 +57,13 @@ class MetaUiIT {
   var r=inspection.rules();assertEquals(loader.hash(),r.rulesetHash());assertEquals(loader.snapshot().getVersion(),r.rulesetVersion());
   assertEquals(loader.snapshot().getRules().stream().map(a->a.getId()).toList(),r.rules().stream().map(a->a.ruleId()).toList());
   for(int i=0;i<r.rules().size();i++){assertEquals(loader.snapshot().getRules().get(i).getPriority(),r.rules().get(i).priority());assertEquals(loader.snapshot().getRules().get(i).getActions().stream().map(a->a.getType()).toList(),r.rules().get(i).actions().stream().map(a->a.type()).toList());}
-  var student=learning.create(null).id();var a=submit(student,"SEQUENCES","SEQUENCES");
+  var student=learning.create(null).id();var a=submit(student,"SEQ-01","SEQ-01");
   assertEquals(parameters.values(),inspection.parameters().values());assertEquals(a.adaptation().parametersHash(),inspection.parameters().parametersHash());assertEquals(a.adaptation().rulesetHash(),r.rulesetHash());
   mvc.perform(get("/api/adaptation/rules")).andExpect(status().isOk()).andExpect(content().json(json.writeValueAsString(r)));
   mvc.perform(get("/api/adaptation/parameters")).andExpect(status().isOk()).andExpect(content().json(json.writeValueAsString(inspection.parameters())));
  }
  @Test void paginationAndPseudonymousIsolation()throws Exception {
-  var a=learning.create("PRIVATE_NAME").id();var b=learning.create(null).id();var attempt=submit(a,"SEQUENCES","SEQUENCES");
+  var a=learning.create("PRIVATE_NAME").id();var b=learning.create(null).id();var attempt=submit(a,"SEQ-01","SEQ-01");
   assertEquals(0,meta.attempts(b,0,20).total());assertEquals(0,meta.adaptations(b,0,20).total());assertEquals(1,meta.attempts(a,0,1).total());
   assertTrue(meta.attempts(a,1,1).items().isEmpty());assertEquals(1,meta.students(0,1).items().size());
   assertFalse(json.writeValueAsString(meta.students(0,50)).contains("PRIVATE_NAME"));
@@ -82,7 +82,7 @@ class MetaUiIT {
   }
  }
  @Test void legacyAndInconsistentRemainVisibleWithoutBackfill()throws Exception {
-  var student=learning.create(null).id();var legacy=submit(student,"SEQUENCES","SEQUENCES");var broken=submit(student,"SEQUENCES","SEQUENCES");
+  var student=learning.create(null).id();var legacy=submit(student,"SEQ-01","SEQ-01");var broken=submit(student,"SEQ-01","SEQ-01");
   jdbc.execute("ALTER TABLE attempt_events DISABLE TRIGGER attempt_events_append_only");
   try {jdbc.update("delete from attempt_events where attempt_id=?",legacy.attemptId());jdbc.update("delete from attempt_events where attempt_id=? and event_type='EXECUTION_STARTED'",broken.attemptId());}
   finally{jdbc.execute("ALTER TABLE attempt_events ENABLE TRIGGER attempt_events_append_only");}
@@ -93,7 +93,7 @@ class MetaUiIT {
  }
  @Test void emptyStudentAndSchemaRemainUnchanged()throws Exception {
   var student=learning.create(null).id();assertTrue(meta.attempts(student,0,20).items().isEmpty());assertTrue(meta.adaptations(student,0,20).items().isEmpty());assertEquals(4,meta.overview(student).conceptMasteries().size());
-  assertEquals(8,jdbc.queryForObject("select count(*) from flyway_schema_history where success=true",Integer.class));
-  assertEquals(4,jdbc.queryForObject("select count(*) from learning_activities",Integer.class));assertEquals(0,jdbc.queryForObject("select count(*) from learning_activities where reinforcement",Integer.class));
+  assertEquals(9,jdbc.queryForObject("select count(*) from flyway_schema_history where success=true",Integer.class));
+  assertEquals(22,jdbc.queryForObject("select count(*) from learning_activities",Integer.class));assertEquals(18,jdbc.queryForObject("select count(*) from learning_activities where not archived",Integer.class));assertEquals(0,jdbc.queryForObject("select count(*) from learning_activities where reinforcement",Integer.class));
  }
 }

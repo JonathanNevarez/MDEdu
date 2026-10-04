@@ -57,8 +57,8 @@
       "concept": "VARIABLES",
       "severity": "ERROR",
       "detector": "INCORRECT_UPDATE",
-      "pedagogicalMeaning": "El cambio observado todavía no cumple el objetivo de pasar de 0 a 1.",
-      "recommendedAction": "Inicializa tu primera variable entera en 0 y asígnale 1. Puedes elegir su nombre.",
+      "pedagogicalMeaning": "El cambio observado no cumple los valores inicial y final requeridos por el reto.",
+      "recommendedAction": "Revisa los valores y las lecturas de la variable que pide el objetivo del reto.",
       "defaultHintLevel": 1
     },
     {
@@ -67,7 +67,7 @@
       "concept": "CONDITIONALS",
       "severity": "ERROR",
       "detector": "MISSING_CONDITION",
-      "pedagogicalMeaning": "Falta el condicional que representa la decisión de esta actividad.",
+      "pedagogicalMeaning": "Falta el condicional que representa la decisión de este reto.",
       "recommendedAction": "Usa Si / Si no para expresar las dos alternativas.",
       "defaultHintLevel": 1
     },
@@ -128,7 +128,7 @@
       "severity": "ERROR",
       "detector": "INCORRECT_REPETITION_COUNT",
       "pedagogicalMeaning": "El ciclo seleccionado no coincide con las iteraciones esperadas para el camino.",
-      "recommendedAction": "Cuenta las siete casillas por avanzar y revisa cuántas veces se repite el cuerpo.",
+      "recommendedAction": "Cuenta los pasos del patrón del reto y revisa cuántas veces se repite el cuerpo.",
       "defaultHintLevel": 1
     },
     {

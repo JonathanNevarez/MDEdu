@@ -18,21 +18,26 @@ const evaluation: EvaluationResult = {
 };
 const result: ExecutionResult = { success: true, status: 'COMPLETED', steps: 7, finalState: null, trace: [], errors: [], evaluation };
 describe('Evaluación determinista de un intento', () => {
+  it('explica objetivos pendientes aunque la meta esté alcanzada', () => {
+    render(<EvaluationFeedback evaluation={{...evaluation, patterns: [], structuralCorrectness: {...evaluation.structuralCorrectness, structuralConstraints: {variableCheckpoints: false, orderedItems: true}}}} />);
+    expect(screen.getByRole('list', {name: 'Objetivos por completar'})).toHaveTextContent('lee cada valor antes de cambiarlo');
+    expect(screen.queryByText('Recoge las llaves en el orden indicado antes de terminar.')).not.toBeInTheDocument();
+  });
   it('functional fail invita a intentar sin declarar completado', () => {
     expect(evaluationMessage({ ...result, success: false })).toBe('No alcanzaste la meta todavía. Intenta nuevamente.');
   });
   it('separa llegada funcional de aprobación pedagógica', () => {
-    expect(evaluationMessage(result)).toBe('¡Llegaste a la meta! Pero todavía falta aplicar el concepto de este nivel.');
+    expect(evaluationMessage(result)).toBe('¡Llegaste a la meta! Pero todavía falta aplicar el concepto de este reto.');
   });
   it('activityPassed muestra completado', () => {
-    expect(evaluationMessage({ ...result, evaluation: { ...evaluation, activityPassed: true } })).toBe('¡Nivel completado!');
+    expect(evaluationMessage({ ...result, evaluation: { ...evaluation, activityPassed: true } })).toBe('¡Reto completado!');
   });
   it('renderiza significado y acción recomendada del catálogo', () => {
     render(<EvaluationFeedback evaluation={evaluation} />);
     expect(screen.getByText(evaluation.patterns[0]!.pedagogicalMeaning)).toBeVisible();
     expect(screen.getByText(/Prueba a representar esa repetición con un ciclo/)).toBeVisible();
     expect(screen.getByText('Recorrido: meta alcanzada.')).toBeVisible();
-    expect(screen.getByText('Concepto del nivel: por practicar.')).toBeVisible();
+    expect(screen.getByText('Concepto del reto: por practicar.')).toBeVisible();
   });
   it('el progreso no avanza por éxito funcional sin aprobación', () => {
     const progress = emptyProgress();
